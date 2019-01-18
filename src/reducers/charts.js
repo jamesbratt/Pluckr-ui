@@ -1,12 +1,13 @@
-import { prepend } from 'ramda';
+import { append } from 'ramda';
 
 const charts = (state = [], action) => {
   switch (action.type) {
     case 'ADD_CHART':
       const newChart = {
         id: action.id,
+        type: action.chartType,
       };
-      return prepend(newChart, state);
+      return append(newChart, state);
 
     case 'REMOVE_CHART':
       return state;

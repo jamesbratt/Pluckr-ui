@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import Chart from './builder_components/Chart';
 import { StravaSetModelData } from './data_sources/Strava';
 import { GenerateGuid } from './utils/Helpers';
-import { EASY_OAUTH_REDIRECT } from './Constants';
+import { EASY_OAUTH_REDIRECT, CHART_TYPES } from './Constants';
 import { addChart } from './actions';
-import { connect } from 'react-redux'
+import { connect } from 'react-redux';
 
 const mapStateToProps = state => {
   return state
@@ -12,10 +12,23 @@ const mapStateToProps = state => {
 
 class Builder extends Component {
 
-  addChart = () => {
+  constructor(props) {
+    super(props);
+    this.state = {selectedChartType: ''};
+  }
+
+  addChart = (event) => {
+    event.preventDefault();
     this.props.dispatch(
-      addChart(GenerateGuid())
+      addChart(
+        GenerateGuid(),
+        this.state.selectedChartType
+      )
     );
+  }
+
+  selectChartType = (event) => {
+    this.setState({selectedChartType: event.target.value});
   }
 
   componentDidMount() {
@@ -31,9 +44,16 @@ class Builder extends Component {
     return (
       <div id='chart-canvas'>
         <h1>Chart Configurations</h1>
-        <button onClick={this.addChart}>Add Chart</button>
+        <form onSubmit={this.addChart}>
+          <select onChange={this.selectChartType}>
+            {CHART_TYPES.map(chartType => {
+              return <option value={chartType.value}>{chartType.label}</option>
+            })}
+          </select>
+          <button>Add Chart</button>
+        </form>
         {this.props.charts.map(chart => {
-          return <Chart id={chart.id} />;
+          return <Chart id={chart.id} type={chart.type} />;
         })}
       </div>
     );

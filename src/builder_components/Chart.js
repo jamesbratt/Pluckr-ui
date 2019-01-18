@@ -6,8 +6,8 @@ const Chart = (props) => {
 
   return (
     <div className='chart-config'>
-      {props.id}
-      <ChartConfig />
+      <h2>{props.type}</h2>
+      <ChartConfig id={props.id} />
       <ChartRuntime />
     </div>
   );
