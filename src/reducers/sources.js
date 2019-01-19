@@ -4,9 +4,12 @@ const sources = (state = [], action) => {
   switch (action.type) {
     case 'ADD_SOURCE':
       const newSource = {
+        id: action.id,
+        name: action.sourceName,
         chartId: action.chartId,
         resource: action.resource,
-        rawData: action.data
+        rawData: action.data,
+        properties: action.properties,
       };
       return prepend(newSource, state);
 

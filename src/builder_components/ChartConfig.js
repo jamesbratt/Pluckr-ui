@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { addSource } from '../actions';
+import { GenerateGuid } from '../utils/Helpers';
 import { getData } from '../data_sources/Strava';
+import DataSetConfig from './DataSetConfig';
 
 const mapStateToProps = state => {
   return state
@@ -14,20 +16,25 @@ class ChartConfig extends Component {
     this.state = {
       selectedResource: 'activities',
       totalResults: '30',
+      sourceName: 'New Source',
     };
   }
 
   addDataSource = (event) => {
     const selectedResource = this.state.selectedResource;
     const noResults = this.state.totalResults;
+    const sourceName = this.state.sourceName;
     event.preventDefault();
     getData(selectedResource, noResults)
-      .then(data => {
+      .then(response => {
         this.props.dispatch(
           addSource(
+            GenerateGuid(),
+            sourceName,
             this.props.id,
             selectedResource,
-            data,
+            response.data,
+            response.properties,
           )
         );
       })
@@ -39,6 +46,10 @@ class ChartConfig extends Component {
 
   onResultsChange = (event) => {
     this.setState({ totalResults: event.target.value });
+  }
+
+  onSourceNameChange = (event) => {
+    this.setState({ sourceName: event.target.value });
   }
 
   /*onFilterChange = (event) => {
@@ -53,16 +64,26 @@ class ChartConfig extends Component {
   }*/
 
   render() {
+    const availableSources = this.props.sources.map(source => {
+      if(source.chartId === this.props.id) {
+        return source;
+      }
+    });
+
     return (
       <div>
+        <h2>Data Sources</h2>
         <ul>
           {this.props.sources.map(source => {
             if(source.chartId === this.props.id) {
-              return <li>{source.chartId}</li>;
+              return <li>{source.name}</li>;
             }
           })}
         </ul>
         <form onSubmit={this.addDataSource}>
+          <div>
+            <input type="text" onKeyUp={this.onSourceNameChange} />
+          </div>
           <div>
             <select disabled onChange={this.onResourceChange}>
               <option value="actvities">Activities</option>
@@ -76,6 +97,7 @@ class ChartConfig extends Component {
             <button>Add a Data Source</button>
           </div>
         </form>
+        {availableSources.length > 0 ? <DataSetConfig chartId={this.props.id} sources={availableSources} /> : null}
       </div>
     );
   }
