@@ -1,7 +1,7 @@
 const STRAVA_URI = 'https://www.strava.com/api/v3';
 
 const STRAVA_RESOURCES = {
-  activities: '/athlete/activities'
+  activities: {endpoint: '/athlete/activities', name: 'activities'}
 };
 
 const RESOURCE_PROPERTIES = {
@@ -25,7 +25,7 @@ const RESOURCE_PROPERTIES = {
 
 const getActivities = (perPage) => {
   const token = localStorage.getItem('token');
-  return fetch(`${STRAVA_URI}${STRAVA_RESOURCES.activities}?per_page=${perPage}`, {
+  return fetch(`${STRAVA_URI}${STRAVA_RESOURCES.activities.endpoint}?per_page=${perPage}`, {
     headers:{
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${token}`
@@ -38,15 +38,23 @@ const getActivities = (perPage) => {
 };
 
 export const getData = (resource, perPage) => {
+  let call;
   switch(resource) {
-    case STRAVA_RESOURCES.activities:
+    case STRAVA_RESOURCES.activities.name:
+    call = getActivities;
+    break;
+  default:
+    console.error('Invalid');
+    break;
+  }
+
+  return call(perPage)
+  .then(response => {
     return {
-      data: getActivities(perPage),
+      data: response,
       properties: RESOURCE_PROPERTIES.activities,
     };
-  default:
-    return getActivities(perPage);
-  }
+  })
 };
 
 export const get = (resource, perPage) => {

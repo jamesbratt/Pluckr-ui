@@ -17,3 +17,14 @@ export const addSource = (id, sourceName, chartId, resource, data, properties) =
     properties,
   }
 };
+
+export const addDataset = (id, sourceId, chartId, property, data) => {
+  return {
+    type: 'ADD_DATASET',
+    id,
+    sourceId,
+    chartId,
+    property,
+    data,
+  }
+};
