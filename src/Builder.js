@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import Chart from './builder_components/Chart';
-import { StravaSetModelData } from './data_sources/Strava';
 import { GenerateGuid } from './utils/Helpers';
 import { EASY_OAUTH_REDIRECT, CHART_TYPES } from './Constants';
 import { addChart } from './actions';
@@ -14,7 +13,7 @@ class Builder extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {selectedChartType: ''};
+    this.state = {selectedChartType: 'line'};
   }
 
   addChart = (event) => {
@@ -35,8 +34,6 @@ class Builder extends Component {
     const stravaToken = localStorage.getItem('token');
     if(!stravaToken) {
       document.location.replace(EASY_OAUTH_REDIRECT);
-    } else {
-      StravaSetModelData();
     }
   }
 
@@ -45,7 +42,7 @@ class Builder extends Component {
       <div id='chart-canvas'>
         <h1>Chart Configurations</h1>
         <form onSubmit={this.addChart}>
-          <select onChange={this.selectChartType}>
+          <select disabled onChange={this.selectChartType}>
             {CHART_TYPES.map(chartType => {
               return <option value={chartType.value}>{chartType.label}</option>
             })}

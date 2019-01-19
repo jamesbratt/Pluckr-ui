@@ -6,7 +6,7 @@ const sources = (state = [], action) => {
       const newSource = {
         chartId: action.chartId,
         resource: action.resource,
-        filters: action.filters
+        rawData: action.data
       };
       return prepend(newSource, state);
 

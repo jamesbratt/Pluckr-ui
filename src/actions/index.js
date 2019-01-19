@@ -6,11 +6,11 @@ export const addChart = (id, chartType) => {
   }
 };
 
-export const addSource = (chartId, resource, filters) => {
+export const addSource = (chartId, resource, data) => {
   return {
     type: 'ADD_SOURCE',
     chartId,
     resource,
-    filters,
+    data,
   }
 };

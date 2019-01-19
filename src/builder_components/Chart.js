@@ -8,7 +8,7 @@ const Chart = (props) => {
     <div className='chart-config'>
       <h2>{props.type}</h2>
       <ChartConfig id={props.id} />
-      <ChartRuntime />
+      <ChartRuntime id={props.id} />
     </div>
   );
 }

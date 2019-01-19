@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { addSource } from '../actions'; 
+import { addSource } from '../actions';
+import { getData } from '../data_sources/Strava';
 
 const mapStateToProps = state => {
   return state
@@ -11,27 +12,36 @@ class ChartConfig extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectedResource: '',
-      selectedFilters: [],
+      selectedResource: 'activities',
+      totalResults: '30',
     };
   }
 
   addDataSource = (event) => {
+    const selectedResource = this.state.selectedResource;
+    const noResults = this.state.totalResults;
     event.preventDefault();
-    this.props.dispatch(
-      addSource(
-        this.props.id,
-        this.state.selectedResource,
-        this.state.selectedFilters,
-      )
-    );
+    getData(selectedResource, noResults)
+      .then(data => {
+        this.props.dispatch(
+          addSource(
+            this.props.id,
+            selectedResource,
+            data,
+          )
+        );
+      })
   }
 
   onResourceChange = (event) => {
     this.setState({ selectedResource: event.target.value });
   }
 
-  onFilterChange = (event) => {
+  onResultsChange = (event) => {
+    this.setState({ totalResults: event.target.value });
+  }
+
+  /*onFilterChange = (event) => {
     const filters = event.target.options;
     const selectedFilters = [];
     for (var i = 0, l = filters.length; i < l; i++) {
@@ -40,7 +50,7 @@ class ChartConfig extends Component {
       }
     }
     this.setState({ selectedFilters: selectedFilters });
-  }
+  }*/
 
   render() {
     return (
@@ -54,16 +64,13 @@ class ChartConfig extends Component {
         </ul>
         <form onSubmit={this.addDataSource}>
           <div>
-            <select onChange={this.onResourceChange}>
+            <select disabled onChange={this.onResourceChange}>
               <option value="actvities">Activities</option>
               <option value="club_activities">Club Activities</option>
             </select>
           </div>
           <div>
-            <select onChange={this.onFilterChange} multiple>
-              <option value="before">Before</option>
-              <option value="after">After</option>
-            </select>
+            <input type="number" onKeyUp={this.onResultsChange} />
           </div>
           <div>
             <button>Add a Data Source</button>

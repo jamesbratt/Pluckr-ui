@@ -1,7 +1,8 @@
 import React from 'react';
+import RuntimeChart from '../chart_runtime/RuntimeChart';
 
 const ChartRuntime = (props) => {
-  return <span>A runtime</span>;
+  return <RuntimeChart id={props.id} />;
 }
 
 export default ChartRuntime;
