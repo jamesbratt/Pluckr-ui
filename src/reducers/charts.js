@@ -5,7 +5,7 @@ const charts = (state = [], action) => {
     case 'ADD_CHART':
       const newChart = {
         id: action.id,
-        type: action.chartType,
+        name: action.chartName,
       };
       return append(newChart, state);
 

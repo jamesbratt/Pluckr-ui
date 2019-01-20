@@ -7,10 +7,3 @@ export const GenerateGuid = () => {
   }
   return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
 }
-
-export const FetchSourceData = (endpoint, params) => {
-  return fetch(endpoint + params)
-    .then((response) => {
-      return response;
-    })
-}

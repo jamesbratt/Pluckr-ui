@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Chart from './builder_components/Chart';
 import { GenerateGuid } from './utils/Helpers';
-import { EASY_OAUTH_REDIRECT, CHART_TYPES } from './Constants';
+import { EASY_OAUTH_REDIRECT } from './Constants';
 import { addChart } from './actions';
 import { connect } from 'react-redux';
 
@@ -13,21 +13,25 @@ class Builder extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {selectedChartType: 'line'};
+    this.state = {selectChartName: null};
   }
 
   addChart = (event) => {
     event.preventDefault();
-    this.props.dispatch(
-      addChart(
-        GenerateGuid(),
-        this.state.selectedChartType
-      )
-    );
+    if(this.state.selectChartName) {
+      this.props.dispatch(
+        addChart(
+          GenerateGuid(),
+          this.state.selectChartName
+        )
+      );
+    } else {
+      alert('Fill out all required chart fields');
+    }
   }
 
-  selectChartType = (event) => {
-    this.setState({selectedChartType: event.target.value});
+  selectChartName = (event) => {
+    this.setState({selectChartName: event.target.value});
   }
 
   componentDidMount() {
@@ -42,15 +46,11 @@ class Builder extends Component {
       <div id='chart-canvas'>
         <h1>Chart Configurations</h1>
         <form onSubmit={this.addChart}>
-          <select disabled onChange={this.selectChartType}>
-            {CHART_TYPES.map(chartType => {
-              return <option value={chartType.value}>{chartType.label}</option>
-            })}
-          </select>
+          <input type="text" onKeyUp={this.selectChartName} />
           <button>Add Chart</button>
         </form>
         {this.props.charts.map(chart => {
-          return <Chart id={chart.id} type={chart.type} />;
+          return <Chart id={chart.id} name={chart.name} />;
         })}
       </div>
     );

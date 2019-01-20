@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { addSource } from '../actions';
 import { GenerateGuid } from '../utils/Helpers';
 import { getData } from '../data_sources/Strava';
-import DataSetConfig from './DataSetConfig';
+import ChartRuntime from './ChartRuntime';
 
 const mapStateToProps = state => {
   return state
@@ -16,7 +16,7 @@ class ChartConfig extends Component {
     this.state = {
       selectedResource: 'activities',
       totalResults: '30',
-      sourceName: 'New Source',
+      sourceName: null,
     };
   }
 
@@ -25,19 +25,23 @@ class ChartConfig extends Component {
     const noResults = this.state.totalResults;
     const sourceName = this.state.sourceName;
     event.preventDefault();
-    getData(selectedResource, noResults)
-      .then(response => {
-        this.props.dispatch(
-          addSource(
-            GenerateGuid(),
-            sourceName,
-            this.props.id,
-            selectedResource,
-            response.data,
-            response.properties,
-          )
-        );
-      })
+    if(selectedResource && noResults && sourceName) {
+      getData(selectedResource, noResults)
+        .then(response => {
+          this.props.dispatch(
+            addSource(
+              GenerateGuid(),
+              sourceName,
+              this.props.id,
+              selectedResource,
+              response.data,
+              response.properties,
+            )
+          );
+        })
+    } else {
+      alert('Fill out all required data source fields');
+    }
   }
 
   onResourceChange = (event) => {
@@ -86,7 +90,7 @@ class ChartConfig extends Component {
             <button>Add a Data Source</button>
           </div>
         </form>
-        {availableSources.length > 0 ? <DataSetConfig chartId={this.props.id} sources={availableSources} /> : null}
+        {availableSources.length > 0 ? <ChartRuntime chartId={this.props.id} chartName={this.props.name} sources={availableSources} /> : null}
       </div>
     );
   }

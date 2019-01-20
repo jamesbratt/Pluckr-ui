@@ -1,8 +1,8 @@
-export const addChart = (id, chartType) => {
+export const addChart = (id, chartName) => {
   return {
     type: 'ADD_CHART',
     id,
-    chartType,
+    chartName,
   }
 };
 
