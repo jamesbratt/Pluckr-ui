@@ -52,17 +52,6 @@ class ChartConfig extends Component {
     this.setState({ sourceName: event.target.value });
   }
 
-  /*onFilterChange = (event) => {
-    const filters = event.target.options;
-    const selectedFilters = [];
-    for (var i = 0, l = filters.length; i < l; i++) {
-      if (filters[i].selected) {
-        selectedFilters.push(filters[i].value);
-      }
-    }
-    this.setState({ selectedFilters: selectedFilters });
-  }*/
-
   render() {
     const availableSources = this.props.sources.map(source => {
       if(source.chartId === this.props.id) {

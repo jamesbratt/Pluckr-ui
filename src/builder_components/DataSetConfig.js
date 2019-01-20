@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { GenerateGuid } from '../utils/Helpers';
 import { addDataset } from '../actions';
+import { parseDataSeries } from '../data_parsing/parse';
 
 const mapStateToProps = state => {
   return state
@@ -29,13 +30,26 @@ class DataSetConfig extends Component {
 
   addDataset = (event) => {
     event.preventDefault();
-    const data = [];
+
+    const newDataSetId = GenerateGuid();
+    const dataProperty = this.state.selectedDataProperty;
+    const sourceId = this.state.selectedDataSource;
+
+    const dataSource = this.props.sources.find(
+      source => source.id === sourceId
+    );
+
+    const data = parseDataSeries(
+      dataSource.rawData,
+      dataProperty,
+    );
+
     this.props.dispatch(
       addDataset(
-        GenerateGuid(),
-        this.state.selectedDataSource,
+        newDataSetId,
+        sourceId,
         this.props.chartId,
-        this.state.selectedDataProperty,
+        dataProperty,
         data,
       )
     );
