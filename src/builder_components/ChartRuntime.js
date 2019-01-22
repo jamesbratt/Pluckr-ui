@@ -29,7 +29,18 @@ class ChartRuntime extends Component {
     })  
   }
 
-  componentDidMount() {
+  setChartConfig = () => {
+    const foo = [];
+    this.props.datasets.forEach(
+      dataSet => {
+        if(dataSet.chartId === this.props.chartId) {
+          foo.push({
+            name: dataSet.property,
+            type: dataSet.chartType,
+            data: dataSet.data
+          });
+        }
+      });
 
     this.chartInstance = Highcharts.chart(this.props.chartId, {
 
@@ -44,8 +55,23 @@ class ChartRuntime extends Component {
         align: 'right',
         verticalAlign: 'middle'
       },
-      series: [],
+      series: foo,
     });
+  }
+
+  componentDidUpdate(prevProps) {
+    if(prevProps.chartId !== this.props.chartId) {
+      this.chartInstance.destroy();
+      this.setChartConfig();
+    }
+  }
+
+  componentWillUnmount() {
+    this.chartInstance.destroy();
+  }
+
+  componentDidMount() {
+    this.setChartConfig();
   }
 
   render() {  

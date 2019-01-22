@@ -9,6 +9,7 @@ const datasets = (state = [], action) => {
         chartId: action.chartId,
         property: action.property,
         data: action.data,
+        chartType: action.chartType,
       };
       return prepend(newDataset, state);
 

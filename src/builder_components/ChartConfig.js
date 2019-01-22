@@ -56,11 +56,18 @@ class ChartConfig extends Component {
     this.setState({ sourceName: event.target.value });
   }
 
+  componentDidUpdate(prevProps) {
+    if(prevProps.id !== this.props.id) {
+      this.setState({
+        sourceName: null,
+        totalResults: '30',
+      });
+    }
+  }
+
   render() {
-    const availableSources = this.props.sources.map(source => {
-      if(source.chartId === this.props.id) {
-        return source;
-      }
+    const availableSources = this.props.sources.filter((source) => {
+      return source.chartId === this.props.id;
     });
 
     return (
@@ -75,7 +82,7 @@ class ChartConfig extends Component {
         </ul>
         <form onSubmit={this.addDataSource}>
           <div>
-            <input type="text" onKeyUp={this.onSourceNameChange} />
+            <input type="text" value={this.state.sourceName || ''} onChange={this.onSourceNameChange} />
           </div>
           <div>
             <select disabled onChange={this.onResourceChange}>

@@ -61,6 +61,7 @@ class DataSetConfig extends Component {
           this.props.chartId,
           dataProperty,
           data,
+          chartType,
         )
       );
     } else {
@@ -75,7 +76,16 @@ class DataSetConfig extends Component {
 
   onSelectChartType = (event) => {
     this.setState({selectedChartType: event.target.value})
-  } 
+  }
+
+  componentDidUpdate(prevProps) {
+    if(prevProps.chartId !== this.props.chartId) {
+      this.setState({
+        sourceName: null,
+        totalResults: '30',
+      });
+    }
+  }
 
   render() {
     const dataProperties = this.state.dataProperties;

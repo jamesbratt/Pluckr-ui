@@ -18,7 +18,7 @@ export const addSource = (id, sourceName, chartId, resource, data, properties) =
   }
 };
 
-export const addDataset = (id, sourceId, chartId, property, data) => {
+export const addDataset = (id, sourceId, chartId, property, data, chartType) => {
   return {
     type: 'ADD_DATASET',
     id,
@@ -26,5 +26,6 @@ export const addDataset = (id, sourceId, chartId, property, data) => {
     chartId,
     property,
     data,
+    chartType,
   }
 };

@@ -13,7 +13,10 @@ class Builder extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {selectChartName: null};
+    this.state = {
+      selectChartName: null,
+      chartToEdit: null,
+    };
   }
 
   addChart = (event) => {
@@ -34,6 +37,10 @@ class Builder extends Component {
     this.setState({selectChartName: event.target.value});
   }
 
+  selectChartToEdit = (chart) => {
+    this.setState({chartToEdit: chart});
+  }
+
   componentDidMount() {
     const stravaToken = localStorage.getItem('token');
     if(!stravaToken) {
@@ -49,9 +56,14 @@ class Builder extends Component {
           <input type="text" onKeyUp={this.selectChartName} />
           <button>Add Chart</button>
         </form>
-        {this.props.charts.map(chart => {
-          return <Chart id={chart.id} name={chart.name} />;
-        })}
+        <div>
+          <ul>
+            {this.props.charts.map(chart => {
+              return <li><button onClick={() => this.selectChartToEdit({id: chart.id, name: chart.name})}>{chart.name}</button></li>;
+            })}
+          </ul>
+        </div>
+        {this.state.chartToEdit ? <Chart id={this.state.chartToEdit.id} name={this.state.chartToEdit.name} /> : null}
       </div>
     );
   }
