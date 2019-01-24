@@ -17,6 +17,7 @@ class DataSetConfig extends Component {
       selectedDataSource: null,
       selectedDataProperty: null,
       selectedChartType: null,
+      hasAxis: false,
     };
   }
 
@@ -38,6 +39,7 @@ class DataSetConfig extends Component {
       const dataProperty = this.state.selectedDataProperty;
       const chartType = this.state.selectedChartType;
       const sourceId = this.state.selectedDataSource;
+      const hasAxis = this.state.hasAxis;
   
       const dataSource = this.props.sources.find(
         source => source.id === sourceId
@@ -52,6 +54,7 @@ class DataSetConfig extends Component {
         dataProperty,
         data,
         chartType,
+        hasAxis,
       );
   
       this.props.dispatch(
@@ -62,6 +65,7 @@ class DataSetConfig extends Component {
           dataProperty,
           data,
           chartType,
+          hasAxis,
         )
       );
     } else {
@@ -78,11 +82,17 @@ class DataSetConfig extends Component {
     this.setState({selectedChartType: event.target.value})
   }
 
+  onHasAxis = (event) => {
+    this.setState({hasAxis: event.target.checked})
+  }
+
   componentDidUpdate(prevProps) {
     if(prevProps.chartId !== this.props.chartId) {
       this.setState({
-        sourceName: null,
-        totalResults: '30',
+        selectedDataSource: null,
+        selectedChartType: null,
+        selectedDataProperty: null,
+        hasAxis: false,
       });
     }
   }
@@ -101,8 +111,8 @@ class DataSetConfig extends Component {
         </ul>
         <form onSubmit={this.addDataset}>
           <div>
-            <select onChange={this.getSourceData}>
-            <option value="" selected disabled hidden>-- Select a data source --</option>;
+            <select value={this.state.selectedDataSource} onChange={this.getSourceData}>
+            <option value={null} hidden>-- Select a data source --</option>
               {this.props.sources.map(source => {
                 if(source.chartId === this.props.chartId) {
                   return <option value={source.id}>{source.name}</option>;
@@ -111,20 +121,23 @@ class DataSetConfig extends Component {
             </select>
           </div>
           <div>
-            <select onChange={this.onSelectDataProperty}>
-              <option value="" selected disabled hidden>-- Select a data property --</option>;
+            <select value={this.state.selectedDataProperty} onChange={this.onSelectDataProperty}>
+            <option value={null} hidden>-- Select a data property --</option>
               {dataProperties.map(property => {
                 return <option value={property}>{property}</option>;
               })}
             </select>
           </div>
           <div>
-            <select onChange={this.onSelectChartType}>
-              <option value="" selected disabled hidden>-- Select a chart type --</option>;
+            <select value={this.state.selectedChartType} onChange={this.onSelectChartType}>
+            <option value={null} hidden>-- Select a chart type --</option>;
               {CHART_TYPES.map(chartType => {
                 return <option value={chartType.value}>{chartType.label}</option>
               })}
             </select>
+          </div>
+          <div>
+            <input checked={this.state.hasAxis} type="checkbox" onClick={this.onHasAxis} /> Add an axis?
           </div>
           <div>
             <button>Add a Data Set</button>

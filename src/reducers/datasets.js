@@ -10,6 +10,7 @@ const datasets = (state = [], action) => {
         property: action.property,
         data: action.data,
         chartType: action.chartType,
+        hasAxis: action.hasAxis,
       };
       return prepend(newDataset, state);
 

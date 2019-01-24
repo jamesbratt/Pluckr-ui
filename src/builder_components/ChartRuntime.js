@@ -21,29 +21,54 @@ class ChartRuntime extends Component {
     this.chartInstance = null;
   }
 
-  addDataSeries = (property, data, chartType) => {
-    this.chartInstance.addSeries({
+  addDataSeries = (property, data, chartType, hasAxis) => {
+    const newDataSeries = {
       name: property,
       type: chartType,
       data: data
-    })  
+    };
+
+    if(hasAxis) {
+      const newYaxisId = this.chartInstance.yAxis.length + 1;
+      this.chartInstance.addAxis({
+          title: {
+              text: property
+          },
+          opposite: true,
+          id: newYaxisId,
+      })
+      newDataSeries['yAxis'] = newYaxisId;
+    }
+  
+    this.chartInstance.addSeries(newDataSeries)  
   }
 
   setChartConfig = () => {
-    const foo = [];
+    const dataSets = [];
+    const yAxis = [];
     this.props.datasets.forEach(
       dataSet => {
         if(dataSet.chartId === this.props.chartId) {
-          foo.push({
+          const series = {
             name: dataSet.property,
             type: dataSet.chartType,
             data: dataSet.data
-          });
+          };
+
+          const axisId = yAxis.length;
+          yAxis.push({
+              title: {
+                  text: dataSet.property
+              },
+              opposite: dataSet.hasAxis,
+          })
+          series['yAxis'] = axisId;
+
+          dataSets.push(series);
         }
       });
 
-    this.chartInstance = Highcharts.chart(this.props.chartId, {
-
+    const chartConfig = {
       title: {
         text: this.props.chartName
       },
@@ -55,8 +80,14 @@ class ChartRuntime extends Component {
         align: 'right',
         verticalAlign: 'middle'
       },
-      series: foo,
-    });
+      series: dataSets,
+    };
+
+    if(yAxis.length > 0) {
+      chartConfig['yAxis'] = yAxis;
+    }
+
+    this.chartInstance = Highcharts.chart(this.props.chartId, chartConfig);
   }
 
   componentDidUpdate(prevProps) {
