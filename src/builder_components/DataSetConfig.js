@@ -101,7 +101,6 @@ class DataSetConfig extends Component {
     const dataProperties = this.state.dataProperties;
     return (
       <div>
-        <h2>Data Sets</h2>
         <ul>
           {this.props.datasets.map(dataset => {
             if(dataset.chartId === this.props.chartId) {
@@ -110,9 +109,10 @@ class DataSetConfig extends Component {
           })}
         </ul>
         <form onSubmit={this.addDataset}>
-          <div>
-            <select value={this.state.selectedDataSource} onChange={this.getSourceData}>
-            <option value={null} hidden>-- Select a data source --</option>
+          <div class="form-group">
+            <label for="datasetSource">Data Source</label>
+            <select className="form-control" id="datasetSource" value={this.state.selectedDataSource} onChange={this.getSourceData}>
+              <option value={null} hidden>-- Select a data source --</option>
               {this.props.sources.map(source => {
                 if(source.chartId === this.props.chartId) {
                   return <option value={source.id}>{source.name}</option>;
@@ -120,28 +120,32 @@ class DataSetConfig extends Component {
               })}
             </select>
           </div>
-          <div>
-            <select value={this.state.selectedDataProperty} onChange={this.onSelectDataProperty}>
-            <option value={null} hidden>-- Select a data property --</option>
+
+          <div class="form-group">
+            <label for="datasetProperty">Data Property</label>
+            <select className="form-control" id="datasetProperty" value={this.state.selectedDataProperty} onChange={this.onSelectDataProperty}>
+              <option value={null} hidden>-- Select a data property --</option>
               {dataProperties.map(property => {
                 return <option value={property}>{property}</option>;
               })}
             </select>
           </div>
-          <div>
-            <select value={this.state.selectedChartType} onChange={this.onSelectChartType}>
-            <option value={null} hidden>-- Select a chart type --</option>;
+
+          <div class="form-group">
+            <label for="datasetType">Data Type</label>
+            <select className="form-control" id="datasetType" value={this.state.selectedChartType} onChange={this.onSelectChartType}>
+              <option value={null} hidden>-- Select a type --</option>;
               {CHART_TYPES.map(chartType => {
                 return <option value={chartType.value}>{chartType.label}</option>
               })}
             </select>
           </div>
-          <div>
-            <input checked={this.state.hasAxis} type="checkbox" onClick={this.onHasAxis} /> Add an axis?
+        
+          <div class="form-group form-check">
+            <input class="form-check-input" checked={this.state.hasAxis} type="checkbox" onClick={this.onHasAxis} />
+            <label class="form-check-label">Add an axis?</label>
           </div>
-          <div>
-            <button>Add a Data Set</button>
-          </div>
+          <button type="submit" class="btn btn-primary">Submit</button>
         </form>
       </div>
     );

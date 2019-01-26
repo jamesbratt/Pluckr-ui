@@ -64,12 +64,14 @@ class ChartRuntime extends Component {
     );
 
     this.props.datasets.forEach((dataset) => {
-      this.addDataSeries(
-        dataset.property,
-        dataset.data,
-        dataset.chartType,
-        dataset.hasAxis,
-      );
+      if(dataset.chartId === this.props.chartId) {
+        this.addDataSeries(
+          dataset.property,
+          dataset.data,
+          dataset.chartType,
+          dataset.hasAxis,
+        );
+      }
     })
   }
 
@@ -92,9 +94,11 @@ class ChartRuntime extends Component {
     return (
       <div className="row">
         <div className="col-md-4">
+          <h4>Data Sets</h4>
           <DataSetConfig chartId={this.props.chartId} sources={this.props.sources} addData={this.addDataSeries} />
         </div>
         <div className="col-md-8">
+          <h4>Chart Runtime</h4>
           <div style={{ ...style }} id={this.props.chartId} />
         </div>
       </div>
