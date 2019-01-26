@@ -2,10 +2,7 @@ import React, { Component } from 'react';
 import Chart from './builder_components/Chart';
 import AddChart from './builder_components/AddChart';
 import ChartList from './builder_components/ChartList';
-import { Navbar, Nav } from 'react-bootstrap';
-import { GenerateGuid } from './utils/Helpers';
 import { EASY_OAUTH_REDIRECT } from './Constants';
-import { addChart } from './actions';
 import { connect } from 'react-redux';
 
 const mapStateToProps = state => {
@@ -35,16 +32,18 @@ class Builder extends Component {
   render() {
     return (
       <div id='chart-canvas'>
-        <Navbar bg="light" expand="lg">
-          <Navbar.Brand href="#home">Chart Builder</Navbar.Brand>
-          <Navbar.Toggle aria-controls="basic-navbar-nav" />
-          <Navbar.Collapse id="basic-navbar-nav">
-            <Nav className="mr-auto">
+        <nav className="navbar navbar-expand-lg navbar-light bg-light">
+          <a className="navbar-brand" href="#">Chart Builder</a>
+          <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span className="navbar-toggler-icon"></span>
+          </button>
+          <div className="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul className="navbar-nav mr-auto">
               {this.props.charts.length > 0 ? <ChartList charts={this.props.charts} onSelect={this.selectChartToEdit} /> : null}
-            </Nav>
+            </ul>
             <AddChart />
-          </Navbar.Collapse>
-        </Navbar>
+          </div>
+        </nav>
         {this.state.chartToEdit ? <Chart id={this.state.chartToEdit.id} name={this.state.chartToEdit.name} /> : null}
       </div>
     );

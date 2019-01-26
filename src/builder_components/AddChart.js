@@ -1,7 +1,4 @@
 import React from 'react';
-import Form from 'react-bootstrap/Form';
-import FormControl from 'react-bootstrap/FormControl';
-import Button from 'react-bootstrap/Button';
 import { GenerateGuid } from '../utils/Helpers';
 import { addChart } from '../actions';
 import { connect } from 'react-redux';
@@ -29,10 +26,10 @@ const AddChart = (props) => {
   } 
 
   return (
-    <Form inline>
-      <FormControl ref={chartNameRef} type="text" placeholder="Create a new chart" className="mr-sm-2" />
-      <Button onClick={addNewChart} variant="outline-success">Create Chart</Button>
-    </Form>
+    <form className="form-inline my-2 my-lg-0">
+      <input ref={chartNameRef} className="form-control mr-sm-2" type="text" placeholder="Create a new chart" aria-label="New Chart" />
+      <button onClick={addNewChart} className="btn btn-outline-success my-2 my-sm-0" type="submit">Create Chart</button>
+    </form>
   );
 }
 

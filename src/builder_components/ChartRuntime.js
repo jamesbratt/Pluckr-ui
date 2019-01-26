@@ -5,7 +5,7 @@ import DataSetConfig from './DataSetConfig';
 var Highcharts = require('highcharts');
 
 const style = {
-  width: '1000px',
+  width: '100%',
   height: '400px',
   margin: '0 auto',
 };
@@ -55,7 +55,7 @@ class ChartRuntime extends Component {
         layout: 'vertical',
         align: 'right',
         verticalAlign: 'middle'
-      },
+      }
     };
 
     this.chartInstance = Highcharts.chart(
@@ -90,9 +90,13 @@ class ChartRuntime extends Component {
 
   render() {  
     return (
-      <div>
-        <DataSetConfig chartId={this.props.chartId} sources={this.props.sources} addData={this.addDataSeries} />
-        <div style={{ ...style }} id={this.props.chartId} />
+      <div className="row">
+        <div className="col-md-4">
+          <DataSetConfig chartId={this.props.chartId} sources={this.props.sources} addData={this.addDataSeries} />
+        </div>
+        <div className="col-md-8">
+          <div style={{ ...style }} id={this.props.chartId} />
+        </div>
       </div>
     )
   }

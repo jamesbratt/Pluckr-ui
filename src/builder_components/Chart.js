@@ -4,8 +4,8 @@ import ChartConfig from './ChartConfig';
 const Chart = (props) => {
 
   return (
-    <div className='chart-config'>
-      <h2>{props.name}</h2>
+    <div className='container-fluid'>
+      <h3>{props.name}</h3>
       <ChartConfig id={props.id} name={props.name} />
     </div>
   );

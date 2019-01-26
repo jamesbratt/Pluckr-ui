@@ -3,6 +3,8 @@ import { connect } from 'react-redux';
 import { addSource } from '../actions';
 import { GenerateGuid } from '../utils/Helpers';
 import { getData } from '../data_sources/Strava';
+import Form from 'react-bootstrap/Form';
+import Button from 'react-bootstrap/Button';
 import ChartRuntime from './ChartRuntime';
 
 const mapStateToProps = state => {
@@ -71,31 +73,29 @@ class ChartConfig extends Component {
     });
 
     return (
-      <div>
-        <h2>Data Sources</h2>
-        <ul>
-          {this.props.sources.map(source => {
-            if(source.chartId === this.props.id) {
-              return <li>{source.name}</li>;
-            }
-          })}
-        </ul>
-        <form onSubmit={this.addDataSource}>
-          <div>
-            <input type="text" value={this.state.sourceName || ''} onChange={this.onSourceNameChange} />
-          </div>
-          <div>
-            <select disabled onChange={this.onResourceChange}>
+      <div id="chart-config">
+        <div id="data-sources">
+          <ul className="list-inline">
+            {this.props.sources.map(source => {
+              if(source.chartId === this.props.id) {
+                return <li className="list-inline-item">{source.name}</li>;
+              }
+            })}
+          </ul>
+        </div>
+        <form className="form-inline">
+            <label className="sr-only" for="dataSourceTitle">Title</label>
+            <input value={this.state.sourceName || ''} onChange={this.onSourceNameChange} type="text" className="form-control mb-2 mr-sm-2" id="dataSourceTitle" placeholder="Enter a title" />
+
+            <label className="sr-only" for="dataSourceResource">Resource</label>
+            <select disabled className="form-control mb-2 mr-sm-2" id="dataSourceResource">
               <option value="actvities">Activities</option>
-              <option value="club_activities">Club Activities</option>
             </select>
-          </div>
-          <div>
-            <input type="number" onKeyUp={this.onResultsChange} />
-          </div>
-          <div>
-            <button className="btn">Add a Data Source</button>
-          </div>
+
+            <label className="sr-only" for="dataSourceResults">No. of results</label>
+            <input onKeyUp={this.onResultsChange} type="number" className="form-control mb-2 mr-sm-2" id="dataSourceResults" placeholder="No. of results" />
+
+            <button onClick={this.addDataSource} type="submit" className="btn btn-primary mb-2">Add Data Source</button>
         </form>
         {availableSources.length > 0 ? <ChartRuntime chartId={this.props.id} chartName={this.props.name} sources={availableSources} /> : null}
       </div>
