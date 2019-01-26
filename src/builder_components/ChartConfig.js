@@ -94,7 +94,7 @@ class ChartConfig extends Component {
             <input type="number" onKeyUp={this.onResultsChange} />
           </div>
           <div>
-            <button>Add a Data Source</button>
+            <button className="btn">Add a Data Source</button>
           </div>
         </form>
         {availableSources.length > 0 ? <ChartRuntime chartId={this.props.id} chartName={this.props.name} sources={availableSources} /> : null}

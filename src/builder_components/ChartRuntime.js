@@ -44,30 +44,6 @@ class ChartRuntime extends Component {
   }
 
   setChartConfig = () => {
-    const dataSets = [];
-    const yAxis = [];
-    this.props.datasets.forEach(
-      dataSet => {
-        if(dataSet.chartId === this.props.chartId) {
-          const series = {
-            name: dataSet.property,
-            type: dataSet.chartType,
-            data: dataSet.data
-          };
-
-          const axisId = yAxis.length;
-          yAxis.push({
-              title: {
-                  text: dataSet.property
-              },
-              opposite: dataSet.hasAxis,
-          })
-          series['yAxis'] = axisId;
-
-          dataSets.push(series);
-        }
-      });
-
     const chartConfig = {
       title: {
         text: this.props.chartName
@@ -80,14 +56,21 @@ class ChartRuntime extends Component {
         align: 'right',
         verticalAlign: 'middle'
       },
-      series: dataSets,
     };
 
-    if(yAxis.length > 0) {
-      chartConfig['yAxis'] = yAxis;
-    }
+    this.chartInstance = Highcharts.chart(
+      this.props.chartId,
+      chartConfig
+    );
 
-    this.chartInstance = Highcharts.chart(this.props.chartId, chartConfig);
+    this.props.datasets.forEach((dataset) => {
+      this.addDataSeries(
+        dataset.property,
+        dataset.data,
+        dataset.chartType,
+        dataset.hasAxis,
+      );
+    })
   }
 
   componentDidUpdate(prevProps) {

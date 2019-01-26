@@ -13,6 +13,13 @@ const store = createStore(
 
 class App extends Component {
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      chartToEdit: null,
+    };
+  }
+
   render() {
     return (
       <Provider store={store}>

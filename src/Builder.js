@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
 import Chart from './builder_components/Chart';
+import AddChart from './builder_components/AddChart';
+import ChartList from './builder_components/ChartList';
+import { Navbar, Nav } from 'react-bootstrap';
 import { GenerateGuid } from './utils/Helpers';
 import { EASY_OAUTH_REDIRECT } from './Constants';
 import { addChart } from './actions';
@@ -14,27 +17,8 @@ class Builder extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectChartName: null,
       chartToEdit: null,
     };
-  }
-
-  addChart = (event) => {
-    event.preventDefault();
-    if(this.state.selectChartName) {
-      this.props.dispatch(
-        addChart(
-          GenerateGuid(),
-          this.state.selectChartName
-        )
-      );
-    } else {
-      alert('Fill out all required chart fields');
-    }
-  }
-
-  selectChartName = (event) => {
-    this.setState({selectChartName: event.target.value});
   }
 
   selectChartToEdit = (chart) => {
@@ -51,18 +35,16 @@ class Builder extends Component {
   render() {
     return (
       <div id='chart-canvas'>
-        <h1>Chart Configurations</h1>
-        <form onSubmit={this.addChart}>
-          <input type="text" onKeyUp={this.selectChartName} />
-          <button>Add Chart</button>
-        </form>
-        <div>
-          <ul>
-            {this.props.charts.map(chart => {
-              return <li><button onClick={() => this.selectChartToEdit({id: chart.id, name: chart.name})}>{chart.name}</button></li>;
-            })}
-          </ul>
-        </div>
+        <Navbar bg="light" expand="lg">
+          <Navbar.Brand href="#home">Chart Builder</Navbar.Brand>
+          <Navbar.Toggle aria-controls="basic-navbar-nav" />
+          <Navbar.Collapse id="basic-navbar-nav">
+            <Nav className="mr-auto">
+              {this.props.charts.length > 0 ? <ChartList charts={this.props.charts} onSelect={this.selectChartToEdit} /> : null}
+            </Nav>
+            <AddChart />
+          </Navbar.Collapse>
+        </Navbar>
         {this.state.chartToEdit ? <Chart id={this.state.chartToEdit.id} name={this.state.chartToEdit.name} /> : null}
       </div>
     );
