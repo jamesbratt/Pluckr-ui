@@ -5,6 +5,7 @@ import ChartList from './builder_components/ChartList';
 import { getProfile } from './data_sources/Strava';
 import { EASY_OAUTH_REDIRECT } from './Constants';
 import { connect } from 'react-redux';
+import './css/builder.css';
 
 const mapStateToProps = state => {
   return state

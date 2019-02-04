@@ -3,8 +3,6 @@ import { connect } from 'react-redux';
 import { addSource } from '../actions';
 import { GenerateGuid } from '../utils/Helpers';
 import { getData } from '../data_sources/Strava';
-import Form from 'react-bootstrap/Form';
-import Button from 'react-bootstrap/Button';
 import ChartRuntime from './ChartRuntime';
 
 const mapStateToProps = state => {
