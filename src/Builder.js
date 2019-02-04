@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Chart from './builder_components/Chart';
 import AddChart from './builder_components/AddChart';
 import ChartList from './builder_components/ChartList';
+import { getProfile } from './data_sources/Strava';
 import { EASY_OAUTH_REDIRECT } from './Constants';
 import { connect } from 'react-redux';
 
@@ -26,6 +27,14 @@ class Builder extends Component {
     const stravaToken = localStorage.getItem('token');
     if(!stravaToken) {
       document.location.replace(EASY_OAUTH_REDIRECT);
+    } else {
+      // This is just so we can check the token is still valid
+      getProfile()
+        .then(response => {
+          if(response.errors) {
+            document.location.replace(EASY_OAUTH_REDIRECT);
+          }
+        })
     }
   }
 

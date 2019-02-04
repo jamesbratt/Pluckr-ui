@@ -37,6 +37,20 @@ const getActivities = (perPage) => {
   })
 };
 
+export const getProfile = (perPage) => {
+  const token = localStorage.getItem('token');
+  return fetch(`${STRAVA_URI}/athlete`, {
+    headers:{
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    }
+  }).then(response => {
+    return response.json();
+  }).then(response => {
+    return response;
+  })
+};
+
 export const getData = (resource, perPage) => {
   let call;
   switch(resource) {
