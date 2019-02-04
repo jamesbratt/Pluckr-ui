@@ -3,6 +3,5 @@ export const EASY_OAUTH_AUTH_ENDPOINT = 'http://easyoauth.com/project/authorise/
 
 export const CHART_TYPES = [
   { value: 'line', label: 'Line Chart' },
-  { value: 'column', label: 'Column Chart' },
   { value: 'area', label: 'Area Chart' }
 ];

@@ -52,9 +52,8 @@ class ChartRuntime extends Component {
         type: 'datetime',
       },    
       legend: {
-        layout: 'vertical',
-        align: 'right',
-        verticalAlign: 'middle'
+        align: 'left',
+        verticalAlign: 'top',
       }
     };
 
