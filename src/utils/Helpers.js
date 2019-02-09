@@ -7,3 +7,8 @@ export const GenerateGuid = () => {
   }
   return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
 }
+
+export const ConvertToEpoch = (dateString) => {
+  const splittedDate = dateString.split('-');
+  return new Date(parseInt(splittedDate[0]), parseInt(splittedDate[1]) - 1, parseInt(splittedDate[2])).getTime() / 1000;
+}
