@@ -35,9 +35,16 @@ const RESOURCE_PROPERTIES = {
   ]
 }
 
-const getActivities = (perPage) => {
+const generateQueryString = (params) => {
+  return params.map(param => {
+    return param.name + '=' + param.value;
+  }).join('&');
+};
+
+const getActivities = (params) => {
   const token = localStorage.getItem('token');
-  return fetch(`${STRAVA_URI}${STRAVA_RESOURCES.activities.endpoint}?per_page=${perPage}`, {
+  const queryString = params.length > 0 ? '?' + generateQueryString(params) : '';
+  return fetch(`${STRAVA_URI}${STRAVA_RESOURCES.activities.endpoint}${queryString}`, {
     headers:{
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${token}`
@@ -63,7 +70,7 @@ export const getProfile = (perPage) => {
   })
 };
 
-export const getData = (resource, perPage) => {
+export const getData = (resource, params) => {
   let call;
   switch(resource) {
     case STRAVA_RESOURCES.activities.name:
@@ -74,7 +81,7 @@ export const getData = (resource, perPage) => {
     break;
   }
 
-  return call(perPage)
+  return call(params)
   .then(response => {
     return {
       data: response,

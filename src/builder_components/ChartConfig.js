@@ -24,11 +24,11 @@ class ChartConfig extends Component {
 
   addDataSource = (event) => {
     const selectedResource = this.state.selectedResource;
-    const noResults = this.state.totalResults;
+    const params = this.state.parameterValues;
     const sourceName = this.state.sourceName;
     event.preventDefault();
-    if(selectedResource && noResults && sourceName) {
-      getData(selectedResource, noResults)
+    if(selectedResource && sourceName) {
+      getData(selectedResource, params)
         .then(response => {
           this.props.dispatch(
             addSource(
@@ -90,7 +90,8 @@ class ChartConfig extends Component {
     if(prevProps.id !== this.props.id) {
       this.setState({
         sourceName: null,
-        totalResults: '30',
+        parameterFields: [],
+        parameterValues: [],
       });
     }
   }
