@@ -1,7 +1,19 @@
+
+import { DATA_TYPES } from '../Constants';
+
 const STRAVA_URI = 'https://www.strava.com/api/v3';
 
-const STRAVA_RESOURCES = {
-  activities: {endpoint: '/athlete/activities', name: 'activities'}
+export const STRAVA_RESOURCES = {
+  activities: {
+    endpoint: '/athlete/activities',
+    name: 'activities',
+    label: 'Activities',
+    parameters: [
+      { name: 'before', type: DATA_TYPES.date },
+      { name: 'after', type: DATA_TYPES.date },
+      { name: 'per_page', type: DATA_TYPES.int },
+    ]
+  }
 };
 
 const RESOURCE_PROPERTIES = {

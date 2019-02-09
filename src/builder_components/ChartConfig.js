@@ -2,8 +2,9 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { addSource } from '../actions';
 import { GenerateGuid } from '../utils/Helpers';
-import { getData } from '../data_sources/Strava';
+import { getData, STRAVA_RESOURCES } from '../data_sources/Strava';
 import ChartRuntime from './ChartRuntime';
+import { DATA_TYPES } from '../Constants';
 
 const mapStateToProps = state => {
   return state
@@ -14,9 +15,10 @@ class ChartConfig extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectedResource: 'activities',
-      totalResults: '30',
+      selectedResource: null,
       sourceName: null,
+      parameterFields: [],
+      parameterValues: [],
     };
   }
 
@@ -45,11 +47,39 @@ class ChartConfig extends Component {
   }
 
   onResourceChange = (event) => {
-    this.setState({ selectedResource: event.target.value });
+    let availableFields = [];
+    const resourceName = event.target.value;
+    const resourceParams = STRAVA_RESOURCES[resourceName].parameters;
+
+    if (resourceParams) {
+      availableFields = resourceParams;
+    }
+
+    this.setState({
+      selectedResource: resourceName,
+      parameterFields: availableFields,
+    });
   }
 
-  onResultsChange = (event) => {
-    this.setState({ totalResults: event.target.value });
+  onParameterChange = (event) => {
+    const parameterName = event.target.name;
+    const parameterValue = event.target.value;
+    const constructedParams = this.state.parameterValues;
+    const newParams = [];
+
+    if (constructedParams.length > 0) {
+      constructedParams.forEach(parameter => {
+        if (parameter.name && parameter.name === parameterName) {
+          parameter.value = parameterValue;
+        } else {
+          newParams.push({ name: parameter.name, value: parameter.value });
+        }
+      });
+      newParams.push({ name: parameterName, value: parameterValue });
+    } else {
+      newParams.push({ name: parameterName, value: parameterValue });
+    }
+    this.setState({ parameterValues: newParams });
   }
 
   onSourceNameChange = (event) => {
@@ -66,9 +96,32 @@ class ChartConfig extends Component {
   }
 
   render() {
+    let parameters = [];
+
     const availableSources = this.props.sources.filter((source) => {
       return source.chartId === this.props.id;
     });
+
+    if (this.state.parameterFields.length > 0) {
+      parameters = this.state.parameterFields.map(parameterField => {
+        switch(parameterField.type) {
+          case DATA_TYPES.date:
+            return (
+              <React.Fragment>
+                <label className="sr-only">{parameterField.name}</label>
+                <input name={parameterField.name} onChange={this.onParameterChange} type="date" className="form-control mb-2 mr-sm-2" placeholder={parameterField.name} />
+              </React.Fragment>
+            );
+          case DATA_TYPES.int:
+            return (
+              <React.Fragment>
+                <label className="sr-only">{parameterField.name}</label>
+                <input name={parameterField.name} onKeyUp={this.onParameterChange} type="number" className="form-control mb-2 mr-sm-2" placeholder={parameterField.name} />
+              </React.Fragment>
+            );
+        }
+      })
+    }
 
     return (
       <div id="chart-config">
@@ -86,12 +139,14 @@ class ChartConfig extends Component {
             <input value={this.state.sourceName || ''} onChange={this.onSourceNameChange} type="text" className="form-control mb-2 mr-sm-2" id="dataSourceTitle" placeholder="Enter a title" />
 
             <label className="sr-only" for="dataSourceResource">Resource</label>
-            <select disabled className="form-control mb-2 mr-sm-2" id="dataSourceResource">
-              <option value="actvities">Activities</option>
+            <select onChange={this.onResourceChange} className="form-control mb-2 mr-sm-2" id="dataSourceResource">
+              <option value={null} hidden>-- Select a resource --</option>;
+              {Object.keys(STRAVA_RESOURCES).map(resourceKey => {
+                return <option value={STRAVA_RESOURCES[resourceKey].name}>{STRAVA_RESOURCES[resourceKey].label}</option>
+              })}
             </select>
 
-            <label className="sr-only" for="dataSourceResults">No. of results</label>
-            <input onKeyUp={this.onResultsChange} type="number" className="form-control mb-2 mr-sm-2" id="dataSourceResults" placeholder="No. of results" />
+            {parameters}
 
             <button onClick={this.addDataSource} type="submit" className="btn btn-primary mb-2">Add Data Source</button>
         </form>
