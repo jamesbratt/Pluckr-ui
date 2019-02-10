@@ -1,6 +1,6 @@
 
 import { DATA_TYPES } from '../Constants';
-import { ConvertToEpoch } from '../utils/Helpers';
+import { ConvertToEpoch, generateQueryString, injectParametersIntoEndpoint } from '../utils/Helpers';
 
 const STRAVA_URI = 'https://www.strava.com/api/v3';
 
@@ -60,19 +60,15 @@ const RESOURCE_PROPERTIES = {
   ]
 }
 
-const generateQueryString = (params, resource) => {
-  const resourceParameters = STRAVA_RESOURCES[resource].parameters;
-  return params.map(param => {
-    const transformation = resourceParameters.find(
-      resourceParameter => resourceParameter.name === param.name
-    ).transform;
-    return param.name + '=' + (transformation ? transformation(param.value) : param.value);
-  }).join('&');
-};
-
 const getActivities = (params) => {
   const token = localStorage.getItem('token');
-  const queryString = params.length > 0 ? '?' + generateQueryString(params, 'activities') : '';
+  const queryString = params.length > 0 ? '?' +
+    generateQueryString(
+      params,
+      'activities',
+      STRAVA_RESOURCES['activities'].parameters
+    ) : '';
+
   return fetch(`${STRAVA_URI}${STRAVA_RESOURCES.activities.endpoint}${queryString}`, {
     headers:{
       'Content-Type': 'application/json',
@@ -86,24 +82,22 @@ const getActivities = (params) => {
 };
 
 const getSegmentEfforts = (params) => {
-  let endPoint = STRAVA_RESOURCES.segment_efforts.endpoint;
-  let parameterToRemove = null;
-  let parameters = params;
+  const urlComponents = injectParametersIntoEndpoint(
+    STRAVA_RESOURCES.segment_efforts.endpoint,
+    params,
+  )
 
-  parameters.forEach(param => {
-    const endpointContainsParam = endPoint.indexOf(`{${param.name}}`) !== -1;
-    if (endpointContainsParam) {
-      endPoint = STRAVA_RESOURCES.segment_efforts.endpoint.replace(`{${param.name}}`, param.value);
-      parameterToRemove = param.name;
-    }
-  });
-
-  if (parameterToRemove) {
-    parameters = params.filter(param => param.name !== parameterToRemove);
-  }
+  const { endPoint } = urlComponents;
+  const { parameters } = urlComponents;
 
   const token = localStorage.getItem('token');
-  const queryString = parameters.length > 0 ? '?' + generateQueryString(parameters, 'segment_efforts') : '';
+  const queryString = parameters.length > 0 ? '?' +
+    generateQueryString(
+      parameters,
+      'segment_efforts',
+      STRAVA_RESOURCES['segment_efforts'].parameters,
+    ) : '';
+
   return fetch(`${STRAVA_URI}${endPoint}${queryString}`, {
     headers:{
       'Content-Type': 'application/json',
@@ -117,24 +111,22 @@ const getSegmentEfforts = (params) => {
 };
 
 const getClubActivities = (params) => {
-  let endPoint = STRAVA_RESOURCES.club_activities.endpoint;
-  let parameterToRemove = null;
-  let parameters = params;
+  const urlComponents = injectParametersIntoEndpoint(
+    STRAVA_RESOURCES.segment_efforts.endpoint,
+    params,
+  )
 
-  parameters.forEach(param => {
-    const endpointContainsParam = endPoint.indexOf(`{${param.name}}`) !== -1;
-    if (endpointContainsParam) {
-      endPoint.replace(`{${param.name}}`, param.value);
-      parameterToRemove = param.name;
-    }
-  });
-
-  if (parameterToRemove) {
-    parameters = params.filter(param => param.name !== parameterToRemove);
-  }
+  const { endPoint } = urlComponents;
+  const { parameters } = urlComponents;
 
   const token = localStorage.getItem('token');
-  const queryString = parameters.length > 0 ? '?' + generateQueryString(parameters, 'club_activities') : '';
+  const queryString = parameters.length > 0 ? '?' +
+    generateQueryString(
+      parameters,
+      'club_activities',
+      STRAVA_RESOURCES['club_activities'].parameters,
+    ) : '';
+
   return fetch(`${STRAVA_URI}${endPoint}${queryString}`, {
     headers:{
       'Content-Type': 'application/json',
