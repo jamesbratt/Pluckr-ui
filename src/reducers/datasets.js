@@ -1,18 +1,22 @@
-import { prepend } from 'ramda';
+import { assocPath, prepend } from 'ramda';
 
 const datasets = (state = [], action) => {
   switch (action.type) {
     case 'ADD_DATASET':
+      const datasets = state.map(dataset => {
+        if (dataset.isActive) {
+          assocPath(['isActive'], false, dataset);
+        }
+        return dataset;
+      })
       const newDataset = {
         id: action.id,
         sourceId: action.sourceId,
         chartId: action.chartId,
-        property: action.property,
-        data: action.data,
-        chartType: action.chartType,
-        hasAxis: action.hasAxis,
+        isActive: action.isActive,
+        title: 'New Dataset'
       };
-      return prepend(newDataset, state);
+      return prepend(newDataset, datasets);
 
     default:
       return state;

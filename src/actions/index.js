@@ -18,15 +18,20 @@ export const addSource = (id, sourceName, chartId, resource, data, properties) =
   }
 };
 
-export const addDataset = (id, sourceId, chartId, property, data, chartType, hasAxis) => {
+export const addDataset = (id, sourceId, chartId, isActive) => {
   return {
     type: 'ADD_DATASET',
     id,
     sourceId,
     chartId,
-    property,
-    data,
-    chartType,
-    hasAxis,
+    isActive,
+  }
+};
+
+export const addOperation = (id, dataSetId) => {
+  return {
+    type: 'ADD_OPERATION',
+    id,
+    dataSetId,
   }
 };

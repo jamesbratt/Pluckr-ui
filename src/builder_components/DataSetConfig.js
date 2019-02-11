@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import SingleDataSet from './SingleDataSet';
 import { connect } from 'react-redux';
 import { GenerateGuid } from '../utils/Helpers';
 import { addDataset } from '../actions';
@@ -15,9 +16,7 @@ class DataSetConfig extends Component {
     this.state = {
       dataProperties: [],
       selectedDataSource: null,
-      selectedDataProperty: null,
-      selectedChartType: null,
-      hasAxis: false,
+      activeDataSet: null,
     };
   }
 
@@ -34,14 +33,11 @@ class DataSetConfig extends Component {
   addDataset = (event) => {
     event.preventDefault();
 
-    if(this.state.selectedDataSource && this.state.selectedDataProperty && this.state.selectedChartType) {
+    if(this.state.selectedDataSource) {
       const newDataSetId = GenerateGuid();
-      const dataProperty = this.state.selectedDataProperty;
-      const chartType = this.state.selectedChartType;
       const sourceId = this.state.selectedDataSource;
-      const hasAxis = this.state.hasAxis;
   
-      const dataSource = this.props.sources.find(
+      /*const dataSource = this.props.sources.find(
         source => source.id === sourceId
       );
   
@@ -55,17 +51,14 @@ class DataSetConfig extends Component {
         data,
         chartType,
         hasAxis,
-      );
+      );*/
   
       this.props.dispatch(
         addDataset(
           newDataSetId,
           sourceId,
           this.props.chartId,
-          dataProperty,
-          data,
-          chartType,
-          hasAxis,
+          true,
         )
       );
     } else {
@@ -78,13 +71,13 @@ class DataSetConfig extends Component {
     this.setState({selectedDataProperty: event.target.value})
   }
 
-  onSelectChartType = (event) => {
+  /*onSelectChartType = (event) => {
     this.setState({selectedChartType: event.target.value})
   }
 
   onHasAxis = (event) => {
     this.setState({hasAxis: event.target.checked})
-  }
+  }*/
 
   componentDidUpdate(prevProps) {
     if(prevProps.chartId !== this.props.chartId) {
@@ -99,19 +92,11 @@ class DataSetConfig extends Component {
 
   render() {
     const dataProperties = this.state.dataProperties;
+    const activeDataset = this.props.datasets.find(dataset => dataset.isActive === true);
     return (
       <div>
-        <ul>
-          {this.props.datasets.map(dataset => {
-            if(dataset.chartId === this.props.chartId) {
-              return <li>{dataset.property}</li>;
-            }
-          })}
-        </ul>
-        <form onSubmit={this.addDataset}>
-          <div class="form-group">
-            <label for="datasetSource">Data Source</label>
-            <select className="form-control" id="datasetSource" value={this.state.selectedDataSource} onChange={this.getSourceData}>
+        <form onSubmit={this.addDataset} className="form-inline my-2 my-lg-0">
+            <select className="form-control mr-sm-2" id="datasetSource" value={this.state.selectedDataSource} onChange={this.getSourceData}>
               <option value={null} hidden>-- Select a data source --</option>
               {this.props.sources.map(source => {
                 if(source.chartId === this.props.chartId) {
@@ -119,34 +104,18 @@ class DataSetConfig extends Component {
                 }
               })}
             </select>
-          </div>
-
-          <div class="form-group">
-            <label for="datasetProperty">Data Property</label>
-            <select className="form-control" id="datasetProperty" value={this.state.selectedDataProperty} onChange={this.onSelectDataProperty}>
-              <option value={null} hidden>-- Select a data property --</option>
-              {dataProperties.map(property => {
-                return <option value={property}>{property}</option>;
-              })}
-            </select>
-          </div>
-
-          <div class="form-group">
-            <label for="datasetType">Data Type</label>
-            <select className="form-control" id="datasetType" value={this.state.selectedChartType} onChange={this.onSelectChartType}>
-              <option value={null} hidden>-- Select a type --</option>;
-              {CHART_TYPES.map(chartType => {
-                return <option value={chartType.value}>{chartType.label}</option>
-              })}
-            </select>
-          </div>
-        
-          <div class="form-group form-check">
-            <input class="form-check-input" checked={this.state.hasAxis} type="checkbox" onClick={this.onHasAxis} />
-            <label class="form-check-label">Add an axis?</label>
-          </div>
-          <button type="submit" class="btn btn-primary">Submit</button>
+          <button className="btn btn-outline-success my-2 my-sm-0" type="submit">New Dataset</button>
         </form>
+        <ul>
+          {this.props.datasets.map(dataset => {
+            if(dataset.chartId === this.props.chartId) {
+              return <li>{dataset.title}</li>;
+            }
+          })}
+        </ul>
+        <div>
+          {activeDataset ? <SingleDataSet id={activeDataset.id} /> : null}
+        </div>
       </div>
     );
   }
