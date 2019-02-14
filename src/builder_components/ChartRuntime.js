@@ -92,11 +92,8 @@ class ChartRuntime extends Component {
   render() {  
     return (
       <div className="row wrapper">
-        <div className="col-md-4">
-          <h4>Data Sets</h4>
-          <DataSetConfig chartId={this.props.chartId} sources={this.props.sources} addData={this.addDataSeries} />
-        </div>
-        <div className="col-md-8">
+        <DataSetConfig chartId={this.props.chartId} sources={this.props.sources} addData={this.addDataSeries} />
+        <div className="col-md-8 wrapper">
           <h4>Chart Runtime</h4>
           <div style={{ ...style }} id={this.props.chartId} />
         </div>

@@ -1,14 +1,18 @@
 import React from 'react';
+import Operations from './Operations';
 import { connect } from 'react-redux';
 
 const mapStateToProps = state => {
   return state;
 };
 
-const SingleDataSet = (props) => {
+const SingleDataSet = ({ dataset }) => {
 
   return (
-    <div>{props.id}</div>
+    <div className="single-dataset">
+      <h5>{dataset.title}</h5>
+      <Operations dataSetId={dataset.id} dataSourceId={dataset.sourceId} />
+    </div>
   );
 }
 

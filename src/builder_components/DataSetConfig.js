@@ -16,6 +16,7 @@ class DataSetConfig extends Component {
     this.state = {
       dataProperties: [],
       selectedDataSource: null,
+      dataSetTitle: null,
       activeDataSet: null,
     };
   }
@@ -33,7 +34,7 @@ class DataSetConfig extends Component {
   addDataset = (event) => {
     event.preventDefault();
 
-    if(this.state.selectedDataSource) {
+    if(this.state.selectedDataSource && this.state.dataSetTitle) {
       const newDataSetId = GenerateGuid();
       const sourceId = this.state.selectedDataSource;
   
@@ -59,6 +60,7 @@ class DataSetConfig extends Component {
           sourceId,
           this.props.chartId,
           true,
+          this.state.dataSetTitle,
         )
       );
     } else {
@@ -71,11 +73,11 @@ class DataSetConfig extends Component {
     this.setState({selectedDataProperty: event.target.value})
   }
 
-  /*onSelectChartType = (event) => {
-    this.setState({selectedChartType: event.target.value})
+  onSelectDataSetTitle = (event) => {
+    this.setState({dataSetTitle: event.target.value})
   }
 
-  onHasAxis = (event) => {
+  /*onHasAxis = (event) => {
     this.setState({hasAxis: event.target.checked})
   }*/
 
@@ -94,8 +96,19 @@ class DataSetConfig extends Component {
     const dataProperties = this.state.dataProperties;
     const activeDataset = this.props.datasets.find(dataset => dataset.isActive === true);
     return (
-      <div>
-        <form onSubmit={this.addDataset} className="form-inline my-2 my-lg-0">
+      <React.Fragment>
+        <div className="col-md-12">
+          <h4>Add datasets</h4>
+          <div id="data-sets">
+            <ul className="list-inline">
+              {this.props.datasets.map(dataset => {
+                if(dataset.chartId === this.props.chartId) {
+                  return <li className="list-inline-item">{dataset.title}</li>;
+                }
+              })}
+            </ul>
+          </div>
+          <form onSubmit={this.addDataset} className="form-inline my-2 my-lg-0">
             <select className="form-control mr-sm-2" id="datasetSource" value={this.state.selectedDataSource} onChange={this.getSourceData}>
               <option value={null} hidden>-- Select a data source --</option>
               {this.props.sources.map(source => {
@@ -104,19 +117,14 @@ class DataSetConfig extends Component {
                 }
               })}
             </select>
-          <button className="btn btn-outline-success my-2 my-sm-0" type="submit">New Dataset</button>
-        </form>
-        <ul>
-          {this.props.datasets.map(dataset => {
-            if(dataset.chartId === this.props.chartId) {
-              return <li>{dataset.title}</li>;
-            }
-          })}
-        </ul>
-        <div>
-          {activeDataset ? <SingleDataSet id={activeDataset.id} /> : null}
+            <input onKeyUp={this.onSelectDataSetTitle} className="form-control mr-sm-2" type="text" placeholder="Dataset title" />
+            <button className="btn btn-primary my-2 my-sm-0" type="submit">New Dataset</button>
+          </form>
         </div>
-      </div>
+        <div className="col-md-4 wrapper">
+            {activeDataset ? <SingleDataSet dataset={activeDataset} dataProperties={dataProperties} /> : null}
+        </div>
+      </React.Fragment>
     );
   }
 }
