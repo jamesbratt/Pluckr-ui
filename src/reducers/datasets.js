@@ -15,6 +15,7 @@ const datasets = (state = [], action) => {
         chartId: action.chartId,
         isActive: action.isActive,
         title: action.title,
+        xAxis: action.title,
       };
       return prepend(newDataset, datasets);
 

@@ -10,3 +10,7 @@ export const DATA_TYPES = {
   date: 'date',
   int: 'integer',
 };
+
+export const OPERATION_FUNCTIONS = {
+  filter: 'Filter',
+};

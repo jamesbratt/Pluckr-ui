@@ -9,6 +9,7 @@ export const STRAVA_RESOURCES = {
     endpoint: '/athlete/activities',
     name: 'activities',
     label: 'Activities',
+    dateTimeAxisProperty: 'start_date',
     parameters: [
       { name: 'after', type: DATA_TYPES.date, transform: ConvertToEpoch },
       { name: 'before', type: DATA_TYPES.date, transform: ConvertToEpoch },
@@ -19,6 +20,7 @@ export const STRAVA_RESOURCES = {
     endpoint: '/clubs/{id}/activities',
     name: 'club_activities',
     label: 'Club Activities',
+    dateTimeAxisProperty: 'start_date',
     parameters: [
       { name: 'id', type: DATA_TYPES.int },
       { name: 'per_page', type: DATA_TYPES.int },
@@ -28,6 +30,7 @@ export const STRAVA_RESOURCES = {
     endpoint: '/segments/{id}/all_efforts',
     name: 'segment_efforts',
     label: 'Segment Efforts',
+    dateTimeAxisProperty: 'start_date',
     parameters: [
       { name: 'id', type: DATA_TYPES.int },
       { name: 'per_page', type: DATA_TYPES.int },

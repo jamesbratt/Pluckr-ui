@@ -14,6 +14,8 @@ class Operations extends Component {
     super(props, context);
     this.state = {
       show: false,
+      operationFunction: null,
+      operationValue: null,
     };
   }
 
@@ -26,15 +28,29 @@ class Operations extends Component {
   }
 
   addOperation = () => {
-    const newOperationId = GenerateGuid();
-    this.props.dispatch(
-      addOperation(
-        newOperationId,
-        this.props.dataSetId,
-      )
-    );
+    if (this.state.operationFunction && this.state.operationValue) {
+      const newOperationId = GenerateGuid();
+      this.props.dispatch(
+        addOperation(
+          newOperationId,
+          this.props.dataSetId,
+          this.state.operationFunction,
+          this.state.operationValue,
+        )
+      );
+    } else {
+      alert('Fill out all fields please');
+    }
 
     this.setState({ show: false });
+  }
+
+  onOperationFunctionSet = (event) => {
+    this.setState({operationFunction: event.target.value})
+  }
+
+  onOperationValueSet = (event) => {
+    this.setState({operationValue: event.target.value})
   }
 
   render() {
@@ -59,20 +75,14 @@ class Operations extends Component {
           </Modal.Header>
           <Modal.Body>
             <form className="form-inline my-2 my-lg-0">
-              <select className="form-control mr-sm-2">
+              <select className="form-control mr-sm-2" onChange={this.onOperationFunctionSet}>
                 <option value={null} hidden>-- Select a function --</option>
-                <option>Filter</option>
-                <option>Sum</option>
+                <option value="FILTER_BY">Filter By</option>
               </select>
-              <select className="form-control mr-sm-2">
-                <option value={null} hidden>-- Select a criteria --</option>
-                <option>By</option>
-                <option>Where</option>
-              </select>
-              <select className="form-control mr-sm-2">
+              <select className="form-control mr-sm-2" onChange={this.onOperationValueSet}>
                 <option value={null} hidden>-- Select a value --</option>
                 {selectedSource.properties.map(property => {
-                  return <option>{property}</option>;
+                  return <option value={property}>{property}</option>;
                 })}
               </select>
             </form>

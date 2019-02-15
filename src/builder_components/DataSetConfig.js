@@ -17,6 +17,7 @@ class DataSetConfig extends Component {
       dataProperties: [],
       selectedDataSource: null,
       dataSetTitle: null,
+      dataSetXaxis: 'NONE',
       activeDataSet: null,
     };
   }
@@ -61,6 +62,7 @@ class DataSetConfig extends Component {
           this.props.chartId,
           true,
           this.state.dataSetTitle,
+          this.state.dataSetXaxis,
         )
       );
     } else {
@@ -75,6 +77,10 @@ class DataSetConfig extends Component {
 
   onSelectDataSetTitle = (event) => {
     this.setState({dataSetTitle: event.target.value})
+  }
+
+  onSelectXaxis = (event) => {
+    this.setState({dataSetXaxis: event.target.value})
   }
 
   /*onHasAxis = (event) => {
@@ -118,6 +124,24 @@ class DataSetConfig extends Component {
               })}
             </select>
             <input onKeyUp={this.onSelectDataSetTitle} className="form-control mr-sm-2" type="text" placeholder="Dataset title" />
+            <div class="form-check form-check-inline">
+              <input onChange={this.onSelectXaxis} class="form-check-input" type="radio" name="xaxis" id="linear-xaxis" value="LINEAR" />
+              <label class="form-check-label" for="linear-xaxis">
+                Linear x-axis
+              </label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input onChange={this.onSelectXaxis} class="form-check-input" type="radio" name="xaxis" id="datetime-xaxis" value="DATETIME" />
+              <label class="form-check-label" for="datetime-xaxis">
+                Datetime x-axis
+              </label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input onChange={this.onSelectXaxis} class="form-check-input" type="radio" name="xaxis" id="none-xaxis" value="NONE" />
+              <label class="form-check-label" for="none-xaxis">
+                None
+              </label>
+            </div>
             <button className="btn btn-primary my-2 my-sm-0" type="submit">New Dataset</button>
           </form>
         </div>
