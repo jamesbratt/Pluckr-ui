@@ -11,6 +11,29 @@ export const DATA_TYPES = {
   int: 'integer',
 };
 
-export const OPERATION_FUNCTIONS = {
-  filter: 'Filter',
-};
+export const OPERATION_FUNCTIONS = [
+  {
+    name: 'FILTER_BY',
+    accepts: ['PROPERTY']
+  },
+  {
+    name: 'FOR_EVERY',
+    accepts: ['FUNCTION']
+  },
+  {
+    name: 'MULTIPLY_BY',
+    accepts: ['INTEGER']
+  },
+  {
+    name: 'DIVIDE_BY',
+    accepts: ['INTEGER']
+  },
+  {
+    name: 'ADD',
+    accepts: ['INTEGER']
+  },
+  {
+    name: 'SUBTRACT',
+    accepts: ['INTEGER']
+  }
+];
