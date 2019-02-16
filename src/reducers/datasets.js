@@ -15,10 +15,19 @@ const datasets = (state = [], action) => {
         chartId: action.chartId,
         isActive: action.isActive,
         title: action.title,
-        xAxis: action.title,
+        xAxis: action.xAxis,
+        rawData: null,
       };
       return prepend(newDataset, datasets);
 
+    case 'RUN_DATASET':
+      return state.map(dataset => {
+        if (dataset.id === action.datasetId) {
+          assocPath(['rawData'], action.rawData, dataset);
+        }
+        return dataset;
+      });
+  
     default:
       return state;
   }

@@ -30,6 +30,14 @@ export const addDataset = (id, sourceId, chartId, isActive, title, xAxis) => {
   }
 };
 
+export const runDataset = (datasetId, rawData) => {
+  return {
+    type: 'RUN_DATASET',
+    datasetId,
+    rawData,
+  }
+}
+
 export const addOperation = (id, dataSetId, operationFunction, value) => {
   return {
     type: 'ADD_OPERATION',

@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import SingleDataSet from './SingleDataSet';
 import { connect } from 'react-redux';
 import { GenerateGuid } from '../utils/Helpers';
-import { addDataset } from '../actions';
+import { addDataset, runDataset } from '../actions';
 import { CHART_TYPES } from '../Constants';
-import { parseDataSeries } from '../data_parsing/parse';
+import { executeOperations } from '../data_parsing/parse';
 
 const mapStateToProps = state => {
   return state
@@ -18,7 +18,6 @@ class DataSetConfig extends Component {
       selectedDataSource: null,
       dataSetTitle: null,
       dataSetXaxis: 'NONE',
-      activeDataSet: null,
     };
   }
 
@@ -38,22 +37,6 @@ class DataSetConfig extends Component {
     if(this.state.selectedDataSource && this.state.dataSetTitle) {
       const newDataSetId = GenerateGuid();
       const sourceId = this.state.selectedDataSource;
-  
-      /*const dataSource = this.props.sources.find(
-        source => source.id === sourceId
-      );
-  
-      const data = parseDataSeries(
-        dataSource.rawData,
-        dataProperty,
-      );
-  
-      this.props.addData(
-        dataProperty,
-        data,
-        chartType,
-        hasAxis,
-      );*/
   
       this.props.dispatch(
         addDataset(
@@ -83,9 +66,34 @@ class DataSetConfig extends Component {
     this.setState({dataSetXaxis: event.target.value})
   }
 
-  /*onHasAxis = (event) => {
-    this.setState({hasAxis: event.target.checked})
-  }*/
+  runDataSet = () => {
+    const dataSet = this.props.datasets.find(dataset => dataset.isActive === true);
+    const operations = this.props.operations.filter(operation => operation.dataSetId === dataSet.id);
+
+    const dataSource = this.props.sources.find(
+      source => source.id === this.state.selectedDataSource,
+    );
+
+    const data = executeOperations(
+      dataSource.rawData,
+      dataSet,
+      operations,
+    );
+
+    this.props.addData(
+      dataSet.title, // data series name
+      data, // the actual data
+      'line', // line or area
+      false, // bool does have a y axis
+    );
+
+    this.props.dispatch(
+      runDataset(
+        dataSet.id,
+        data,
+      )
+    );
+  }
 
   componentDidUpdate(prevProps) {
     if(prevProps.chartId !== this.props.chartId) {
@@ -146,7 +154,7 @@ class DataSetConfig extends Component {
           </form>
         </div>
         <div className="col-md-4 wrapper">
-            {activeDataset ? <SingleDataSet dataset={activeDataset} dataProperties={dataProperties} /> : null}
+            {activeDataset ? <SingleDataSet dataset={activeDataset} dataProperties={dataProperties} run={this.runDataSet} /> : null}
         </div>
       </React.Fragment>
     );
