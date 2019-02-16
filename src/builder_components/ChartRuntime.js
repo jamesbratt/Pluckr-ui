@@ -65,10 +65,10 @@ class ChartRuntime extends Component {
     this.props.datasets.forEach((dataset) => {
       if(dataset.chartId === this.props.chartId) {
         this.addDataSeries(
-          dataset.property,
-          dataset.data,
-          dataset.chartType,
-          dataset.hasAxis,
+          dataset.title,
+          dataset.rawData,
+          'line',
+          false,
         );
       }
     })

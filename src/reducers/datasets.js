@@ -23,7 +23,8 @@ const datasets = (state = [], action) => {
     case 'RUN_DATASET':
       return state.map(dataset => {
         if (dataset.id === action.datasetId) {
-          assocPath(['rawData'], action.rawData, dataset);
+          const updatedData = assocPath(['rawData'], action.rawData, dataset);
+          return updatedData;
         }
         return dataset;
       });
