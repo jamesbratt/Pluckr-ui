@@ -35,7 +35,7 @@ class Operations extends Component {
         newOperationId,
         this.props.dataSetId,
         this.state.rootFunction,
-        this.state.operationValue,
+        this.state.operationAst,
       )
     );
 
@@ -150,7 +150,7 @@ class Operations extends Component {
     const operations = this.props.operations.map(operation => {
       if (operation.dataSetId === this.props.dataSetId) {
         return <li class="list-group-item">
-          {operation.operationFunction}
+          {operation.rootFunction}
         </li>
       }
     });

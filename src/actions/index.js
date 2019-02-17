@@ -38,12 +38,12 @@ export const runDataset = (datasetId, rawData) => {
   }
 }
 
-export const addOperation = (id, dataSetId, operationFunction, value) => {
+export const addOperation = (id, dataSetId, rootFunction, ast) => {
   return {
     type: 'ADD_OPERATION',
     id,
     dataSetId,
-    operationFunction,
-    value,
+    rootFunction,
+    ast,
   }
 };

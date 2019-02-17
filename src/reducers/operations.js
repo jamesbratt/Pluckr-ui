@@ -6,8 +6,8 @@ const operations = (state = [], action) => {
       const newOperation = {
         id: action.id,
         dataSetId: action.dataSetId,
-        operationFunction: action.operationFunction,
-        value: action.value,
+        rootFunction: action.rootFunction,
+        ast: action.ast,
         order: state.length + 1,
       };
       return append(newOperation, state);
