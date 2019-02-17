@@ -15,9 +15,9 @@ class Operations extends Component {
     super(props, context);
     this.state = {
       show: false,
-      operationFunction: null,
+      rootFunction: null,
       // operationValue: null,
-      functionArguments: null,
+      operationAst: null,
     };
   }
 
@@ -35,7 +35,7 @@ class Operations extends Component {
       addOperation(
         newOperationId,
         this.props.dataSetId,
-        this.state.operationFunction,
+        this.state.rootFunction,
         this.state.operationValue,
       )
     );
@@ -44,33 +44,44 @@ class Operations extends Component {
   }
 
   onRootFunctionSet = (event) => {
-    const operationFunctionName = event.target.value;
-    const functionConfig = OPERATION_FUNCTIONS.find(fn => fn.name === operationFunctionName);
+    const rootFunctionType = event.target.value;
+    const rootFunctionSyntax = OPERATION_FUNCTIONS.find(fn => fn.name === rootFunctionType);
 
-    const functionArguments = functionConfig.accepts.map(arg => {
+    const rootFunctionArguments = rootFunctionSyntax.accepts.map(arg => {
       return {
         id: GenerateGuid(),
         name: arg,
         parent: 'root',
+        value: null,
       }
     });
 
     this.setState({
-      functionArguments,
-      operationFunction: operationFunctionName, 
+      operationAst: rootFunctionArguments,
+      rootFunction: rootFunctionType, 
     })
   }
 
-  onOperationChildFunctionSet = (event) => {
-    const currentFunctionArgs = this.state.functionArguments;
-    const operationFunctionId = event.target.id;
+  onChildFunctionSet = (event) => {
 
-    const parent = currentFunctionArgs.find(
-      currentFn => currentFn.id === operationFunctionId
+    // The current AST
+    const ast = this.state.operationAst;
+
+    // This is captured from the selectboxes html ID (??)
+    const selectedFunctionId = event.target.id;
+
+    // e.g FILTER_BY etc etc
+    const selectedFunctionValue = event.target.value;
+
+    // Identify the selected functions parent function
+    const parentFunction = ast.find(
+      currentFn => currentFn.id === selectedFunctionId
     );
 
+    // This is so that if the selected function is changed
+    // then all of its's current offspring are cleared out of the AST
     const getRidOfOffspring = (parentId) => {
-      currentFunctionArgs.forEach((child, index, object) => {
+      ast.forEach((child, index, object) => {
         if (child.parent === parentId) {
           object.splice(index, 1);
           getRidOfOffspring(child.id);
@@ -78,31 +89,44 @@ class Operations extends Component {
       })
     }
 
-    getRidOfOffspring(parent.id);
+    // Recurively clearing out the offspring
+    getRidOfOffspring(parentFunction.id);
 
-    const functionConfig = OPERATION_FUNCTIONS.find(
-      fn => fn.name === event.target.value
-    );
-
-    const newFunctionArguments = functionConfig.accepts.map(arg => {
-      return {
-        id: GenerateGuid(),
-        name: arg,
-        parent: parent.id,
+    // Now the selected functions value is set
+    ast.find(currentFn => {
+      if (currentFn.id === selectedFunctionId) {
+        currentFn.value = selectedFunctionValue;
       }
     });
 
-    const appendedFunctionArgs = currentFunctionArgs.concat(
+    // Find what arguments the selected function accepts
+    const newlySelectedFunctionSyntax = OPERATION_FUNCTIONS.find(
+      fn => fn.name === selectedFunctionValue
+    );
+
+    // Generate new nodes for each argument that selected function accepts
+    const newFunctionArguments = newlySelectedFunctionSyntax.accepts.map(arg => {
+      return {
+        id: GenerateGuid(),
+        name: arg,
+        parent: parentFunction.id,
+        value: null,
+      }
+    });
+
+    // Add the new nodes to the AST
+    const updatedAst = ast.concat(
       newFunctionArguments
     );
 
+    // Put the updated AST into state
     this.setState({
-      functionArguments: appendedFunctionArgs,
+      operationAst: updatedAst,
     });
   }
 
   render() {
-    let functionArguments = null;
+    let astToForm = null;
 
     const selectedSource = this.props.sources.find(
       source => source.id === this.props.dataSourceId
@@ -116,12 +140,12 @@ class Operations extends Component {
       }
     });
 
-    if (this.state.functionArguments) {
-      functionArguments = this.state.functionArguments.map(functionArgument => {
-        switch(functionArgument.name) {
+    if (this.state.operationAst) {
+      astToForm = this.state.operationAst.map(syntaxNode => {
+        switch(syntaxNode.name) {
           case 'FUNCTION':
             return (
-              <select id={functionArgument.id} className="form-control mb-2 mr-sm-2" onChange={this.onOperationChildFunctionSet}>
+              <select id={syntaxNode.id} className="form-control mb-2 mr-sm-2" onChange={this.onChildFunctionSet}>
                 <option value={null} hidden>-- Select a function --</option>
                 {OPERATION_FUNCTIONS.map(opFunc => {
                   return <option value={opFunc.name}>{opFunc.name}</option>;
@@ -140,8 +164,8 @@ class Operations extends Component {
           case 'INTEGER':
             return (
               <React.Fragment>
-                <label className="sr-only">{functionArgument.name}</label>
-                <input name={functionArgument.name} type="number" className="form-control mb-2 mr-sm-2" placeholder={functionArgument.name} />
+                <label className="sr-only">{syntaxNode.name}</label>
+                <input name={syntaxNode.name} type="number" className="form-control mb-2 mr-sm-2" placeholder={syntaxNode.name} />
               </React.Fragment>
             );
         }
@@ -163,7 +187,7 @@ class Operations extends Component {
                   return <option value={opFunc.name}>{opFunc.name}</option>;
                 })}
               </select>
-              {functionArguments}
+              {astToForm}
             </form>
           </Modal.Body>
           <Modal.Footer>
