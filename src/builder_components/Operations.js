@@ -16,7 +16,6 @@ class Operations extends Component {
     this.state = {
       show: false,
       rootFunction: null,
-      // operationValue: null,
       operationAst: null,
     };
   }
@@ -125,6 +124,22 @@ class Operations extends Component {
     });
   }
 
+  onAstNodeValueSelected = (event) => {
+    const ast = this.state.operationAst;
+    const selectedNodeId = event.target.id;
+    const selectedNodeValue = event.target.value;
+
+    ast.find(currentFn => {
+      if (currentFn.id === selectedNodeId) {
+        currentFn.value = selectedNodeValue;
+      }
+    });
+
+    this.setState({
+      operationAst: ast,
+    });
+  }
+
   render() {
     let astToForm = null;
 
@@ -154,7 +169,7 @@ class Operations extends Component {
             );
           case 'PROPERTY':
             return (
-              <select className="form-control mb-2 mr-sm-2">
+              <select id={syntaxNode.id} onChange={this.onAstNodeValueSelected} className="form-control mb-2 mr-sm-2">
                 <option value={null} hidden>-- Select a value --</option>
                 {selectedSource.properties.map(property => {
                   return <option value={property}>{property}</option>;
@@ -165,7 +180,7 @@ class Operations extends Component {
             return (
               <React.Fragment>
                 <label className="sr-only">{syntaxNode.name}</label>
-                <input name={syntaxNode.name} type="number" className="form-control mb-2 mr-sm-2" placeholder={syntaxNode.name} />
+                <input id={syntaxNode.id} onKeyUp={this.onAstNodeValueSelected} name={syntaxNode.name} type="number" className="form-control mb-2 mr-sm-2" placeholder={syntaxNode.name} />
               </React.Fragment>
             );
         }
