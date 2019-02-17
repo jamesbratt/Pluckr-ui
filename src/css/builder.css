@@ -5,4 +5,13 @@
 
 .operations {
   margin-top: 1em;
+  margin-bottom: 1em;
+}
+
+.list-inline-item {
+  background: #f8f9fa;
+  padding: 0.2em 0.8em;
+  border-radius: 10px;
+  border: solid 1px #ced4da;
+  color:rgba(0, 0, 0, 0.5);
 }
