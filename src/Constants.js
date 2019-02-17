@@ -22,18 +22,18 @@ export const OPERATION_FUNCTIONS = [
   },
   {
     name: 'MULTIPLY_BY',
-    accepts: ['INTEGER']
+    accepts: ['INTEGER', 'DATA_INDEX']
   },
   {
     name: 'DIVIDE_BY',
-    accepts: ['INTEGER']
+    accepts: ['INTEGER', 'DATA_INDEX']
   },
   {
     name: 'ADD',
-    accepts: ['INTEGER']
+    accepts: ['INTEGER', 'DATA_INDEX']
   },
   {
     name: 'SUBTRACT',
-    accepts: ['INTEGER']
+    accepts: ['INTEGER', 'DATA_INDEX']
   }
 ];

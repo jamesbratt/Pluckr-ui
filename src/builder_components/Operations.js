@@ -4,6 +4,7 @@ import { GenerateGuid } from '../utils/Helpers';
 import { addOperation } from '../actions';
 import { connect } from 'react-redux';
 import { OPERATION_FUNCTIONS } from '../Constants';
+import { difference } from 'ramda';
 
 const mapStateToProps = state => {
   return state;
@@ -79,20 +80,30 @@ class Operations extends Component {
 
     // This is so that if the selected function is changed
     // then all of its's current offspring are cleared out of the AST
-    const getRidOfOffspring = (parentId) => {
-      ast.forEach((child, index, object) => {
-        if (child.parent === parentId) {
-          object.splice(index, 1);
-          getRidOfOffspring(child.id);
-        }
-      })
-    }
+    const getRidOfOffspring = (ast, parent) => {
+      const nodesToRemove = [];
+      for(var i in ast) {
+          if(ast[i].parent === parent) {
+              var children = getRidOfOffspring(ast, ast[i].id)
+  
+              if(children.length) {
+                children.forEach(child => {
+                  nodesToRemove.push(child)
+                })
+              }
+              nodesToRemove.push(ast[i])
+          }
+      }
+      return nodesToRemove
+    };
 
-    // Recurively clearing out the offspring
-    getRidOfOffspring(parentFunction.id);
-
+    const cleanedAst = difference(
+      ast,
+      getRidOfOffspring(ast, parentFunction.id)
+    );
+    
     // Now the selected functions value is set
-    ast.find(currentFn => {
+    cleanedAst.find(currentFn => {
       if (currentFn.id === selectedFunctionId) {
         currentFn.value = selectedFunctionValue;
       }
@@ -114,7 +125,7 @@ class Operations extends Component {
     });
 
     // Add the new nodes to the AST
-    const updatedAst = ast.concat(
+    const updatedAst = cleanedAst.concat(
       newFunctionArguments
     );
 
@@ -177,6 +188,7 @@ class Operations extends Component {
               </select>
             );
           case 'INTEGER':
+          case "DATA_INDEX":
             return (
               <React.Fragment>
                 <label className="sr-only">{syntaxNode.name}</label>

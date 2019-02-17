@@ -1,7 +1,7 @@
 let operationDataSet = null;
 
-const filterByOperation = (xAxis, rawData, operation) => {
-  if (xAxis === 'DATETIME') {
+const filterByOperation = (node, data, ast) => {
+  /*if (xAxis === 'DATETIME') {
     const dataSortedByDate = rawData.sort((a,b) => {
       return new Date(b.start_date) - new Date(a.start_date);
     });
@@ -9,10 +9,10 @@ const filterByOperation = (xAxis, rawData, operation) => {
     return dataSortedByDate.map(data => {
       return [new Date(data.start_date).getTime(), data[operation.value]];
     })  
-  }
-
-  return rawData.map(data => {
-    return [data[operation.value]];
+  }*/
+  const arg = ast.find(childNode => childNode.parent === node.id);
+  return data.map(dataPoint => {
+    return [dataPoint[arg.value]];
   })
 }
 
