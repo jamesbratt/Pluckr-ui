@@ -23,6 +23,7 @@ class ChartRuntime extends Component {
 
   addDataSeries = (property, data, chartType, hasAxis) => {
     const newDataSeries = {
+      id: property,
       name: property,
       type: chartType,
       data: data
@@ -39,8 +40,13 @@ class ChartRuntime extends Component {
       })
       newDataSeries['yAxis'] = newYaxisId;
     }
-  
-    this.chartInstance.addSeries(newDataSeries)  
+
+    const existingSeries = this.chartInstance.get(property);
+    if (existingSeries) {
+      existingSeries.setData(data);
+    } else {
+      this.chartInstance.addSeries(newDataSeries)  
+    }
   }
 
   setChartConfig = () => {
