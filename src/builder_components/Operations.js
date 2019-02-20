@@ -179,9 +179,11 @@ class Operations extends Component {
               </select>
             );
           case 'PROPERTY':
+          case 'XAXIS':
+          case 'YAXIS':
             return (
               <select id={syntaxNode.id} onChange={this.onAstNodeValueSelected} className="form-control mb-2 mr-sm-2">
-                <option value={null} hidden>-- Select a value --</option>
+                <option value={null} hidden>-- Select a {syntaxNode.name} --</option>
                 {selectedSource.properties.map(property => {
                   return <option value={property}>{property}</option>;
                 })}
@@ -193,6 +195,13 @@ class Operations extends Component {
               <React.Fragment>
                 <label className="sr-only">{syntaxNode.name}</label>
                 <input id={syntaxNode.id} onKeyUp={this.onAstNodeValueSelected} name={syntaxNode.name} type="number" className="form-control mb-2 mr-sm-2" placeholder={syntaxNode.name} />
+              </React.Fragment>
+            );
+          case "DATA_KEY":
+            return (
+              <React.Fragment>
+                <label className="sr-only">{syntaxNode.name}</label>
+                <input id={syntaxNode.id} onKeyUp={this.onAstNodeValueSelected} name={syntaxNode.name} type="text" className="form-control mb-2 mr-sm-2" placeholder={syntaxNode.name} />
               </React.Fragment>
             );
         }

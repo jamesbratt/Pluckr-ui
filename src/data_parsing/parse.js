@@ -1,7 +1,7 @@
-let operationDataSet = null;
+import { assocPath } from 'ramda';
 
-const filterByOperation = (node, data, ast) => {
-  /*if (xAxis === 'DATETIME') {
+const constructSeries = (node, data, ast) => {
+    /*if (xAxis === 'DATETIME') {
     const dataSortedByDate = rawData.sort((a,b) => {
       return new Date(b.start_date) - new Date(a.start_date);
     });
@@ -10,9 +10,20 @@ const filterByOperation = (node, data, ast) => {
       return [new Date(data.start_date).getTime(), data[operation.value]];
     })  
   }*/
-  const arg = ast.find(childNode => childNode.parent === node.id);
-  return data.map(dataPoint => {
-    return [dataPoint[arg.value]];
+
+  const args = ast.filter(childNode => childNode.parent === node.id);
+  const xaxis = args.find(arg => arg.name === 'XAXIS');
+  const yaxis = args.find(arg => arg.name === 'YAXIS');
+
+  const xaxisxaxisValue = xaxis.value;
+  const yaxisxaxisValue = yaxis.value;
+
+  const dataSortedByXaxis = data.sort((a,b) => {
+    return b[xaxisxaxisValue] - a[xaxisxaxisValue];
+  });
+
+  return dataSortedByXaxis.map(dataPoint => {
+    return {x: dataPoint[xaxisxaxisValue], y: dataPoint[yaxisxaxisValue]};
   })
 }
 
@@ -23,14 +34,31 @@ const forEvery = (node, data, ast) => {
   })
 }
 
+const target = (node, data, ast) => {
+  const args = ast.filter(childNode => childNode.parent === node.id);
+  const target = args.find(arg => arg.name === 'DATA_KEY');
+  const func = args.find(arg => arg.name === 'FUNCTION');
+  const keyToTarget = target.value;
+
+  return assocPath(
+    [keyToTarget],
+    executeFunction(func, data[keyToTarget], ast),
+    data,
+  );
+}
+
 const multiplyBy = (node, data, ast) => {
-  const arg = ast.find(childNode => childNode.parent === node.id);
-  return data * parseInt(arg.value);
+  let dataPoint = data;
+  const args = ast.filter(childNode => childNode.parent === node.id);
+  const val = args.find(arg => arg.name === 'INTEGER');
+  return dataPoint * val.value;
 }
 
 const divideBy = (node, data, ast) => {
-  const arg = ast.find(childNode => childNode.parent === node.id);
-  return data / parseInt(arg.value);
+  let dataPoint = data;
+  const args = ast.filter(childNode => childNode.parent === node.id);
+  const val = args.find(arg => arg.name === 'INTEGER');
+  return dataPoint / val.value;;
 }
 
 const add = (node, data, ast) => {
@@ -45,14 +73,20 @@ const subtract = (node, data, ast) => {
 
 const executeFunction = (node, data, ast) => {
   switch (node.value) {
-    case 'FILTER_BY':
-      return filterByOperation(
+    case 'CONSTRUCT_SERIES':
+      return constructSeries(
         node,
         data,
         ast
       );
     case 'FOR_EVERY':
       return forEvery(
+        node,
+        data,
+        ast,
+      );
+    case 'TARGET':
+      return target(
         node,
         data,
         ast,
@@ -87,7 +121,6 @@ const executeFunction = (node, data, ast) => {
 }
 
 export const executeOperations = (rawData, dataSet, operations) => {
-  operationDataSet = dataSet;
   let data = rawData;
   operations.forEach(operation => {
     const rootNode = {

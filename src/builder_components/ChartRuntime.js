@@ -55,7 +55,7 @@ class ChartRuntime extends Component {
         text: this.props.chartName
       },
       xAxis: {
-        type: 'datetime',
+        type: 'linear',
       },    
       legend: {
         align: 'left',

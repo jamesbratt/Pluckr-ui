@@ -13,27 +13,31 @@ export const DATA_TYPES = {
 
 export const OPERATION_FUNCTIONS = [
   {
-    name: 'FILTER_BY',
-    accepts: ['PROPERTY']
+    name: 'CONSTRUCT_SERIES',
+    accepts: ['XAXIS', 'YAXIS']
   },
   {
     name: 'FOR_EVERY',
     accepts: ['FUNCTION']
   },
   {
+    name: 'TARGET',
+    accepts: ['DATA_KEY', 'FUNCTION']
+  },
+  {
     name: 'MULTIPLY_BY',
-    accepts: ['INTEGER', 'DATA_INDEX']
+    accepts: ['INTEGER']
   },
   {
     name: 'DIVIDE_BY',
-    accepts: ['INTEGER', 'DATA_INDEX']
+    accepts: ['INTEGER']
   },
   {
     name: 'ADD',
-    accepts: ['INTEGER', 'DATA_INDEX']
+    accepts: ['INTEGER']
   },
   {
     name: 'SUBTRACT',
-    accepts: ['INTEGER', 'DATA_INDEX']
+    accepts: ['INTEGER']
   }
 ];
