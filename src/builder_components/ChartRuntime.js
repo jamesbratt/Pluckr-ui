@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import DataSetConfig from './DataSetConfig';
+import Datasets from './Datasets';
+import ChartConfiguration from './ChartConfiguration';
 
 var Highcharts = require('highcharts');
 
@@ -97,11 +98,13 @@ class ChartRuntime extends Component {
 
   render() {  
     return (
-      <div className="row wrapper">
-        <DataSetConfig chartId={this.props.chartId} sources={this.props.sources} addData={this.addDataSeries} />
-        <div className="col-md-8 wrapper">
-          <h4>Chart Runtime</h4>
-          <div style={{ ...style }} id={this.props.chartId} />
+      <div className="wrapper">
+        <ChartConfiguration />
+        <Datasets chartId={this.props.chartId} sources={this.props.sources} addData={this.addDataSeries} />
+        <div className="row">
+          <div className="col-md-12">
+            <div style={{ ...style }} id={this.props.chartId} />
+          </div>
         </div>
       </div>
     )
