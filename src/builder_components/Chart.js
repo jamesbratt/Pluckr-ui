@@ -136,10 +136,10 @@ class Chart extends Component {
           </ul>
         </div>
         <form className="form-inline">
-            <label className="sr-only" for="dataSourceTitle">Title</label>
+            <label className="sr-only">Title</label>
             <input value={this.state.sourceName || ''} onChange={this.onSourceNameChange} type="text" className="form-control mb-2 mr-sm-2" id="dataSourceTitle" placeholder="Enter a title" />
 
-            <label className="sr-only" for="dataSourceResource">Resource</label>
+            <label className="sr-only">Resource</label>
             <select onChange={this.onResourceChange} className="form-control mb-2 mr-sm-2" id="dataSourceResource">
               <option value={null} hidden>-- Select a resource --</option>;
               {Object.keys(STRAVA_RESOURCES).map(resourceKey => {

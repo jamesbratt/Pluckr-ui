@@ -41,6 +41,7 @@ export const STRAVA_RESOURCES = {
 const RESOURCE_PROPERTIES = {
   activities: [
     'distance',
+    'start_date',
     'moving_time',
     'elapsed_time',
     'total_elevation_gain',

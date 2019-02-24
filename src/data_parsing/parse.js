@@ -1,16 +1,6 @@
 import { assocPath } from 'ramda';
 
 const constructSeries = (node, data, ast) => {
-    /*if (xAxis === 'DATETIME') {
-    const dataSortedByDate = rawData.sort((a,b) => {
-      return new Date(b.start_date) - new Date(a.start_date);
-    });
-  
-    return dataSortedByDate.map(data => {
-      return [new Date(data.start_date).getTime(), data[operation.value]];
-    })  
-  }*/
-
   const args = ast.filter(childNode => childNode.parent === node.id);
   const xaxis = args.find(arg => arg.name === 'XAXIS');
   const yaxis = args.find(arg => arg.name === 'YAXIS');
@@ -71,6 +61,10 @@ const subtract = (node, data, ast) => {
   return data - parseInt(arg.value);
 }
 
+const convertToUnixTimestamp = (node, data, ast) => {
+  return new Date(data).getTime()
+}
+
 const executeFunction = (node, data, ast) => {
   switch (node.value) {
     case 'CONSTRUCT_SERIES':
@@ -111,6 +105,12 @@ const executeFunction = (node, data, ast) => {
       );
     case 'SUBTRACT':
       return subtract(
+        node,
+        data,
+        ast,
+      );
+    case 'CONVERT_TO_TIMESTAMP':
+      return convertToUnixTimestamp(
         node,
         data,
         ast,

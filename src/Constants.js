@@ -39,5 +39,9 @@ export const OPERATION_FUNCTIONS = [
   {
     name: 'SUBTRACT',
     accepts: ['INTEGER']
+  },
+  {
+    name: 'CONVERT_TO_TIMESTAMP',
+    accepts: []
   }
 ];
