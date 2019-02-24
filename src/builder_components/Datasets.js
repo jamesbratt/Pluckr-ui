@@ -55,6 +55,15 @@ class Datasets extends Component {
     this.setState({dataSetTitle: event.target.value})
   }
 
+  updateDataset = (event) => {
+    const checked = event.target.checked;
+    const dataSet = this.props.datasets.find(dataset => dataset.isActive === true);
+    this.props.updateDataset(
+      dataSet.title,
+      checked,
+    );
+  }
+
   runDataSet = () => {
     const dataSet = this.props.datasets.find(dataset => dataset.isActive === true);
     const operations = this.props.operations.filter(operation => operation.dataSetId === dataSet.id);
@@ -126,7 +135,14 @@ class Datasets extends Component {
             </form>
           </div>
         </div>
-        {activeDataset ? <DatasetConfiguration dataset={activeDataset} dataProperties={dataProperties} run={this.runDataSet} /> : null}
+        {activeDataset ?
+        <DatasetConfiguration
+          dataset={activeDataset}
+          dataProperties={dataProperties}
+          run={this.runDataSet}
+          updateDataset={this.updateDataset}
+        />
+        : null}
       </React.Fragment>
     );
   }

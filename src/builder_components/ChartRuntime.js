@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Datasets from './Datasets';
 import ChartConfiguration from './ChartConfiguration';
+import { assocPath } from 'ramda';
 
 var Highcharts = require('highcharts');
 
@@ -47,6 +48,31 @@ class ChartRuntime extends Component {
       existingSeries.setData(data);
     } else {
       this.chartInstance.addSeries(newDataSeries)  
+    }
+  }
+
+  updateDataSeriesConfig = (property, isChecked) => {
+    const existingSeries = this.chartInstance.get(property);
+
+    if (existingSeries) {
+      const newYaxisId = this.chartInstance.yAxis.length + 1;
+      this.chartInstance.addAxis({
+        title: {
+            text: property
+        },
+        opposite: true,
+        id: newYaxisId,
+      });
+
+      const updatedSeries = assocPath(
+        ['yAxis'],
+        newYaxisId,
+        existingSeries.options,
+      );
+
+      existingSeries.update(updatedSeries);
+    } else {
+      alert('Error! You need to run this dataset first')
     }
   }
 
@@ -104,7 +130,12 @@ class ChartRuntime extends Component {
     return (
       <div className="wrapper">
         <ChartConfiguration chartId={this.props.chartId} updateChart={this.updateChartConfig} />
-        <Datasets chartId={this.props.chartId} sources={this.props.sources} addData={this.addDataSeries} />
+        <Datasets
+          chartId={this.props.chartId}
+          sources={this.props.sources}
+          addData={this.addDataSeries}
+          updateDataset={this.updateDataSeriesConfig}
+        />
         <div className="row">
           <div className="col-md-12">
             <div style={{ ...style }} id={this.props.chartId} />
