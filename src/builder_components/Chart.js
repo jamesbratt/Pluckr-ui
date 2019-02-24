@@ -151,7 +151,7 @@ class Chart extends Component {
 
             <button onClick={this.addDataSource} type="submit" className="btn btn-primary mb-2">Add Data Source</button>
         </form>
-        {availableSources.length > 0 ? <ChartRuntime chartId={this.props.id} chartName={this.props.name} sources={availableSources} /> : null}
+        {availableSources.length > 0 ? <ChartRuntime chartId={this.props.id} chartName={this.props.name} sources={availableSources} chartConfig={this.props.chartConfig} /> : null}
       </div>
     );
   }

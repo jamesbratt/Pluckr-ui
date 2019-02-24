@@ -1,4 +1,4 @@
-import { append } from 'ramda';
+import { append, assocPath } from 'ramda';
 
 const charts = (state = [], action) => {
   switch (action.type) {
@@ -6,11 +6,17 @@ const charts = (state = [], action) => {
       const newChart = {
         id: action.id,
         name: action.chartName,
+        xaxis: null,
       };
       return append(newChart, state);
 
-    case 'REMOVE_CHART':
-      return state;
+    case 'UPDATE_CHART_XAXIS':
+      return state.map(chart => {
+        if (chart.id === action.id) {
+          return assocPath(['xaxis'], action.axisType, chart);
+        }
+        return chart;
+      });
 
     default:
       return state;

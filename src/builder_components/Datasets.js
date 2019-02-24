@@ -16,7 +16,6 @@ class Datasets extends Component {
       dataProperties: [],
       selectedDataSource: null,
       dataSetTitle: null,
-      dataSetXaxis: 'NONE',
     };
   }
 
@@ -44,7 +43,6 @@ class Datasets extends Component {
           this.props.chartId,
           true,
           this.state.dataSetTitle,
-          this.state.dataSetXaxis,
         )
       );
     } else {

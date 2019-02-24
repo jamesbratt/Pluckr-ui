@@ -50,13 +50,17 @@ class ChartRuntime extends Component {
     }
   }
 
+  updateChartConfig = (value) => {
+    this.chartInstance.xAxis[0].update({ type: value });
+  }
+
   setChartConfig = () => {
     const chartConfig = {
       title: {
         text: this.props.chartName
       },
       xAxis: {
-        type: 'linear',
+        type: this.props.chartConfig.xaxis,
       },    
       legend: {
         align: 'left',
@@ -99,7 +103,7 @@ class ChartRuntime extends Component {
   render() {  
     return (
       <div className="wrapper">
-        <ChartConfiguration />
+        <ChartConfiguration chartId={this.props.chartId} updateChart={this.updateChartConfig} />
         <Datasets chartId={this.props.chartId} sources={this.props.sources} addData={this.addDataSeries} />
         <div className="row">
           <div className="col-md-12">

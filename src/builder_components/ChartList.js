@@ -6,7 +6,7 @@ const ChartList = (props) => {
     <ul className="navbar-nav mr-auto">
       {props.charts.map(chart => {
         return <li className="nav-item">
-          <a className="nav-link" onClick={() => props.onSelect({id: chart.id, name: chart.name})}
+          <a className="nav-link" onClick={() => props.onSelect(chart)}
           href="#">
             {chart.name}</a>
         </li>

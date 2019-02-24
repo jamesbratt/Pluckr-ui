@@ -56,7 +56,7 @@ class Builder extends Component {
         </nav>
         <div className='container-fluid wrapper'>
           {this.state.chartToEdit ? <h3>{this.state.chartToEdit.name}</h3> : null}
-          {this.state.chartToEdit ? <Chart id={this.state.chartToEdit.id} name={this.state.chartToEdit.name} /> : null}
+          {this.state.chartToEdit ? <Chart id={this.state.chartToEdit.id} name={this.state.chartToEdit.name} chartConfig={this.state.chartToEdit} /> : null}
         </div>
       </div>
     );

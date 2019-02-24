@@ -6,6 +6,14 @@ export const addChart = (id, chartName) => {
   }
 };
 
+export const updateChartXaxis = (id, axisType) => {
+  return {
+    type: 'UPDATE_CHART_XAXIS',
+    id,
+    axisType,
+  }
+};
+
 export const addSource = (id, sourceName, chartId, resource, data, properties) => {
   return {
     type: 'ADD_SOURCE',
@@ -18,7 +26,7 @@ export const addSource = (id, sourceName, chartId, resource, data, properties) =
   }
 };
 
-export const addDataset = (id, sourceId, chartId, isActive, title, xAxis) => {
+export const addDataset = (id, sourceId, chartId, isActive, title) => {
   return {
     type: 'ADD_DATASET',
     id,
@@ -26,7 +34,6 @@ export const addDataset = (id, sourceId, chartId, isActive, title, xAxis) => {
     chartId,
     isActive,
     title,
-    xAxis,
   }
 };
 
