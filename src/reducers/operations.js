@@ -1,4 +1,4 @@
-import { append } from 'ramda';
+import { append, merge } from 'ramda';
 
 const operations = (state = [], action) => {
   switch (action.type) {
@@ -11,6 +11,19 @@ const operations = (state = [], action) => {
         order: state.length + 1,
       };
       return append(newOperation, state);
+
+    case 'UPDATE_OPERATION':
+      const updates = {
+        rootFunction: action.rootFunction,
+        ast: action.ast,
+      };
+
+      return state.map(operation => {
+        if (operation.id === action.id) {
+          return merge(operation, updates)
+        }
+        return operation;
+      });
 
     default:
       return state;

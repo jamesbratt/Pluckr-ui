@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import { GenerateGuid } from '../utils/Helpers';
-import { addOperation } from '../actions';
+import { addOperation, updateOperation } from '../actions';
 import { connect } from 'react-redux';
 import { OPERATION_FUNCTIONS } from '../Constants';
 import { difference } from 'ramda';
@@ -18,11 +18,17 @@ class Operations extends Component {
       show: false,
       rootFunction: null,
       operationAst: null,
+      operationEdit: null,
     };
   }
 
   handleClose = () => {
-    this.setState({ show: false });
+    this.setState({
+      show: false,
+      operationAst: null,
+      rootFunction: null,
+      operationEdit: null,
+    });
   }
 
   handleShow = () => {
@@ -40,7 +46,28 @@ class Operations extends Component {
       )
     );
 
-    this.setState({ show: false });
+    this.setState({
+      show: false,
+      operationAst: null,
+      rootFunction: null,
+    });
+  }
+
+  updateOperation = () => {
+    this.props.dispatch(
+      updateOperation(
+        this.state.operationEdit.id,
+        this.state.rootFunction,
+        this.state.operationAst,
+      )
+    );
+
+    this.setState({
+      show: false,
+      operationAst: null,
+      rootFunction: null,
+      operationEdit: null,
+    });
   }
 
   onRootFunctionSet = (event) => {
@@ -151,6 +178,16 @@ class Operations extends Component {
     });
   }
 
+  onOperationEdit = (operation) => {
+    this.setState({
+      operationAst: operation.ast,
+      rootFunction: operation.rootFunction,
+      operationEdit: operation,
+    }, () => {
+        this.handleShow();
+    });
+  }
+
   render() {
     let astToForm = null;
 
@@ -162,6 +199,7 @@ class Operations extends Component {
       if (operation.dataSetId === this.props.dataSetId) {
         return <li class="list-group-item">
           {operation.rootFunction}
+          <button className="btn btn-light btn-sm float-right" onClick={() => this.onOperationEdit(operation)}>Edit</button>
         </li>
       }
     });
@@ -171,7 +209,7 @@ class Operations extends Component {
         switch(syntaxNode.name) {
           case 'FUNCTION':
             return (
-              <select id={syntaxNode.id} className="form-control mb-2 mr-sm-2" onChange={this.onChildFunctionSet}>
+              <select defaultValue={syntaxNode.value} id={syntaxNode.id} className="form-control mb-2 mr-sm-2" onChange={this.onChildFunctionSet}>
                 <option value={null} hidden>-- Select a function --</option>
                 {OPERATION_FUNCTIONS.map(opFunc => {
                   return <option value={opFunc.name}>{opFunc.name}</option>;
@@ -182,7 +220,7 @@ class Operations extends Component {
           case 'XAXIS':
           case 'YAXIS':
             return (
-              <select id={syntaxNode.id} onChange={this.onAstNodeValueSelected} className="form-control mb-2 mr-sm-2">
+              <select defaultValue={syntaxNode.value} id={syntaxNode.id} onChange={this.onAstNodeValueSelected} className="form-control mb-2 mr-sm-2">
                 <option value={null} hidden>-- Select a {syntaxNode.name} --</option>
                 {selectedSource.properties.map(property => {
                   return <option value={property}>{property}</option>;
@@ -194,14 +232,14 @@ class Operations extends Component {
             return (
               <React.Fragment>
                 <label className="sr-only">{syntaxNode.name}</label>
-                <input id={syntaxNode.id} onKeyUp={this.onAstNodeValueSelected} name={syntaxNode.name} type="number" className="form-control mb-2 mr-sm-2" placeholder={syntaxNode.name} />
+                <input defaultValue={syntaxNode.value} id={syntaxNode.id} onKeyUp={this.onAstNodeValueSelected} name={syntaxNode.name} type="number" className="form-control mb-2 mr-sm-2" placeholder={syntaxNode.name} />
               </React.Fragment>
             );
           case "DATA_KEY":
             return (
               <React.Fragment>
                 <label className="sr-only">{syntaxNode.name}</label>
-                <input id={syntaxNode.id} onKeyUp={this.onAstNodeValueSelected} name={syntaxNode.name} type="text" className="form-control mb-2 mr-sm-2" placeholder={syntaxNode.name} />
+                <input defaultValue={syntaxNode.value} id={syntaxNode.id} onKeyUp={this.onAstNodeValueSelected} name={syntaxNode.name} type="text" className="form-control mb-2 mr-sm-2" placeholder={syntaxNode.name} />
               </React.Fragment>
             );
         }
@@ -217,7 +255,7 @@ class Operations extends Component {
           </Modal.Header>
           <Modal.Body>
             <form className="form-inline my-2 my-lg-0">
-              <select className="form-control mb-2 mr-sm-2" onChange={this.onRootFunctionSet}>
+              <select defaultValue={this.state.rootFunction} className="form-control mb-2 mr-sm-2" onChange={this.onRootFunctionSet}>
                 <option value={null} hidden>-- Select a function --</option>
                 {OPERATION_FUNCTIONS.map(opFunc => {
                   return <option value={opFunc.name}>{opFunc.name}</option>;
@@ -230,7 +268,7 @@ class Operations extends Component {
             <button className="btn btn-secondary" onClick={this.handleClose}>
               Close
             </button>
-            <button className="btn btn-primary" onClick={this.addOperation}>
+            <button className="btn btn-primary" onClick={this.state.operationEdit ? this.updateOperation : this.addOperation}>
               Save Operation
             </button>
           </Modal.Footer>

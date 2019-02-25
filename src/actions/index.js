@@ -54,3 +54,12 @@ export const addOperation = (id, dataSetId, rootFunction, ast) => {
     ast,
   }
 };
+
+export const updateOperation = (id, rootFunction, ast) => {
+  return {
+    type: 'UPDATE_OPERATION',
+    id,
+    rootFunction,
+    ast,
+  }
+};
