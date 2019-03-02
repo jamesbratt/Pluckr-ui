@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Modal from 'react-bootstrap/Modal';
+import OperationConfiguration from './OperationConfiguration';
 import { GenerateGuid } from '../utils/Helpers';
 import { addOperation, updateOperation } from '../actions';
 import { connect } from 'react-redux';
@@ -250,28 +251,15 @@ class Operations extends Component {
       <div className="operations">
         <button onClick={this.handleShow} type="button" class="btn btn-primary btn-sm">Add Operation</button>
         <Modal size="lg" show={this.state.show} onHide={this.handleClose}>
-          <Modal.Header closeButton>
-            <Modal.Title>Construct an Operation</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <form className="form-inline my-2 my-lg-0">
-              <select defaultValue={this.state.rootFunction} className="form-control mb-2 mr-sm-2" onChange={this.onRootFunctionSet}>
-                <option value={null} hidden>-- Select a function --</option>
-                {OPERATION_FUNCTIONS.map(opFunc => {
-                  return <option value={opFunc.name}>{opFunc.name}</option>;
-                })}
-              </select>
-              {astToForm}
-            </form>
-          </Modal.Body>
-          <Modal.Footer>
-            <button className="btn btn-secondary" onClick={this.handleClose}>
-              Close
-            </button>
-            <button className="btn btn-primary" onClick={this.state.operationEdit ? this.updateOperation : this.addOperation}>
-              Save Operation
-            </button>
-          </Modal.Footer>
+          <OperationConfiguration
+            form = {astToForm}
+            rootFunction = {this.state.rootFunction}
+            setRootFunction = {this.onRootFunctionSet}
+            isEdit = {this.state.operationEdit}
+            close = {this.handleClose}
+            create = {this.addOperation}
+            update = {this.updateOperation}
+          />
         </Modal>
         <ul class="list-group operations">
           {operations}
