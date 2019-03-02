@@ -65,6 +65,7 @@ class Datasets extends Component {
   }
 
   runDataSet = () => {
+    let data = [];
     const dataSet = this.props.datasets.find(dataset => dataset.isActive === true);
     const operations = this.props.operations.filter(operation => operation.dataSetId === dataSet.id);
 
@@ -72,11 +73,15 @@ class Datasets extends Component {
       source => source.id === this.state.selectedDataSource,
     );
 
-    const data = executeOperations(
-      dataSource.rawData,
-      dataSet,
-      operations,
-    );
+    try {
+      data = executeOperations(
+        dataSource.rawData,
+        dataSet,
+        operations,
+      );
+    } catch (error) {
+      alert(error);
+    } 
 
     this.props.addData(
       dataSet.title, // data series name

@@ -1,68 +1,97 @@
 import { assocPath } from 'ramda';
 
 const constructSeries = (node, data, ast) => {
-  const args = ast.filter(childNode => childNode.parent === node.id);
-  const xaxis = args.find(arg => arg.name === 'XAXIS');
-  const yaxis = args.find(arg => arg.name === 'YAXIS');
+  if (Array.isArray(data)) {
+    const args = ast.filter(childNode => childNode.parent === node.id);
+    const xaxis = args.find(arg => arg.name === 'XAXIS');
+    const yaxis = args.find(arg => arg.name === 'YAXIS');
 
-  const xaxisxaxisValue = xaxis.value;
-  const yaxisxaxisValue = yaxis.value;
+    const xaxisxaxisValue = xaxis.value;
+    const yaxisxaxisValue = yaxis.value;
 
-  const dataSortedByXaxis = data.sort((a,b) => {
-    return a[xaxisxaxisValue] - b[xaxisxaxisValue];
-  });
+    const dataSortedByXaxis = data.sort((a,b) => {
+      return a[xaxisxaxisValue] - b[xaxisxaxisValue];
+    });
 
-  return dataSortedByXaxis.map(dataPoint => {
-    return {x: dataPoint[xaxisxaxisValue], y: dataPoint[yaxisxaxisValue]};
-  })
+    return dataSortedByXaxis.map(dataPoint => {
+      return {x: dataPoint[xaxisxaxisValue], y: dataPoint[yaxisxaxisValue]};
+    })
+  }
+  throw new Error('CONSTRUCT_SERIES can only be executed on a list of items');
 }
 
 const forEvery = (node, data, ast) => {
-  const arg = ast.find(childNode => childNode.parent === node.id);
-  return data.map(dataPoint => {
-    return executeFunction(arg, dataPoint, ast);
-  })
+  if (Array.isArray(data)) {
+    const arg = ast.find(childNode => childNode.parent === node.id);
+    return data.map(dataPoint => {
+      return executeFunction(arg, dataPoint, ast);
+    })
+  }
+  throw new Error('FOR_EVERY can only be executed on a list of items');
 }
 
 const target = (node, data, ast) => {
-  const args = ast.filter(childNode => childNode.parent === node.id);
-  const target = args.find(arg => arg.name === 'DATA_KEY');
-  const func = args.find(arg => arg.name === 'FUNCTION');
-  const keyToTarget = target.value;
+  if ((typeof data === 'function' || (typeof data === 'object' && !!data)) && !Array.isArray(data)) {
+    const args = ast.filter(childNode => childNode.parent === node.id);
+    const target = args.find(arg => arg.name === 'DATA_KEY');
+    const func = args.find(arg => arg.name === 'FUNCTION');
+    const keyToTarget = target.value;
 
-  return assocPath(
-    [keyToTarget],
-    executeFunction(func, data[keyToTarget], ast),
-    data,
-  );
+    return assocPath(
+      [keyToTarget],
+      executeFunction(func, data[keyToTarget], ast),
+      data,
+    );
+  }
+  throw new Error('TARGET can only be executed on a data structure with keys');
 }
 
 const multiplyBy = (node, data, ast) => {
-  let dataPoint = data;
-  const args = ast.filter(childNode => childNode.parent === node.id);
-  const val = args.find(arg => arg.name === 'INTEGER');
-  return dataPoint * val.value;
+  if (!isNaN(data)) {
+    let dataPoint = data;
+    const args = ast.filter(childNode => childNode.parent === node.id);
+    const val = args.find(arg => arg.name === 'INTEGER');
+    return parseInt(dataPoint) * parseInt(val.value);
+  }
+  throw new Error('DIVIDE_BY can only be executed on numbers');
 }
 
 const divideBy = (node, data, ast) => {
-  let dataPoint = data;
-  const args = ast.filter(childNode => childNode.parent === node.id);
-  const val = args.find(arg => arg.name === 'INTEGER');
-  return dataPoint / val.value;;
+  if (!isNaN(data)) {
+    let dataPoint = data;
+    const args = ast.filter(childNode => childNode.parent === node.id);
+    const val = args.find(arg => arg.name === 'INTEGER');
+    return parseInt(dataPoint) / parseInt(val.value);
+  }
+  throw new Error('MULTIPLY_BY can only be executed on numbers');
 }
 
 const add = (node, data, ast) => {
-  const arg = ast.find(childNode => childNode.parent === node.id);
-  return data + parseInt(arg.value);
+  if (!isNaN(data)) {
+    let dataPoint = data;
+    const args = ast.filter(childNode => childNode.parent === node.id);
+    const val = args.find(arg => arg.name === 'INTEGER');
+    return parseInt(dataPoint) + parseInt(val.value);
+  }
+  throw new Error('ADD can only be executed on numbers');
 }
 
 const subtract = (node, data, ast) => {
-  const arg = ast.find(childNode => childNode.parent === node.id);
-  return data - parseInt(arg.value);
+  if (!isNaN(data)) {
+    let dataPoint = data;
+    const args = ast.filter(childNode => childNode.parent === node.id);
+    const val = args.find(arg => arg.name === 'INTEGER');
+    return parseInt(dataPoint) - parseInt(val.value);
+  }
+  throw new Error('SUBTRACT can only be executed on numbers');
 }
 
 const convertToUnixTimestamp = (node, data, ast) => {
-  return new Date(data).getTime()
+  if (!isNaN(Date.parse(data))) {
+    const timestamp = new Date(data).getTime();
+    return timestamp;
+  }
+  throw new Error("Invalid date format");
 }
 
 const executeFunction = (node, data, ast) => {

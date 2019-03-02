@@ -10,18 +10,26 @@ const mapStateToProps = state => {
 
 const DatasetPreview = (props) => {
 
-  const dataSet = props.datasets.find(dataset => dataset.id === props.dataSetId);
-  const operations = props.operations.filter(operation => operation.dataSetId === props.dataSetId);
+  let data = [];
 
-  const dataSource = props.sources.find(
-    source => source.id === props.dataSourceId,
-  );
+  try {
+    const dataSet = props.datasets.find(dataset => dataset.id === props.dataSetId);
+    const operations = props.operations.filter(operation => operation.dataSetId === props.dataSetId);
+  
+    const dataSource = props.sources.find(
+      source => source.id === props.dataSourceId,
+    );
+  
+    data = executeOperations(
+      dataSource.rawData,
+      dataSet,
+      operations,
+    );
 
-  const data = executeOperations(
-    dataSource.rawData,
-    dataSet,
-    operations,
-  );
+  } catch (error) {
+    alert(error);
+  } 
+
 
   return (
     <React.Fragment>
