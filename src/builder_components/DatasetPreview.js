@@ -1,6 +1,6 @@
 import React from 'react';
 import Modal from 'react-bootstrap/Modal';
-import ReactJson from 'react-json-view';
+import JSONTree from 'react-json-tree'
 import { connect } from 'react-redux';
 import { executeOperations } from '../data_parsing/parse';
 
@@ -9,20 +9,19 @@ const mapStateToProps = state => {
 };
 
 const DatasetPreview = (props) => {
-  const preview = () => {
-    const dataSet = props.datasets.find(dataset => dataset.id === props.dataSetId);
-    const operations = props.operations.filter(operation => operation.dataSetId === props.dataSetId);
 
-    const dataSource = props.sources.find(
-      source => source.id === props.dataSourceId,
-    );
+  const dataSet = props.datasets.find(dataset => dataset.id === props.dataSetId);
+  const operations = props.operations.filter(operation => operation.dataSetId === props.dataSetId);
 
-    return executeOperations(
-      dataSource.rawData,
-      dataSet,
-      operations,
-    );
-  }
+  const dataSource = props.sources.find(
+    source => source.id === props.dataSourceId,
+  );
+
+  const data = executeOperations(
+    dataSource.rawData,
+    dataSet,
+    operations,
+  );
 
   return (
     <React.Fragment>
@@ -30,11 +29,13 @@ const DatasetPreview = (props) => {
           <Modal.Title>Dataset Preview</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <ReactJson src={preview()} />
+          <div className="preview-wrapper">
+            <JSONTree data={data} />
+          </div>
         </Modal.Body>
         <Modal.Footer>
           <button className="btn btn-secondary" onClick={() => props.previewToggle(false)}>
-            Back
+            Construct Operation
           </button>
         </Modal.Footer>
     </React.Fragment>

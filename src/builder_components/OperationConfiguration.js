@@ -26,9 +26,6 @@ const OperationConfiguration = (props) => {
           <button className="btn btn-secondary" onClick={() => props.previewToggle(true)}>
             Preview Dataset
           </button>
-          <button className="btn btn-secondary" onClick={props.close}>
-            Save and Preview
-          </button>
           <button className="btn btn-primary" onClick={props.isEdit ? props.update : props.create}>
             Save Operation
           </button>
