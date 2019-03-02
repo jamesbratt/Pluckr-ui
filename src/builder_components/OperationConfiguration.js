@@ -23,7 +23,7 @@ const OperationConfiguration = (props) => {
           <button className="btn btn-secondary" onClick={props.close}>
             Close
           </button>
-          <button className="btn btn-secondary" onClick={props.close}>
+          <button className="btn btn-secondary" onClick={() => props.previewToggle(true)}>
             Preview Dataset
           </button>
           <button className="btn btn-secondary" onClick={props.close}>

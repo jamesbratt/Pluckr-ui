@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import OperationConfiguration from './OperationConfiguration';
+import DatasetPreview from './DatasetPreview';
 import { GenerateGuid } from '../utils/Helpers';
 import { addOperation, updateOperation } from '../actions';
 import { connect } from 'react-redux';
@@ -20,6 +21,7 @@ class Operations extends Component {
       rootFunction: null,
       operationAst: null,
       operationEdit: null,
+      preview: false,
     };
   }
 
@@ -29,11 +31,16 @@ class Operations extends Component {
       operationAst: null,
       rootFunction: null,
       operationEdit: null,
+      preview: false,
     });
   }
 
   handleShow = () => {
     this.setState({ show: true });
+  }
+
+  previewToggle = (preview) => {
+    this.setState({ preview });
   }
 
   addOperation = () => {
@@ -251,15 +258,24 @@ class Operations extends Component {
       <div className="operations">
         <button onClick={this.handleShow} type="button" class="btn btn-primary btn-sm">Add Operation</button>
         <Modal size="lg" show={this.state.show} onHide={this.handleClose}>
-          <OperationConfiguration
-            form = {astToForm}
-            rootFunction = {this.state.rootFunction}
-            setRootFunction = {this.onRootFunctionSet}
-            isEdit = {this.state.operationEdit}
-            close = {this.handleClose}
-            create = {this.addOperation}
-            update = {this.updateOperation}
-          />
+          {
+            this.state.preview ?
+            <DatasetPreview
+              dataSetId = {this.props.dataSetId}
+              dataSourceId = {this.props.dataSourceId}
+              previewToggle = {this.previewToggle}
+            /> :
+            <OperationConfiguration
+              form = {astToForm}
+              rootFunction = {this.state.rootFunction}
+              setRootFunction = {this.onRootFunctionSet}
+              isEdit = {this.state.operationEdit}
+              close = {this.handleClose}
+              create = {this.addOperation}
+              update = {this.updateOperation}
+              previewToggle = {this.previewToggle}
+            />
+          }
         </Modal>
         <ul class="list-group operations">
           {operations}
