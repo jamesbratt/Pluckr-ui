@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Datasets from './Datasets';
 import ChartConfiguration from './ChartConfiguration';
-import { assocPath } from 'ramda';
+import { assocPath, dissoc } from 'ramda';
 
 var Highcharts = require('highcharts');
 
@@ -23,7 +23,7 @@ class ChartRuntime extends Component {
     this.chartInstance = null;
   }
 
-  addDataSeries = (property, data, chartType, hasAxis) => {
+  addDataSeries = (property, data, chartType, hasYAxis) => {
     const newDataSeries = {
       id: property,
       name: property,
@@ -31,46 +31,36 @@ class ChartRuntime extends Component {
       data: data
     };
 
-    if(hasAxis) {
-      const newYaxisId = this.chartInstance.yAxis.length + 1;
+    const existingSeries = this.chartInstance.get(property);
+
+    if (existingSeries) {
+      const axis = this.chartInstance.get(`yaxis-${property}`);
+      axis.update({
+        visible: hasYAxis
+      });
+      existingSeries.setData(data);
+    } else {
+      const newYaxisId = `yaxis-${property}`;
       this.chartInstance.addAxis({
           title: {
               text: property
           },
-          opposite: true,
+          opposite: this.chartInstance.series.length > 0 ? true : false,
           id: newYaxisId,
+          visible: hasYAxis
       })
       newDataSeries['yAxis'] = newYaxisId;
-    }
-
-    const existingSeries = this.chartInstance.get(property);
-    if (existingSeries) {
-      existingSeries.setData(data);
-    } else {
       this.chartInstance.addSeries(newDataSeries)  
     }
   }
 
   updateDataSeriesConfig = (property, isChecked) => {
     const existingSeries = this.chartInstance.get(property);
-
     if (existingSeries) {
-      const newYaxisId = this.chartInstance.yAxis.length + 1;
-      this.chartInstance.addAxis({
-        title: {
-            text: property
-        },
-        opposite: true,
-        id: newYaxisId,
+      const axis = this.chartInstance.get(`yaxis-${property}`);
+      axis.update({
+        visible: isChecked
       });
-
-      const updatedSeries = assocPath(
-        ['yAxis'],
-        newYaxisId,
-        existingSeries.options,
-      );
-
-      existingSeries.update(updatedSeries);
     } else {
       alert('Error! You need to run this dataset first')
     }
@@ -87,6 +77,9 @@ class ChartRuntime extends Component {
       },
       xAxis: {
         type: this.props.chartConfig.xaxis,
+      },
+      yAxis: {
+        title: false
       },    
       legend: {
         align: 'left',
@@ -134,7 +127,6 @@ class ChartRuntime extends Component {
           chartId={this.props.chartId}
           sources={this.props.sources}
           addData={this.addDataSeries}
-          updateDataset={this.updateDataSeriesConfig}
         />
         <div className="row">
           <div className="col-md-12">

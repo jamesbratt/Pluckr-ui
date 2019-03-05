@@ -16,6 +16,7 @@ class Datasets extends Component {
       dataProperties: [],
       selectedDataSource: null,
       dataSetTitle: null,
+      dataSetHasYaxis: true,
     };
   }
 
@@ -55,13 +56,9 @@ class Datasets extends Component {
     this.setState({dataSetTitle: event.target.value})
   }
 
-  updateDataset = (event) => {
+  updateYaxis = (event) => {
     const checked = event.target.checked;
-    const dataSet = this.props.datasets.find(dataset => dataset.isActive === true);
-    this.props.updateDataset(
-      dataSet.title,
-      checked,
-    );
+    this.setState({dataSetHasYaxis: checked});
   }
 
   runDataSet = () => {
@@ -87,7 +84,7 @@ class Datasets extends Component {
       dataSet.title, // data series name
       data, // the actual data
       'line', // line or area
-      false, // bool does have a y axis
+      this.state.dataSetHasYaxis, // bool does have a y axis
     );
 
     this.props.dispatch(
@@ -145,7 +142,7 @@ class Datasets extends Component {
           dataset={activeDataset}
           dataProperties={dataProperties}
           run={this.runDataSet}
-          updateDataset={this.updateDataset}
+          updateYaxis={this.updateYaxis}
         />
         : null}
       </React.Fragment>

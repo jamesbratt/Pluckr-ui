@@ -22,7 +22,7 @@ const DatasetConfiguration = (props) => {
           <div className="row">
             <div className="col-md-4">
               <div className="form-check">
-                <input className="form-check-input" type="checkbox" onChange={props.updateDataset} />
+                <input defaultChecked={true} className="form-check-input" type="checkbox" onChange={props.updateYaxis} />
                 <label className="form-check-label">
                   Add a unique Y axis
                 </label>
