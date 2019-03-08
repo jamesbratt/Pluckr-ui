@@ -14,6 +14,14 @@ export const updateChartXaxis = (id, axisType) => {
   }
 };
 
+export const makeChartActive = (id, isActive) => {
+  return {
+    type: 'MAKE_CHART_ACTIVE',
+    id,
+    isActive,
+  }
+};
+
 export const addSource = (id, sourceName, chartId, resource, data, properties) => {
   return {
     type: 'ADD_SOURCE',

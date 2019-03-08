@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Datasets from './Datasets';
 import ChartConfiguration from './ChartConfiguration';
-import { assocPath, dissoc } from 'ramda';
 
 var Highcharts = require('highcharts');
 

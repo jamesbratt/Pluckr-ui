@@ -5,6 +5,7 @@ import ChartList from './builder_components/ChartList';
 import { getProfile } from './data_sources/Strava';
 import { EASY_OAUTH_REDIRECT } from './Constants';
 import { connect } from 'react-redux';
+import { makeChartActive } from './actions';
 import './css/builder.css';
 
 const mapStateToProps = state => {
@@ -13,15 +14,13 @@ const mapStateToProps = state => {
 
 class Builder extends Component {
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      chartToEdit: null,
-    };
-  }
-
   selectChartToEdit = (chart) => {
-    this.setState({chartToEdit: chart});
+    this.props.dispatch(
+      makeChartActive(
+        chart.id,
+        true,
+      )
+    );
   }
 
   componentDidMount() {
@@ -40,6 +39,7 @@ class Builder extends Component {
   }
 
   render() {
+    const chartToEdit = this.props.charts.find(chart => chart.isActive === true);
     return (
       <div id='chart-canvas'>
         <nav className="navbar navbar-expand-lg navbar-light bg-light">
@@ -55,8 +55,8 @@ class Builder extends Component {
           </div>
         </nav>
         <div className='container-fluid wrapper'>
-          {this.state.chartToEdit ? <h3>{this.state.chartToEdit.name}</h3> : null}
-          {this.state.chartToEdit ? <Chart id={this.state.chartToEdit.id} name={this.state.chartToEdit.name} chartConfig={this.state.chartToEdit} /> : null}
+          {chartToEdit ? <h3>{chartToEdit.name}</h3> : null}
+          {chartToEdit ? <Chart id={chartToEdit.id} name={chartToEdit.name} chartConfig={chartToEdit} /> : null}
         </div>
       </div>
     );
