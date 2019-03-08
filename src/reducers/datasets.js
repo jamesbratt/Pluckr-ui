@@ -20,6 +20,14 @@ const datasets = (state = [], action) => {
       };
       return append(newDataset, datasets);
 
+    case 'MAKE_DATASET_ACTIVE':
+      return state.map(dataset => {
+        if (dataset.id === action.id) {
+          return assocPath(['isActive'], action.isActive, dataset);
+        }
+        return assocPath(['isActive'], false, dataset);
+      });
+
     case 'RUN_DATASET':
       return state.map(dataset => {
         if (dataset.id === action.datasetId) {

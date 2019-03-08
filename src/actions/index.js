@@ -45,6 +45,14 @@ export const addDataset = (id, sourceId, chartId, isActive, title) => {
   }
 };
 
+export const makeDatasetActive = (id, isActive) => {
+  return {
+    type: 'MAKE_DATASET_ACTIVE',
+    id,
+    isActive,
+  }
+};
+
 export const runDataset = (datasetId, rawData, hasYaxis) => {
   return {
     type: 'RUN_DATASET',

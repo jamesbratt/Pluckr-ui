@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import DatasetConfiguration from './DatasetConfiguration';
 import { connect } from 'react-redux';
 import { GenerateGuid } from '../utils/Helpers';
-import { addDataset, runDataset } from '../actions';
+import { addDataset, makeDatasetActive, runDataset } from '../actions';
 import { executeOperations } from '../data_parsing/parse';
 
 const mapStateToProps = state => {
@@ -61,6 +61,15 @@ class Datasets extends Component {
     this.setState({dataSetHasYaxis: checked});
   }
 
+  editDataset = (id) => {
+    this.props.dispatch(
+      makeDatasetActive(
+        id,
+        true,
+      )
+    )
+  } 
+
   runDataSet = () => {
     let data = [];
     const dataSet = this.props.datasets.find(dataset => dataset.isActive === true);
@@ -115,15 +124,6 @@ class Datasets extends Component {
         <div className="row wrapper">
           <div className="col-md-12">
             <h4>Add datasets</h4>
-            <div id="data-sets">
-              <ul className="list-inline">
-                {this.props.datasets.map(dataset => {
-                  if(dataset.chartId === this.props.chartId) {
-                    return <li className="list-inline-item">{dataset.title}</li>;
-                  }
-                })}
-              </ul>
-            </div>
             <form onSubmit={this.addDataset} className="form-inline my-2 my-lg-0">
               <select className="form-control mr-sm-2" id="datasetSource" value={this.state.selectedDataSource} onChange={this.getSourceData}>
                 <option value={null} hidden>-- Select a data source --</option>
@@ -136,6 +136,18 @@ class Datasets extends Component {
               <input onKeyUp={this.onSelectDataSetTitle} className="form-control mr-sm-2" type="text" placeholder="Dataset title" />
               <button className="btn btn-primary my-2 my-sm-0" type="submit">New Dataset</button>
             </form>
+            <div id="data-sets">
+              <ul className="list-inline">
+                {this.props.datasets.map(dataset => {
+                  if(dataset.chartId === this.props.chartId) {
+                    return <li className="list-inline-item">
+                      {dataset.title}
+                      <button onClick={() => this.editDataset(dataset.id)} type="button" className="edit-dataset">Edit</button>
+                    </li>;
+                  }
+                })}
+              </ul>
+            </div>
           </div>
         </div>
         {activeDataset ?

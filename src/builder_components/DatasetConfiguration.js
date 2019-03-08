@@ -15,7 +15,7 @@ const DatasetConfiguration = (props) => {
     <div className="row">
       <div className="col-md-6">
         <Operations dataSetId={props.dataset.id} dataSourceId={props.dataset.sourceId} />
-        {operations.length > 0 ? <button onClick={props.run} className="btn btn-success">Run Dataset</button> : null}
+        <button onClick={props.run} className="btn btn-success">Run Dataset</button>
       </div>
       <div className="col-md-6">
         <form>
