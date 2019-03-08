@@ -1,11 +1,11 @@
-import { assocPath, prepend } from 'ramda';
+import { append, assocPath, merge, prepend } from 'ramda';
 
 const datasets = (state = [], action) => {
   switch (action.type) {
     case 'ADD_DATASET':
       const datasets = state.map(dataset => {
         if (dataset.isActive) {
-          assocPath(['isActive'], false, dataset);
+          return assocPath(['isActive'], false, dataset);
         }
         return dataset;
       })
@@ -16,13 +16,20 @@ const datasets = (state = [], action) => {
         isActive: action.isActive,
         title: action.title,
         rawData: null,
+        hasYaxis: true,
       };
-      return prepend(newDataset, datasets);
+      return append(newDataset, datasets);
 
     case 'RUN_DATASET':
       return state.map(dataset => {
         if (dataset.id === action.datasetId) {
-          const updatedData = assocPath(['rawData'], action.rawData, dataset);
+          const updatedData = merge(
+            dataset,
+            {
+              'rawData': action.rawData,
+              'hasYaxis': action.hasYaxis
+            }
+          );
           return updatedData;
         }
         return dataset;

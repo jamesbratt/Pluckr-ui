@@ -97,7 +97,7 @@ class ChartRuntime extends Component {
           dataset.title,
           dataset.rawData,
           'line',
-          false,
+          dataset.hasYaxis,
         );
       }
     })

@@ -67,7 +67,7 @@ class Datasets extends Component {
     const operations = this.props.operations.filter(operation => operation.dataSetId === dataSet.id);
 
     const dataSource = this.props.sources.find(
-      source => source.id === this.state.selectedDataSource,
+      source => source.id === this.state.selectedDataSource || dataSet.sourceId,
     );
 
     try {
@@ -91,6 +91,7 @@ class Datasets extends Component {
       runDataset(
         dataSet.id,
         data,
+        this.state.dataSetHasYaxis,
       )
     );
   }

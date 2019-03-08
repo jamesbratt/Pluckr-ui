@@ -45,11 +45,12 @@ export const addDataset = (id, sourceId, chartId, isActive, title) => {
   }
 };
 
-export const runDataset = (datasetId, rawData) => {
+export const runDataset = (datasetId, rawData, hasYaxis) => {
   return {
     type: 'RUN_DATASET',
     datasetId,
     rawData,
+    hasYaxis,
   }
 }
 
