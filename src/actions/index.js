@@ -53,12 +53,12 @@ export const makeDatasetActive = (id, isActive) => {
   }
 };
 
-export const runDataset = (datasetId, rawData, hasYaxis) => {
+export const runDataset = (datasetId, rawData, options) => {
   return {
     type: 'RUN_DATASET',
     datasetId,
     rawData,
-    hasYaxis,
+    options,
   }
 }
 

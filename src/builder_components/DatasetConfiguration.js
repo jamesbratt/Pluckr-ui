@@ -22,10 +22,10 @@ const DatasetConfiguration = (props) => {
             <div className="col-md-6">
               <div className="form-group">
                 <label>Title</label>
-                <input defaultValue={props.dataset.title} type="text" className="form-control" placeholder="Title" />
+                <input name="title" onKeyUp={props.update} defaultValue={props.dataset.title} type="text" className="form-control" placeholder="Title" />
               </div>
               <div className="form-check">
-                <input defaultChecked={props.dataset.hasYaxis} className="form-check-input" type="checkbox" onChange={props.updateYaxis} />
+                <input name="hasYaxis" defaultChecked={props.dataset.hasYaxis} className="form-check-input" type="checkbox" onChange={props.update} />
                 <label className="form-check-label">
                   Add a unique Y axis
                 </label>

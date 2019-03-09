@@ -22,31 +22,38 @@ class ChartRuntime extends Component {
     this.chartInstance = null;
   }
 
-  addDataSeries = (property, data, chartType, hasYAxis) => {
+  addDataSeries = (datasetId, title, data, chartType, options) => {
     const newDataSeries = {
-      id: property,
-      name: property,
+      id: datasetId,
+      name: options.title || title,
       type: chartType,
       data: data
     };
 
-    const existingSeries = this.chartInstance.get(property);
+    const existingSeries = this.chartInstance.get(datasetId);
 
     if (existingSeries) {
-      const axis = this.chartInstance.get(`yaxis-${property}`);
+      const axis = this.chartInstance.get(`yaxis-${datasetId}`);
       axis.update({
-        visible: hasYAxis
+        visible: options.hasYaxis,
+        title: {
+          text: options.title || title,
+        },
       });
-      existingSeries.setData(data);
+      existingSeries.update({
+        name: options.title || title,
+        data: data
+      });
+      // existingSeries.setData(data);
     } else {
-      const newYaxisId = `yaxis-${property}`;
+      const newYaxisId = `yaxis-${datasetId}`;
       this.chartInstance.addAxis({
           title: {
-              text: property
+              text: options.title || title,
           },
           opposite: this.chartInstance.series.length > 0 ? true : false,
           id: newYaxisId,
-          visible: hasYAxis
+          visible: options.hasYaxis
       })
       newDataSeries['yAxis'] = newYaxisId;
       this.chartInstance.addSeries(newDataSeries)  
@@ -94,10 +101,11 @@ class ChartRuntime extends Component {
     this.props.datasets.forEach((dataset) => {
       if(dataset.chartId === this.props.chartId) {
         this.addDataSeries(
+          dataset.id,
           dataset.title,
           dataset.rawData,
           'line',
-          dataset.hasYaxis,
+          dataset, // Just expects everything
         );
       }
     })

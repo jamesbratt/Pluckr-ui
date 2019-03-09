@@ -31,12 +31,13 @@ const datasets = (state = [], action) => {
     case 'RUN_DATASET':
       return state.map(dataset => {
         if (dataset.id === action.datasetId) {
+          const updatedOptions = merge(
+            { 'rawData': action.rawData, },
+            action.options,
+          );
           const updatedData = merge(
             dataset,
-            {
-              'rawData': action.rawData,
-              'hasYaxis': action.hasYaxis
-            }
+            updatedOptions,
           );
           return updatedData;
         }

@@ -16,7 +16,9 @@ class Datasets extends Component {
       dataProperties: [],
       selectedDataSource: null,
       dataSetTitle: null,
-      dataSetHasYaxis: true,
+      fieldsToUpdate: {
+        hasYaxis: true,
+      },
     };
   }
 
@@ -56,9 +58,14 @@ class Datasets extends Component {
     this.setState({dataSetTitle: event.target.value})
   }
 
-  updateYaxis = (event) => {
-    const checked = event.target.checked;
-    this.setState({dataSetHasYaxis: checked});
+  updateDataset = (event) => {
+    const key = event.target.name;
+    const isBooleanType = event.target.type === 'checkbox';
+    const value = isBooleanType ? event.target.checked : event.target.value;
+    const dataToUpdate = this.state.fieldsToUpdate;
+
+    dataToUpdate[key] = value;
+    this.setState({ fieldsToUpdate: dataToUpdate });
   }
 
   editDataset = (id) => {
@@ -90,17 +97,18 @@ class Datasets extends Component {
     } 
 
     this.props.addData(
-      dataSet.title, // data series name
+      dataSet.id,
+      dataSet.title,
       data, // the actual data
       'line', // line or area
-      this.state.dataSetHasYaxis, // bool does have a y axis
+      this.state.fieldsToUpdate,
     );
 
     this.props.dispatch(
       runDataset(
         dataSet.id,
         data,
-        this.state.dataSetHasYaxis,
+        this.state.fieldsToUpdate,
       )
     );
   }
@@ -119,6 +127,7 @@ class Datasets extends Component {
   render() {
     const dataProperties = this.state.dataProperties;
     const activeDataset = this.props.datasets.find(dataset => dataset.isActive === true);
+
     return (
       <React.Fragment>
         <div className="row wrapper">
@@ -155,7 +164,7 @@ class Datasets extends Component {
           dataset={activeDataset}
           dataProperties={dataProperties}
           run={this.runDataSet}
-          updateYaxis={this.updateYaxis}
+          update={this.updateDataset}
         />
         : null}
       </React.Fragment>
