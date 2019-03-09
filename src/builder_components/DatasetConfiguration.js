@@ -15,14 +15,17 @@ const DatasetConfiguration = (props) => {
     <div className="row">
       <div className="col-md-6">
         <Operations dataSetId={props.dataset.id} dataSourceId={props.dataset.sourceId} />
-        <button onClick={props.run} className="btn btn-success">Run Dataset</button>
       </div>
       <div className="col-md-6">
-        <form>
+        <form key={props.dataset.id}>
           <div className="row">
-            <div className="col-md-4">
+            <div className="col-md-6">
+              <div className="form-group">
+                <label>Title</label>
+                <input defaultValue={props.dataset.title} type="text" className="form-control" placeholder="Title" />
+              </div>
               <div className="form-check">
-                <input defaultChecked={true} className="form-check-input" type="checkbox" onChange={props.updateYaxis} />
+                <input defaultChecked={props.dataset.hasYaxis} className="form-check-input" type="checkbox" onChange={props.updateYaxis} />
                 <label className="form-check-label">
                   Add a unique Y axis
                 </label>
@@ -30,6 +33,9 @@ const DatasetConfiguration = (props) => {
             </div>
           </div>
         </form>
+      </div>
+      <div className="col-md-12">
+        <button onClick={props.run} className="btn btn-success float-right">Save Dataset</button>
       </div>
     </div>
   );
