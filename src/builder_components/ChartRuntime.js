@@ -138,7 +138,7 @@ class ChartRuntime extends Component {
           addData={this.addDataSeries}
         />
         <div className="row">
-          <div style={{ maxHeight: '400px', overflow: 'scroll' }} className="col-md-3">
+          <div style={{ maxHeight:"400px", overflow:"scroll", backgroundColor:"rgb(0, 43, 54)" }} className="col-md-3">
             {activeDataset ? <JSONTree data={activeDataset.rawData} /> : null}
           </div>
           <div className="col-md-9">
