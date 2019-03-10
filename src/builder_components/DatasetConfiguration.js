@@ -38,7 +38,7 @@ const DatasetConfiguration = (props) => {
         </form>
       </div>
       <div className="col-md-12">
-        <button onClick={props.run} className="btn btn-success float-right">Save Dataset</button>
+        <button onClick={props.run} className="btn btn-success float-right">Run Dataset</button>
       </div>
     </div>
   );

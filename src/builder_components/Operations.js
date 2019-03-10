@@ -257,7 +257,6 @@ class Operations extends Component {
     return (
       <div className="operations">
         <button style={{marginRight: '1em'}} onClick={this.handleShow} type="button" class="btn btn-primary btn-sm">Add Operation</button>
-        <button onClick={() => this.previewToggle(true)} type="button" class="btn btn-secondary btn-sm">Preview Dataset</button>
         <Modal size="lg" show={this.state.show} onHide={this.handleClose}>
           {
             this.state.preview ?
