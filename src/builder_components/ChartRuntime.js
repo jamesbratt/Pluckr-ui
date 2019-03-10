@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import JSONTree from 'react-json-tree'
 import Datasets from './Datasets';
 import ChartConfiguration from './ChartConfiguration';
 
@@ -23,11 +24,12 @@ class ChartRuntime extends Component {
   }
 
   addDataSeries = (datasetId, title, data, chartType, options) => {
+    
     const newDataSeries = {
       id: datasetId,
       name: options.title || title,
       type: chartType,
-      data: data
+      data: data,
     };
 
     const existingSeries = this.chartInstance.get(datasetId);
@@ -42,9 +44,8 @@ class ChartRuntime extends Component {
       });
       existingSeries.update({
         name: options.title || title,
-        data: data
+        data: data,
       });
-      // existingSeries.setData(data);
     } else {
       const newYaxisId = `yaxis-${datasetId}`;
       this.chartInstance.addAxis({
@@ -126,7 +127,8 @@ class ChartRuntime extends Component {
     this.setChartConfig();
   }
 
-  render() {  
+  render() {
+    const activeDataset = this.props.datasets.find(dataset => dataset.isActive === true);  
     return (
       <div className="wrapper">
         <ChartConfiguration chartId={this.props.chartId} updateChart={this.updateChartConfig} />
@@ -136,7 +138,10 @@ class ChartRuntime extends Component {
           addData={this.addDataSeries}
         />
         <div className="row">
-          <div className="col-md-12">
+          <div style={{ maxHeight: '400px', overflow: 'scroll' }} className="col-md-3">
+            {activeDataset ? <JSONTree data={activeDataset.rawData} /> : null}
+          </div>
+          <div className="col-md-9">
             <div style={{ ...style }} id={this.props.chartId} />
           </div>
         </div>

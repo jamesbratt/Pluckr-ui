@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { GenerateGuid } from '../utils/Helpers';
 import { addDataset, makeDatasetActive, runDataset } from '../actions';
 import { executeOperations } from '../data_parsing/parse';
+import { clone } from 'ramda';
 
 const mapStateToProps = state => {
   return state
@@ -38,6 +39,10 @@ class Datasets extends Component {
     if(this.state.selectedDataSource && this.state.dataSetTitle) {
       const newDataSetId = GenerateGuid();
       const sourceId = this.state.selectedDataSource;
+
+      const dataSource = this.props.sources.find(
+        source => source.id === sourceId,
+      );
   
       this.props.dispatch(
         addDataset(
@@ -46,6 +51,7 @@ class Datasets extends Component {
           this.props.chartId,
           true,
           this.state.dataSetTitle,
+          dataSource.rawData,
         )
       );
     } else {
@@ -86,9 +92,13 @@ class Datasets extends Component {
       source => source.id === this.state.selectedDataSource || dataSet.sourceId,
     );
 
+    // Having to clone the source data here as for some reason
+    // the highcharts api is mutating the raw data in the sources store
+    const clonedData = clone(dataSource.rawData);
+
     try {
       data = executeOperations(
-        dataSource.rawData,
+        clonedData,
         dataSet,
         operations,
       );

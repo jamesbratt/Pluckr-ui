@@ -1,6 +1,6 @@
 import React from 'react';
 import Modal from 'react-bootstrap/Modal';
-import JSONTree from 'react-json-tree'
+import JSONTree from 'react-json-tree';
 import { connect } from 'react-redux';
 import { executeOperations } from '../data_parsing/parse';
 

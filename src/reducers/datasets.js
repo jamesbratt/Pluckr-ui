@@ -15,7 +15,7 @@ const datasets = (state = [], action) => {
         chartId: action.chartId,
         isActive: action.isActive,
         title: action.title,
-        rawData: null,
+        rawData: action.data,
         hasYaxis: true,
       };
       return append(newDataset, datasets);
