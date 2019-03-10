@@ -13,6 +13,9 @@ const DatasetConfiguration = (props) => {
 
   return (
     <div className="row">
+      <div className="col-md-12">
+        <h4>Dataset Configuration</h4>
+      </div>
       <div className="col-md-6">
         <Operations dataSetId={props.dataset.id} dataSourceId={props.dataset.sourceId} />
       </div>

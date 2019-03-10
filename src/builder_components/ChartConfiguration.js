@@ -14,6 +14,9 @@ const ChartConfiguration = (props) => {
 
   return (
     <div className="row">
+      <div className="col-md-12">
+        <h4>Chart Configuration</h4>
+      </div>
       <div className="col-md-12 grey-panel">
         <form>
           <div className="row">

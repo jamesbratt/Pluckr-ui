@@ -132,7 +132,6 @@ class Datasets extends Component {
       <React.Fragment>
         <div className="row wrapper">
           <div className="col-md-12">
-            <h4>Add datasets</h4>
             <form onSubmit={this.addDataset} className="form-inline my-2 my-lg-0">
               <select className="form-control mr-sm-2" id="datasetSource" value={this.state.selectedDataSource} onChange={this.getSourceData}>
                 <option value={null} hidden>-- Select a data source --</option>

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Modal from 'react-bootstrap/Modal';
 import { connect } from 'react-redux';
 import { addSource } from '../actions';
 import { GenerateGuid } from '../utils/Helpers';
@@ -15,11 +16,24 @@ class Chart extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      show: false,
       selectedResource: null,
       sourceName: null,
       parameterFields: [],
       parameterValues: [],
     };
+  }
+
+  handleClose = () => {
+    this.setState({
+      show: false,
+    });
+  }
+
+  handleShow = () => {
+    this.setState({
+      show: true
+    });
   }
 
   addDataSource = (event) => {
@@ -30,16 +44,20 @@ class Chart extends Component {
     if(selectedResource && sourceName) {
       getData(selectedResource, params)
         .then(response => {
-          this.props.dispatch(
-            addSource(
-              GenerateGuid(),
-              sourceName,
-              this.props.id,
-              selectedResource,
-              response.data,
-              response.properties,
-            )
-          );
+          this.setState({
+            show: false,
+          }, () => {
+            this.props.dispatch(
+              addSource(
+                GenerateGuid(),
+                sourceName,
+                this.props.id,
+                selectedResource,
+                response.data,
+                response.properties,
+              )
+            );
+          });
         })
     } else {
       alert('Fill out all required data source fields');
@@ -109,15 +127,19 @@ class Chart extends Component {
           case DATA_TYPES.date:
             return (
               <React.Fragment>
-                <label className="sr-only">{parameterField.name}</label>
-                <input name={parameterField.name} onChange={this.onParameterChange} type="date" className="form-control mb-2 mr-sm-2" placeholder={parameterField.name} />
+                <div class="form-group">
+                  <label>{parameterField.name}</label>
+                  <input name={parameterField.name} onChange={this.onParameterChange} type="date" className="form-control" placeholder={parameterField.name} />
+                </div>
               </React.Fragment>
             );
           case DATA_TYPES.int:
             return (
               <React.Fragment>
-                <label className="sr-only">{parameterField.name}</label>
-                <input name={parameterField.name} onKeyUp={this.onParameterChange} type="number" className="form-control mb-2 mr-sm-2" placeholder={parameterField.name} />
+                <div class="form-group">
+                  <label>{parameterField.name}</label>
+                  <input name={parameterField.name} onKeyUp={this.onParameterChange} type="number" className="form-control" placeholder={parameterField.name} />
+                </div>
               </React.Fragment>
             );
         }
@@ -126,31 +148,48 @@ class Chart extends Component {
 
     return (
       <div id="chart-config">
-        <div id="data-sources">
-          <ul className="list-inline">
-            {this.props.sources.map(source => {
-              if(source.chartId === this.props.id) {
-                return <li className="list-inline-item">{source.name}</li>;
-              }
-            })}
-          </ul>
-        </div>
-        <form className="form-inline">
-            <label className="sr-only">Title</label>
-            <input value={this.state.sourceName || ''} onChange={this.onSourceNameChange} type="text" className="form-control mb-2 mr-sm-2" id="dataSourceTitle" placeholder="Enter a title" />
-
-            <label className="sr-only">Resource</label>
-            <select onChange={this.onResourceChange} className="form-control mb-2 mr-sm-2" id="dataSourceResource">
-              <option value={null} hidden>-- Select a resource --</option>;
-              {Object.keys(STRAVA_RESOURCES).map(resourceKey => {
-                return <option value={STRAVA_RESOURCES[resourceKey].name}>{STRAVA_RESOURCES[resourceKey].label}</option>
+        <div id="data-sources" className="row">
+          <div className="col-md-2">
+            <button style={{marginRight: '1em'}} onClick={this.handleShow} type="button" className="btn btn-block btn-primary">New Data Source</button>
+          </div>
+          <div className="col-md-10">
+            <ul className="list-inline">
+              {this.props.sources.map(source => {
+                if(source.chartId === this.props.id) {
+                  return <li className="list-inline-item">{source.name}</li>;
+                }
               })}
-            </select>
+            </ul>
+          </div>
+        </div>
+        <Modal show={this.state.show} onHide={this.handleClose}>
+          <Modal.Header closeButton>
+            <Modal.Title>Add a data source</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <form>
+              <div class="form-group">
+                <label>Title</label>
+                <input value={this.state.sourceName || ''} onChange={this.onSourceNameChange} type="text" className="form-control" placeholder="Enter a title" />
+              </div>
 
-            {parameters}
+              <div class="form-group">
+                <label>Resource</label>
+                <select onChange={this.onResourceChange} className="form-control" id="dataSourceResource">
+                  <option value={null} hidden>-- Select a resource --</option>;
+                  {Object.keys(STRAVA_RESOURCES).map(resourceKey => {
+                    return <option value={STRAVA_RESOURCES[resourceKey].name}>{STRAVA_RESOURCES[resourceKey].label}</option>
+                  })}
+                </select>            
+              </div>
 
+              {parameters}
+            </form>
+          </Modal.Body>
+          <Modal.Footer>
             <button onClick={this.addDataSource} type="submit" className="btn btn-primary mb-2">Add Data Source</button>
-        </form>
+          </Modal.Footer>
+        </Modal>
         {availableSources.length > 0 ? <ChartRuntime chartId={this.props.id} chartName={this.props.name} sources={availableSources} chartConfig={this.props.chartConfig} /> : null}
       </div>
     );
