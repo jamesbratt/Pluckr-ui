@@ -27,7 +27,7 @@ const AddChart = (props) => {
 
   return (
     <form className="form-inline my-2 my-lg-0">
-      <input ref={chartNameRef} className="form-control mr-sm-2" type="text" placeholder="Create a new chart" aria-label="New Chart" />
+      <input ref={chartNameRef} className="form-control mr-sm-2" type="text" placeholder="What is your chart called?" aria-label="New Chart" />
       <button onClick={addNewChart} className="btn btn-outline-success my-2 my-sm-0" type="submit">Create Chart</button>
     </form>
   );

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Chart from './builder_components/Chart';
 import AddChart from './builder_components/AddChart';
 import ChartList from './builder_components/ChartList';
+import DataProviderList from './builder_components/DataProviderList';
 import { getProfile } from './data_sources/Strava';
 import { EASY_OAUTH_REDIRECT } from './Constants';
 import { connect } from 'react-redux';
@@ -49,12 +50,21 @@ class Builder extends Component {
           </button>
           <div className="collapse navbar-collapse" id="navbarSupportedContent">
             <ul className="navbar-nav mr-auto">
+              <DataProviderList />
               {this.props.charts.length > 0 ? <ChartList charts={this.props.charts} onSelect={this.selectChartToEdit} /> : null}
             </ul>
-            <AddChart />
+            {!chartToEdit ? null : <AddChart />}
           </div>
         </nav>
         <div className='container-fluid wrapper'>
+          {!chartToEdit ?
+            <div className="add-chart-center-outer">
+              <div className="add-chart-center">
+                <h1>Build a New Chart</h1>
+                <AddChart />
+              </div>
+            </div>
+          : null}
           {chartToEdit ? <h3>{chartToEdit.name}</h3> : null}
           {chartToEdit ? <Chart id={chartToEdit.id} name={chartToEdit.name} chartConfig={chartToEdit} /> : null}
         </div>

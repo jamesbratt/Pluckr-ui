@@ -1,17 +1,16 @@
 import React from 'react';
+import NavDropdown from 'react-bootstrap/NavDropdown';
 
 const ChartList = (props) => {
 
   return (
-    <ul className="navbar-nav mr-auto">
+    <NavDropdown title="Charts">
       {props.charts.map(chart => {
-        return <li className="nav-item">
-          <a className="nav-link" onClick={() => props.onSelect(chart)}
-          href="#">
-            {chart.name}</a>
-        </li>
+        return <NavDropdown.Item onClick={() => props.onSelect(chart)}>
+          {chart.name}
+        </NavDropdown.Item>
       })}
-    </ul>
+    </NavDropdown>
   );
 }
 
