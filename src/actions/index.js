@@ -81,3 +81,10 @@ export const updateOperation = (id, rootFunction, ast) => {
     ast,
   }
 };
+
+export const setDataProviders = (payload) => {
+  return {
+    type: 'SET_PROVIDERS',
+    payload,
+  }
+};

@@ -3,10 +3,8 @@ import Chart from './builder_components/Chart';
 import AddChart from './builder_components/AddChart';
 import ChartList from './builder_components/ChartList';
 import DataProviderList from './builder_components/DataProviderList';
-import { getProfile } from './data_sources/Strava';
-import { EASY_OAUTH_REDIRECT } from './Constants';
 import { connect } from 'react-redux';
-import { makeChartActive } from './actions';
+import { makeChartActive, setDataProviders } from './actions';
 import './css/builder.css';
 
 const mapStateToProps = state => {
@@ -25,18 +23,17 @@ class Builder extends Component {
   }
 
   componentDidMount() {
-    const stravaToken = localStorage.getItem('token');
-    if(!stravaToken) {
-      document.location.replace(EASY_OAUTH_REDIRECT);
-    } else {
-      // This is just so we can check the token is still valid
-      getProfile()
-        .then(response => {
-          if(response.errors) {
-            document.location.replace(EASY_OAUTH_REDIRECT);
-          }
-        })
-    }
+    const pings = this.props.dataProviders.map(
+      dataProvider => dataProvider.ping()
+    );
+
+    Promise.all(pings).then(responses => { 
+      this.props.dispatch(
+        setDataProviders(
+          responses
+        )
+      );
+    });
   }
 
   render() {

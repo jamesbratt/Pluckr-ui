@@ -152,10 +152,8 @@ export const getProfile = (perPage) => {
       'Authorization': `Bearer ${token}`
     }
   }).then(response => {
-    return response.json();
-  }).then(response => {
-    return response;
-  })
+    return { provider: 'strava', status: response.status };
+  });
 };
 
 export const getData = (resource, params) => {

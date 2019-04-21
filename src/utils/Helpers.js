@@ -13,6 +13,10 @@ export const ConvertToEpoch = (dateString) => {
   return new Date(parseInt(splittedDate[0]), parseInt(splittedDate[1]) - 1, parseInt(splittedDate[2])).getTime() / 1000;
 }
 
+export const isSuccessResponse = (status) => {
+  return status >= 200 && status <= 300;
+}
+
 export const generateQueryString = (params, resource, paramConfigs) => {
   const resourceParameters = paramConfigs;
   return params.map(param => {
