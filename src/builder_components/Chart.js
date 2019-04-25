@@ -3,7 +3,7 @@ import Modal from 'react-bootstrap/Modal';
 import { connect } from 'react-redux';
 import { addSource } from '../actions';
 import { GenerateGuid } from '../utils/Helpers';
-import { getData, STRAVA_RESOURCES } from '../data_sources/Strava';
+import { getStravaData, STRAVA_RESOURCES } from '../data_sources/Strava';
 import ChartRuntime from './ChartRuntime';
 import { DATA_TYPES } from '../Constants';
 
@@ -17,6 +17,7 @@ class Chart extends Component {
     super(props);
     this.state = {
       show: false,
+      selectedProvider: null,
       selectedResource: null,
       sourceName: null,
       parameterFields: [],
@@ -27,6 +28,10 @@ class Chart extends Component {
   handleClose = () => {
     this.setState({
       show: false,
+      sourceName: null,
+      selectedProvider: null,
+      parameterFields: [],
+      parameterValues: [],
     });
   }
 
@@ -42,7 +47,7 @@ class Chart extends Component {
     const sourceName = this.state.sourceName;
     event.preventDefault();
     if(selectedResource && sourceName) {
-      getData(selectedResource, params)
+      getStravaData(selectedResource, params)
         .then(response => {
           this.setState({
             show: false,
@@ -64,19 +69,41 @@ class Chart extends Component {
     }
   }
 
-  onResourceChange = (event) => {
-    let availableFields = [];
-    const resourceName = event.target.value;
-    const resourceParams = STRAVA_RESOURCES[resourceName].parameters;
+  onProviderChange = (event) => {
+    if (event.target.value) {
+      const selectedProvider = this.props.dataProviders.find(
+        dataProvider => dataProvider.provider === event.target.value
+      );
 
-    if (resourceParams) {
-      availableFields = resourceParams;
+      this.setState({
+        selectedProvider,
+        selectedResource: null,
+        parameterFields: [],
+      });
+    } else {
+      this.setState({
+        selectedProvider: null,
+        selectedResource: null,
+        parameterFields: [],
+      });
     }
+  }
 
-    this.setState({
-      selectedResource: resourceName,
-      parameterFields: availableFields,
-    });
+  onResourceChange = (event) => {
+    if (this.state.selectedProvider && event.target.value) {
+      let availableFields = [];
+      const resourceName = event.target.value;
+      const resourceParams = this.state.selectedProvider.resources[resourceName].parameters;
+  
+      if (resourceParams) {
+        availableFields = resourceParams;
+      }
+  
+      this.setState({
+        selectedResource: resourceName,
+        parameterFields: availableFields,
+      });
+    }
   }
 
   onParameterChange = (event) => {
@@ -108,6 +135,7 @@ class Chart extends Component {
     if(prevProps.id !== this.props.id) {
       this.setState({
         sourceName: null,
+        selectedProvider: null,
         parameterFields: [],
         parameterValues: [],
       });
@@ -172,16 +200,29 @@ class Chart extends Component {
                 <label>Title</label>
                 <input value={this.state.sourceName || ''} onChange={this.onSourceNameChange} type="text" className="form-control" placeholder="Enter a title" />
               </div>
-
               <div class="form-group">
-                <label>Resource</label>
-                <select onChange={this.onResourceChange} className="form-control" id="dataSourceResource">
-                  <option value={null} hidden>-- Select a resource --</option>;
-                  {Object.keys(STRAVA_RESOURCES).map(resourceKey => {
-                    return <option value={STRAVA_RESOURCES[resourceKey].name}>{STRAVA_RESOURCES[resourceKey].label}</option>
+                <label>Data Provider</label>
+                <select onChange={this.onProviderChange} className="form-control" id="dataProvider">
+                  <option value="">-- Select a data provider --</option>;
+                  {this.props.dataProviders.map((dataProvider) => {
+                    if (dataProvider.isActive) {
+                      return <option value={dataProvider.provider}>{dataProvider.provider}</option>
+                    }
                   })}
                 </select>            
               </div>
+              {this.state.selectedProvider ?
+                <div class="form-group">
+                  <label>Resource</label>
+                  <select value={this.state.selectedResource || ""} onChange={this.onResourceChange} className="form-control" id="dataSourceResource">
+                    <option value="">-- Select a resource --</option>;
+                    {Object.keys(this.state.selectedProvider.resources).map(resourceKey => {
+                      return <option value={this.state.selectedProvider.resources[resourceKey].name}>{this.state.selectedProvider.resources[resourceKey].label}</option>
+                    })}
+                  </select>            
+                </div>
+              : null
+              }
 
               {parameters}
             </form>

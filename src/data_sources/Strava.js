@@ -156,7 +156,7 @@ export const getProfile = () => {
   });
 };
 
-export const getData = (resource, params) => {
+export const getStravaData = (resource, params) => {
   let call;
   switch(resource) {
     case STRAVA_RESOURCES.activities.name:

@@ -1,6 +1,6 @@
 
-import { getProfile } from '../data_sources/Strava';
-import { getUser } from '../data_sources/Github';
+import { getStravaData, getProfile, STRAVA_RESOURCES } from '../data_sources/Strava';
+import { getGitHubData, getUser, GITHUB_RESOURCES } from '../data_sources/Github';
 import { assocPath } from 'ramda';
 import { STRAVA_REDIRECT, GITHUB_REDIRECT } from '../Constants';
 
@@ -9,12 +9,16 @@ const initialState = [
     provider: 'strava',
     ping: getProfile,
     redirectUrl: STRAVA_REDIRECT,
+    request: getStravaData,
+    resources: STRAVA_RESOURCES,
     isActive: false,
   },
   {
     provider: 'github',
     ping: getUser,
     redirectUrl: GITHUB_REDIRECT,
+    request: getGitHubData,
+    resources: GITHUB_RESOURCES,
     isActive: false,
   },
 ];
