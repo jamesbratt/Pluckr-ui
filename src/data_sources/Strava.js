@@ -1,6 +1,6 @@
 
 import { DATA_TYPES } from '../Constants';
-import { ConvertToEpoch, generateQueryString, injectParametersIntoEndpoint } from '../utils/Helpers';
+import { ConvertToEpoch, getToken, generateQueryString, injectParametersIntoEndpoint } from '../utils/Helpers';
 
 const STRAVA_URI = 'https://www.strava.com/api/v3';
 
@@ -66,7 +66,7 @@ const RESOURCE_PROPERTIES = {
 }
 
 const getActivities = (params) => {
-  const token = localStorage.getItem('token');
+  const token = getToken('strava');
   const queryString = params.length > 0 ? '?' +
     generateQueryString(
       params,
@@ -95,7 +95,7 @@ const getSegmentEfforts = (params) => {
   const { endPoint } = urlComponents;
   const { parameters } = urlComponents;
 
-  const token = localStorage.getItem('token');
+  const token = getToken('strava');
   const queryString = parameters.length > 0 ? '?' +
     generateQueryString(
       parameters,
@@ -124,7 +124,7 @@ const getClubActivities = (params) => {
   const { endPoint } = urlComponents;
   const { parameters } = urlComponents;
 
-  const token = localStorage.getItem('token');
+  const token = getToken('strava');
   const queryString = parameters.length > 0 ? '?' +
     generateQueryString(
       parameters,
@@ -144,8 +144,8 @@ const getClubActivities = (params) => {
   })
 };
 
-export const getProfile = (perPage) => {
-  const token = localStorage.getItem('token');
+export const getProfile = () => {
+  const token = getToken('strava');
   return fetch(`${STRAVA_URI}/athlete`, {
     headers:{
       'Content-Type': 'application/json',

@@ -1,6 +1,12 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router, Redirect } from "react-router-dom";
-import { EASY_OAUTH_AUTH_ENDPOINT } from './Constants';
+import { STRAVA_AUTH_ENDPOINT, GITHUB_AUTH_ENDPOINT } from './Constants';
+import { assocPath } from 'ramda';
+
+const PROVIDER_MAP = {
+  strava: STRAVA_AUTH_ENDPOINT,
+  github: GITHUB_AUTH_ENDPOINT,
+};
 
 class Auth extends Component {
   constructor(props) {
@@ -11,16 +17,22 @@ class Auth extends Component {
   }
 
   componentDidMount() {
+    const urlSegments = window.location.pathname.split('/');
+    const providerName = urlSegments[urlSegments.length - 1];
+    const providerAuthEndpoint = PROVIDER_MAP[providerName];
     const params = window.location.search;
 
-    if (params.length > 0) {
-      fetch(EASY_OAUTH_AUTH_ENDPOINT + params)
+    if (params.length > 0 && providerAuthEndpoint) {
+      fetch(providerAuthEndpoint + params)
         .then((response) => {
           return response.json();
         })
         .then((response) => {
           if (!response.errors) {
-            localStorage.setItem('token', response.access_token);
+            const tokenObj = localStorage.getItem('token');
+            const parsedTokens = tokenObj ? JSON.parse(tokenObj) : {}; 
+            const newTokeObj = assocPath([providerName], response.access_token, parsedTokens);
+            localStorage.setItem('token', JSON.stringify(newTokeObj));
             this.setState({isAuthenticated: true});
           } else {
             console.error(response);

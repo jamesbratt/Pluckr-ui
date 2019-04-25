@@ -47,7 +47,7 @@ class Builder extends Component {
           </button>
           <div className="collapse navbar-collapse" id="navbarSupportedContent">
             <ul className="navbar-nav mr-auto">
-              <DataProviderList />
+              <DataProviderList dataProviders={this.props.dataProviders} />
               {this.props.charts.length > 0 ? <ChartList charts={this.props.charts} onSelect={this.selectChartToEdit} /> : null}
             </ul>
             {!chartToEdit ? null : <AddChart />}

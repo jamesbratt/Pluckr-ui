@@ -1,4 +1,6 @@
 
+import { pathOr } from 'ramda';
+
 export const GenerateGuid = () => {
   const s4 = () => {
     return Math.floor((1 + Math.random()) * 0x10000)
@@ -13,8 +15,10 @@ export const ConvertToEpoch = (dateString) => {
   return new Date(parseInt(splittedDate[0]), parseInt(splittedDate[1]) - 1, parseInt(splittedDate[2])).getTime() / 1000;
 }
 
-export const isSuccessResponse = (status) => {
-  return status >= 200 && status <= 300;
+export const getToken = (dataProvider) => {
+  const tokens = localStorage.getItem('token');
+  const parsedTokens = tokens ? JSON.parse(tokens) : {};
+  return pathOr('', [dataProvider], parsedTokens);
 }
 
 export const generateQueryString = (params, resource, paramConfigs) => {
