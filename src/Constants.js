@@ -32,6 +32,10 @@ export const OPERATION_FUNCTIONS = [
     accepts: ['DATA_KEY', 'FUNCTION']
   },
   {
+    name: 'PLUCK',
+    accepts: ['DATA_KEY']
+  },
+  {
     name: 'MULTIPLY_BY',
     accepts: ['INTEGER']
   },

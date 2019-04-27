@@ -225,8 +225,6 @@ class Operations extends Component {
               </select>
             );
           case 'PROPERTY':
-          case 'XAXIS':
-          case 'YAXIS':
             return (
               <select defaultValue={syntaxNode.value} id={syntaxNode.id} onChange={this.onAstNodeValueSelected} className="form-control mb-2 mr-sm-2">
                 <option value={null} hidden>-- Select a {syntaxNode.name} --</option>
@@ -244,6 +242,8 @@ class Operations extends Component {
               </React.Fragment>
             );
           case "DATA_KEY":
+          case 'XAXIS':
+          case 'YAXIS':
             return (
               <React.Fragment>
                 <label className="sr-only">{syntaxNode.name}</label>

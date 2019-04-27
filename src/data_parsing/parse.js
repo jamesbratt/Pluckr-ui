@@ -1,4 +1,4 @@
-import { assocPath } from 'ramda';
+import { assocPath, pathOr } from 'ramda';
 
 const constructSeries = (node, data, ast) => {
   if (Array.isArray(data)) {
@@ -44,6 +44,17 @@ const target = (node, data, ast) => {
     );
   }
   throw new Error('TARGET can only be executed on a data structure with keys');
+}
+
+const pluck = (node, data, ast) => {
+  if ((typeof data === 'function' || (typeof data === 'object' && !!data)) && !Array.isArray(data)) {
+    const args = ast.filter(childNode => childNode.parent === node.id);
+    const target = args.find(arg => arg.name === 'DATA_KEY');
+    const keyToTarget = target.value;
+
+    return pathOr(null, [keyToTarget], data);
+  }
+  throw new Error('PLUCK can only be executed on a data structure with keys');
 }
 
 const multiplyBy = (node, data, ast) => {
@@ -110,6 +121,12 @@ const executeFunction = (node, data, ast) => {
       );
     case 'TARGET':
       return target(
+        node,
+        data,
+        ast,
+      );
+    case 'PLUCK':
+      return pluck(
         node,
         data,
         ast,
