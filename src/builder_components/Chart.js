@@ -47,7 +47,7 @@ class Chart extends Component {
     const sourceName = this.state.sourceName;
     event.preventDefault();
     if(selectedResource && sourceName) {
-      getStravaData(selectedResource, params)
+      this.state.selectedProvider.request(selectedResource, params)
         .then(response => {
           this.setState({
             show: false,
@@ -79,12 +79,14 @@ class Chart extends Component {
         selectedProvider,
         selectedResource: null,
         parameterFields: [],
+        parameterValues: [],
       });
     } else {
       this.setState({
         selectedProvider: null,
         selectedResource: null,
         parameterFields: [],
+        parameterValues: [],
       });
     }
   }
@@ -102,6 +104,11 @@ class Chart extends Component {
       this.setState({
         selectedResource: resourceName,
         parameterFields: availableFields,
+      });
+    } else {
+      this.setState({
+        parameterFields: [],
+        parameterValues: [],
       });
     }
   }
@@ -170,6 +177,15 @@ class Chart extends Component {
                 </div>
               </React.Fragment>
             );
+          default:
+            return (
+              <React.Fragment>
+                <div class="form-group">
+                  <label>{parameterField.name}</label>
+                  <input name={parameterField.name} onKeyUp={this.onParameterChange} type="text" className="form-control" placeholder={parameterField.name} />
+                </div>
+              </React.Fragment>
+            );          
         }
       })
     }
@@ -214,7 +230,7 @@ class Chart extends Component {
               {this.state.selectedProvider ?
                 <div class="form-group">
                   <label>Resource</label>
-                  <select value={this.state.selectedResource || ""} onChange={this.onResourceChange} className="form-control" id="dataSourceResource">
+                  <select onChange={this.onResourceChange} className="form-control" id="dataSourceResource">
                     <option value="">-- Select a resource --</option>;
                     {Object.keys(this.state.selectedProvider.resources).map(resourceKey => {
                       return <option value={this.state.selectedProvider.resources[resourceKey].name}>{this.state.selectedProvider.resources[resourceKey].label}</option>

@@ -15,6 +15,10 @@ export const ConvertToEpoch = (dateString) => {
   return new Date(parseInt(splittedDate[0]), parseInt(splittedDate[1]) - 1, parseInt(splittedDate[2])).getTime() / 1000;
 }
 
+export const ConvertToIso = (dateString) => {
+  return new Date(dateString).toISOString();
+}
+
 export const getToken = (dataProvider) => {
   const tokens = localStorage.getItem('token');
   const parsedTokens = tokens ? JSON.parse(tokens) : {};
@@ -33,19 +37,19 @@ export const generateQueryString = (params, resource, paramConfigs) => {
 
 export const injectParametersIntoEndpoint = (resourcEndpoint, params) => {
   let endPoint = resourcEndpoint;
-  let parameterToRemove = null;
+  let parametersToRemove = [];
   let parameters = params;
 
   parameters.forEach(param => {
     const endpointContainsParam = endPoint.indexOf(`{${param.name}}`) !== -1;
     if (endpointContainsParam) {
-      endPoint = resourcEndpoint.replace(`{${param.name}}`, param.value);
-      parameterToRemove = param.name;
+      endPoint = endPoint.replace(`{${param.name}}`, param.value);
+      parametersToRemove.push(param.name);
     }
   });
 
-  if (parameterToRemove) {
-    parameters = params.filter(param => param.name !== parameterToRemove);
+  if (parametersToRemove.length > 0) {
+    parameters = params.filter(param => parametersToRemove.indexOf(param.name) === -1);
   }
 
   return { endPoint, parameters };

@@ -15,6 +15,7 @@ export const CHART_TYPES = [
 export const DATA_TYPES = {
   date: 'date',
   int: 'integer',
+  string: 'string',
 };
 
 export const OPERATION_FUNCTIONS = [
