@@ -32,6 +32,10 @@ export const OPERATION_FUNCTIONS = [
     accepts: ['DATA_KEY', 'FUNCTION']
   },
   {
+    name: 'ADD_KEY',
+    accepts: ['NEW_DATA_KEY', 'FUNCTION']
+  },
+  {
     name: 'PLUCK',
     accepts: ['DATA_KEY']
   },
@@ -54,5 +58,9 @@ export const OPERATION_FUNCTIONS = [
   {
     name: 'CONVERT_TO_TIMESTAMP',
     accepts: []
+  },
+  {
+    name: 'GET_MONTH',
+    accepts: ['DATA_KEY']
   }
 ];

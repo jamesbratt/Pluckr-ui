@@ -242,6 +242,7 @@ class Operations extends Component {
               </React.Fragment>
             );
           case "DATA_KEY":
+          case "NEW_DATA_KEY":
           case 'XAXIS':
           case 'YAXIS':
             return (

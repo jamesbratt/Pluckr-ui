@@ -1,4 +1,4 @@
-import { assocPath, pathOr } from 'ramda';
+import { assoc, assocPath, pathOr } from 'ramda';
 
 const constructSeries = (node, data, ast) => {
   if (Array.isArray(data)) {
@@ -44,6 +44,18 @@ const target = (node, data, ast) => {
     );
   }
   throw new Error('TARGET can only be executed on a data structure with keys');
+}
+
+const addKey = (node, data, ast) => {
+  if ((typeof data === 'function' || (typeof data === 'object' && !!data)) && !Array.isArray(data)) {
+    const args = ast.filter(childNode => childNode.parent === node.id);
+    const newKey = args.find(arg => arg.name === 'NEW_DATA_KEY');
+    const func = args.find(arg => arg.name === 'FUNCTION');
+    const newKeyName = newKey.value;
+
+    return assoc(newKeyName, executeFunction(func, data, ast), data);
+  }
+  throw new Error('ADD_KEY can only be executed on a data structure with keys');
 }
 
 const pluck = (node, data, ast) => {
@@ -105,6 +117,34 @@ const convertToUnixTimestamp = (node, data, ast) => {
   throw new Error("Invalid date format");
 }
 
+const getMonth = (node, data, ast) => {
+  const args = ast.filter(childNode => childNode.parent === node.id);
+  const dateKey = args.find(arg => arg.name === 'DATA_KEY');
+  const dateKeyValue = data[dateKey.value];
+  if (!isNaN(Date.parse(dateKeyValue))) {
+  
+    const months = [
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December'
+    ];
+
+    const date = new Date(dateKeyValue);
+    const monthFromDate = date.getMonth();
+    return months[monthFromDate];
+  }
+  throw new Error("Invalid date format");
+}
+
 const executeFunction = (node, data, ast) => {
   switch (node.value) {
     case 'CONSTRUCT_SERIES':
@@ -121,6 +161,12 @@ const executeFunction = (node, data, ast) => {
       );
     case 'TARGET':
       return target(
+        node,
+        data,
+        ast,
+      );
+    case 'ADD_KEY':
+      return addKey(
         node,
         data,
         ast,
@@ -157,6 +203,12 @@ const executeFunction = (node, data, ast) => {
       );
     case 'CONVERT_TO_TIMESTAMP':
       return convertToUnixTimestamp(
+        node,
+        data,
+        ast,
+      );
+    case 'GET_MONTH':
+      return getMonth(
         node,
         data,
         ast,
