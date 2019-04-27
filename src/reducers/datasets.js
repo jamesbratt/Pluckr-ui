@@ -16,7 +16,6 @@ const datasets = (state = [], action) => {
         isActive: action.isActive,
         title: action.title,
         rawData: action.data,
-        hasYaxis: true,
       };
       return append(newDataset, datasets);
 
@@ -32,14 +31,14 @@ const datasets = (state = [], action) => {
       return state.map(dataset => {
         if (dataset.id === action.datasetId) {
           const updatedOptions = merge(
+            dataset,
             { 'rawData': action.rawData, },
-            action.options,
           );
           const updatedData = merge(
             dataset,
             updatedOptions,
           );
-          return updatedData;
+          return updatedOptions;
         }
         return dataset;
       });

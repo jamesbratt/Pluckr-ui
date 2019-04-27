@@ -32,6 +32,14 @@ const ChartConfiguration = (props) => {
                 </select>
               </div>
             </div>
+            <div className="col-md-4">
+              <div className="form-group">
+                <label><span class="badge badge-secondary">0</span> Y Axis configurations available</label>
+                <div>
+                  <button className="btn btn-secondary">New Y Axis</button>
+                </div>
+              </div>
+            </div>
           </div>
         </form>
       </div>

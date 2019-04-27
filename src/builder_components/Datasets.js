@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import DatasetConfiguration from './DatasetConfiguration';
+import Operations from './Operations';
 import { connect } from 'react-redux';
 import { GenerateGuid } from '../utils/Helpers';
 import { addDataset, makeDatasetActive, runDataset } from '../actions';
 import { executeOperations } from '../data_parsing/parse';
+import JSONTree from 'react-json-tree';
 import { clone } from 'ramda';
 
 const mapStateToProps = state => {
@@ -17,9 +18,6 @@ class Datasets extends Component {
       dataProperties: [],
       selectedDataSource: null,
       dataSetTitle: null,
-      fieldsToUpdate: {
-        hasYaxis: true,
-      },
     };
   }
 
@@ -62,16 +60,6 @@ class Datasets extends Component {
 
   onSelectDataSetTitle = (event) => {
     this.setState({dataSetTitle: event.target.value})
-  }
-
-  updateDataset = (event) => {
-    const key = event.target.name;
-    const isBooleanType = event.target.type === 'checkbox';
-    const value = isBooleanType ? event.target.checked : event.target.value;
-    const dataToUpdate = this.state.fieldsToUpdate;
-
-    dataToUpdate[key] = value;
-    this.setState({ fieldsToUpdate: dataToUpdate });
   }
 
   editDataset = (id) => {
@@ -117,8 +105,7 @@ class Datasets extends Component {
     this.props.dispatch(
       runDataset(
         dataSet.id,
-        data,
-        this.state.fieldsToUpdate,
+        data
       )
     );
   }
@@ -169,12 +156,20 @@ class Datasets extends Component {
           </div>
         </div>
         {activeDataset ?
-        <DatasetConfiguration
-          dataset={activeDataset}
-          dataProperties={dataProperties}
-          run={this.runDataSet}
-          update={this.updateDataset}
-        />
+        <div className="row">
+          <div className="col-md-12">
+            <h4>Dataset Configuration</h4>
+          </div>
+          <div className="col-md-6">
+            <Operations dataSetId={activeDataset.id} dataSourceId={activeDataset.sourceId} />
+          </div>
+          <div style={{ maxHeight:"400px", overflow:"scroll", backgroundColor:"rgb(0, 43, 54)" }} className="col-md-6">
+            {activeDataset ? <JSONTree data={activeDataset.rawData} /> : null}
+          </div>
+          <div className="col-md-12">
+            <button onClick={this.runDataSet} className="btn btn-success">Run Dataset</button>
+          </div>
+        </div>
         : null}
       </React.Fragment>
     );

@@ -62,7 +62,6 @@ class Builder extends Component {
               </div>
             </div>
           : null}
-          {chartToEdit ? <h3>{chartToEdit.name}</h3> : null}
           {chartToEdit ? <Chart id={chartToEdit.id} name={chartToEdit.name} chartConfig={chartToEdit} /> : null}
         </div>
       </div>

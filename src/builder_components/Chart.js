@@ -193,17 +193,9 @@ class Chart extends Component {
     return (
       <div id="chart-config">
         <div id="data-sources" className="row">
-          <div className="col-md-2">
-            <button style={{marginRight: '1em'}} onClick={this.handleShow} type="button" className="btn btn-block btn-primary">New Data Source</button>
-          </div>
-          <div className="col-md-10">
-            <ul className="list-inline">
-              {this.props.sources.map(source => {
-                if(source.chartId === this.props.id) {
-                  return <li className="list-inline-item">{source.name}</li>;
-                }
-              })}
-            </ul>
+          <div className="col-md-12">
+            <h3 className="float-left">{this.props.name}</h3>
+            <button onClick={this.handleShow} type="button" className="btn btn-primary float-right">New Data Source</button>
           </div>
         </div>
         <Modal show={this.state.show} onHide={this.handleClose}>

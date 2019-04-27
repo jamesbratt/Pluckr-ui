@@ -13,7 +13,7 @@ const constructSeries = (node, data, ast) => {
       return a[xaxisxaxisValue] - b[xaxisxaxisValue];
     });
 
-    return dataSortedByXaxis.map(dataPoint => {
+    return data.map(dataPoint => {
       return [dataPoint[xaxisxaxisValue], dataPoint[yaxisxaxisValue]];
     })
   }

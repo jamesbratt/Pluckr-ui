@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import JSONTree from 'react-json-tree'
 import Datasets from './Datasets';
-import ChartConfiguration from './ChartConfiguration';
 
 var Highcharts = require('highcharts');
 
@@ -27,27 +25,27 @@ class ChartRuntime extends Component {
     
     const newDataSeries = {
       id: datasetId,
-      name: options.title || title,
-      type: 'bar',
+      name: title,
+      type: chartType,
       data: data,
     };
 
     const existingSeries = this.chartInstance.get(datasetId);
 
     if (existingSeries) {
-      const axis = this.chartInstance.get(`yaxis-${datasetId}`);
+      /*const axis = this.chartInstance.get(`yaxis-${datasetId}`);
       axis.update({
         visible: options.hasYaxis,
         title: {
           text: options.title || title,
         },
-      });
+      });*/
       existingSeries.update({
-        name: options.title || title,
+        name: title,
         data: data,
       });
     } else {
-      const newYaxisId = `yaxis-${datasetId}`;
+      /*const newYaxisId = `yaxis-${datasetId}`;
       this.chartInstance.addAxis({
           title: {
               text: options.title || title,
@@ -56,7 +54,7 @@ class ChartRuntime extends Component {
           id: newYaxisId,
           visible: options.hasYaxis
       })
-      newDataSeries['yAxis'] = newYaxisId;
+      newDataSeries['yAxis'] = newYaxisId;*/
       this.chartInstance.addSeries(newDataSeries)  
     }
   }
@@ -105,7 +103,7 @@ class ChartRuntime extends Component {
           dataset.id,
           dataset.title,
           dataset.rawData,
-          'column',
+          'line',
           dataset, // Just expects everything
         );
       }
@@ -127,24 +125,19 @@ class ChartRuntime extends Component {
     this.setChartConfig();
   }
 
-  render() {
-    const activeDataset = this.props.datasets.find(dataset => dataset.isActive === true);  
+  render() { 
     return (
       <div className="wrapper">
-        <ChartConfiguration chartId={this.props.chartId} updateChart={this.updateChartConfig} />
+        <div className="row">
+          <div className="col-md-12">
+            <div style={{ ...style }} id={this.props.chartId} />
+          </div>
+        </div>
         <Datasets
           chartId={this.props.chartId}
           sources={this.props.sources}
           addData={this.addDataSeries}
         />
-        <div className="row">
-          <div style={{ maxHeight:"400px", overflow:"scroll", backgroundColor:"rgb(0, 43, 54)" }} className="col-md-3">
-            {activeDataset ? <JSONTree data={activeDataset.rawData} /> : null}
-          </div>
-          <div className="col-md-9">
-            <div style={{ ...style }} id={this.props.chartId} />
-          </div>
-        </div>
       </div>
     )
   }
