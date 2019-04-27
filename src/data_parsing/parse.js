@@ -58,6 +58,40 @@ const addKey = (node, data, ast) => {
   throw new Error('ADD_KEY can only be executed on a data structure with keys');
 }
 
+const groupBy = (node, data, ast) => {
+  if (Array.isArray(data)) {
+    const args = ast.filter(childNode => childNode.parent === node.id);
+    const keyToGroupBy = args.find(arg => arg.name === 'DATA_KEY');
+    const keyToGroupByName = keyToGroupBy.value;
+
+    const groupedData = [];
+
+    data.forEach(item => {
+      const existingGroup = groupedData.find(
+        group => group[keyToGroupByName] === item[keyToGroupByName]
+      );
+      if (!existingGroup) {
+        const groupObj = {};
+        groupObj[keyToGroupByName] = item[keyToGroupByName];
+        groupObj['items'] = [item];
+        groupedData.push(groupObj);
+      } else {
+        const groupItems = existingGroup.items;
+        groupItems.push(item);
+        groupedData.map(group => {
+          if (group[keyToGroupByName] === item[keyToGroupByName]) {
+            assocPath(['items'], groupItems, group);
+          }
+        })
+      }
+
+    });
+    
+    return groupedData;
+  }
+  throw new Error('ADD_KEY can only be executed on a data structure with keys');
+}
+
 const pluck = (node, data, ast) => {
   if ((typeof data === 'function' || (typeof data === 'object' && !!data)) && !Array.isArray(data)) {
     const args = ast.filter(childNode => childNode.parent === node.id);
@@ -161,6 +195,12 @@ const executeFunction = (node, data, ast) => {
       );
     case 'TARGET':
       return target(
+        node,
+        data,
+        ast,
+      );
+    case 'GROUP_BY':
+      return groupBy(
         node,
         data,
         ast,

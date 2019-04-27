@@ -36,6 +36,10 @@ export const OPERATION_FUNCTIONS = [
     accepts: ['NEW_DATA_KEY', 'FUNCTION']
   },
   {
+    name: 'GROUP_BY',
+    accepts: ['DATA_KEY']
+  },
+  {
     name: 'PLUCK',
     accepts: ['DATA_KEY']
   },
