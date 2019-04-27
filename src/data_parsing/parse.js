@@ -14,7 +14,7 @@ const constructSeries = (node, data, ast) => {
     });
 
     return dataSortedByXaxis.map(dataPoint => {
-      return {x: dataPoint[xaxisxaxisValue], y: dataPoint[yaxisxaxisValue]};
+      return [dataPoint[xaxisxaxisValue], dataPoint[yaxisxaxisValue]];
     })
   }
   throw new Error('CONSTRUCT_SERIES can only be executed on a list of items');
@@ -37,11 +37,13 @@ const target = (node, data, ast) => {
     const func = args.find(arg => arg.name === 'FUNCTION');
     const keyToTarget = target.value;
 
-    return assocPath(
+    /*assocPath(
       [keyToTarget],
       executeFunction(func, data[keyToTarget], ast),
       data,
-    );
+    );*/
+
+    return executeFunction(func, data[keyToTarget], ast);
   }
   throw new Error('TARGET can only be executed on a data structure with keys');
 }
@@ -151,6 +153,13 @@ const convertToUnixTimestamp = (node, data, ast) => {
   throw new Error("Invalid date format");
 }
 
+const countItems = (node, data, ast) => {
+  if (Array.isArray(data)) {
+    return data.length;
+  }
+  throw new Error('COUNT can only be executed on a list of items');
+}
+
 const getMonth = (node, data, ast) => {
   const args = ast.filter(childNode => childNode.parent === node.id);
   const dateKey = args.find(arg => arg.name === 'DATA_KEY');
@@ -249,6 +258,12 @@ const executeFunction = (node, data, ast) => {
       );
     case 'GET_MONTH':
       return getMonth(
+        node,
+        data,
+        ast,
+      );
+    case 'COUNT':
+      return countItems(
         node,
         data,
         ast,

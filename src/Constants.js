@@ -64,6 +64,10 @@ export const OPERATION_FUNCTIONS = [
     accepts: []
   },
   {
+    name: 'COUNT',
+    accepts: []
+  },
+  {
     name: 'GET_MONTH',
     accepts: ['DATA_KEY']
   }

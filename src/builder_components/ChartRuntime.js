@@ -28,7 +28,7 @@ class ChartRuntime extends Component {
     const newDataSeries = {
       id: datasetId,
       name: options.title || title,
-      type: chartType,
+      type: 'bar',
       data: data,
     };
 
@@ -105,7 +105,7 @@ class ChartRuntime extends Component {
           dataset.id,
           dataset.title,
           dataset.rawData,
-          'line',
+          'column',
           dataset, // Just expects everything
         );
       }
