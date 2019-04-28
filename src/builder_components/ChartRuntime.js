@@ -33,7 +33,7 @@ class ChartRuntime extends Component {
     });
   }
 
-  addDataSeries = (datasetId, title, data, chartType, options) => {
+  addDataSeries = (datasetId, title, data, chartType) => {
     const newDataSeries = {
       id: datasetId,
       name: title,
@@ -95,7 +95,7 @@ class ChartRuntime extends Component {
           dataset.id,
           dataset.title,
           dataset.rawData,
-          'line',
+          this.props.chartConfig.seriesType,
           dataset, // Just expects everything
         );
       }
@@ -139,6 +139,7 @@ class ChartRuntime extends Component {
         </div>
         <Datasets
           chartId={this.props.chartId}
+          chartConfig={this.props.chartConfig}
           sources={this.props.sources}
           addData={this.addDataSeries}
           addYaxis={this.addYaxis}

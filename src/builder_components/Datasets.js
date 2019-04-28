@@ -92,7 +92,7 @@ class Datasets extends Component {
     const operations = this.props.operations.filter(operation => operation.dataSetId === dataSet.id);
 
     const dataSource = this.props.sources.find(
-      source => source.id === this.state.selectedDataSource || dataSet.sourceId,
+      source => source.id === (this.state.selectedDataSource || dataSet.sourceId),
     );
 
     // Having to clone the source data here as for some reason
@@ -113,8 +113,7 @@ class Datasets extends Component {
       dataSet.id,
       dataSet.title,
       data, // the actual data
-      'line', // line or area
-      this.state.fieldsToUpdate,
+      this.props.chartConfig.seriesType,
     );
 
     this.props.dispatch(

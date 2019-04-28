@@ -9,11 +9,25 @@ const charts = (state = [], action) => {
         }
         return chart;
       })
+
+      let seriesType;
+      if (action.chartType === 'linear') {
+        seriesType = 'line';
+      }
+
+      if (action.chartType === 'datetime') {
+        seriesType = 'line';
+      }
+
+      if (action.chartType === 'category') {
+        seriesType = 'bar';
+      }
   
       const newChart = {
         id: action.id,
         name: action.chartName,
         xaxis: action.chartType,
+        seriesType: seriesType,
         isActive: true,
       };
       return append(newChart, charts);
