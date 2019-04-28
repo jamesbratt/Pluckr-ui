@@ -281,6 +281,7 @@ class Operations extends Component {
         <ul class="list-group operations">
           {operations}
         </ul>
+        <button style={{marginTop: '1em'}} onClick={this.props.run} className="btn btn-success">Run Dataset</button>
       </div>
     );
 

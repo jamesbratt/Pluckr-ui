@@ -13,11 +13,12 @@ const charts = (state = [], action) => {
       const newChart = {
         id: action.id,
         name: action.chartName,
-        xaxis: null,
+        xaxis: action.chartType,
         isActive: true,
       };
       return append(newChart, charts);
 
+    // NOT IN USE
     case 'MAKE_CHART_ACTIVE':
       return state.map(chart => {
         if (chart.id === action.id) {
@@ -26,6 +27,7 @@ const charts = (state = [], action) => {
         return assocPath(['isActive'], false, chart);
       });
 
+    // NOT IN USE 
     case 'UPDATE_CHART_XAXIS':
       return state.map(chart => {
         if (chart.id === action.id) {

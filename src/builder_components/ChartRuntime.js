@@ -21,8 +21,18 @@ class ChartRuntime extends Component {
     this.chartInstance = null;
   }
 
+  addYaxis = (dataSetId, title) => {
+    const newYaxisId = `yaxis-${dataSetId}`;
+    this.chartInstance.addAxis({
+      title: {
+          text: title,
+      },
+      opposite: this.chartInstance.series.length > 0 ? true : false,
+      id: newYaxisId,
+    });
+  }
+
   addDataSeries = (datasetId, title, data, chartType, options) => {
-    
     const newDataSeries = {
       id: datasetId,
       name: title,
@@ -33,41 +43,22 @@ class ChartRuntime extends Component {
     const existingSeries = this.chartInstance.get(datasetId);
 
     if (existingSeries) {
-      /*const axis = this.chartInstance.get(`yaxis-${datasetId}`);
-      axis.update({
-        visible: options.hasYaxis,
-        title: {
-          text: options.title || title,
-        },
-      });*/
       existingSeries.update({
         name: title,
         data: data,
       });
     } else {
-      /*const newYaxisId = `yaxis-${datasetId}`;
-      this.chartInstance.addAxis({
-          title: {
-              text: options.title || title,
-          },
-          opposite: this.chartInstance.series.length > 0 ? true : false,
-          id: newYaxisId,
-          visible: options.hasYaxis
-      })
-      newDataSeries['yAxis'] = newYaxisId;*/
+      newDataSeries['yAxis'] = `yaxis-${datasetId}`;
       this.chartInstance.addSeries(newDataSeries)  
     }
   }
 
-  updateDataSeriesConfig = (property, isChecked) => {
-    const existingSeries = this.chartInstance.get(property);
+  updateDataSetYaxis = (datasetId, selectedYaxisDataSetId) => {
+    const existingSeries = this.chartInstance.get(datasetId);
     if (existingSeries) {
-      const axis = this.chartInstance.get(`yaxis-${property}`);
-      axis.update({
-        visible: isChecked
+      existingSeries.update({
+        yAxis: `yaxis-${selectedYaxisDataSetId}`,
       });
-    } else {
-      alert('Error! You need to run this dataset first')
     }
   }
 
@@ -137,6 +128,8 @@ class ChartRuntime extends Component {
           chartId={this.props.chartId}
           sources={this.props.sources}
           addData={this.addDataSeries}
+          addYaxis={this.addYaxis}
+          changeYaxis={this.updateDataSetYaxis}
         />
       </div>
     )

@@ -48,9 +48,7 @@ class Builder extends Component {
           <div className="collapse navbar-collapse" id="navbarSupportedContent">
             <ul className="navbar-nav mr-auto">
               <DataProviderList dataProviders={this.props.dataProviders} />
-              {this.props.charts.length > 0 ? <ChartList charts={this.props.charts} onSelect={this.selectChartToEdit} /> : null}
             </ul>
-            {!chartToEdit ? null : <AddChart />}
           </div>
         </nav>
         <div className='container-fluid wrapper'>

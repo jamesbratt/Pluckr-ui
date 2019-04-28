@@ -1,8 +1,9 @@
-export const addChart = (id, chartName) => {
+export const addChart = (id, chartName, chartType) => {
   return {
     type: 'ADD_CHART',
     id,
     chartName,
+    chartType,
   }
 };
 
@@ -51,6 +52,14 @@ export const makeDatasetActive = (id, isActive) => {
     type: 'MAKE_DATASET_ACTIVE',
     id,
     isActive,
+  }
+};
+
+export const updateDatasetYaxis = (id, yaxisId) => {
+  return {
+    type: 'UPDATE_DATASET_YAXIS',
+    id,
+    yaxisId,
   }
 };
 

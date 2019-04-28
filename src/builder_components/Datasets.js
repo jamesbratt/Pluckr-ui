@@ -2,9 +2,11 @@ import React, { Component } from 'react';
 import Operations from './Operations';
 import { connect } from 'react-redux';
 import { GenerateGuid } from '../utils/Helpers';
-import { addDataset, makeDatasetActive, runDataset } from '../actions';
+import { addDataset, makeDatasetActive, runDataset, updateDatasetYaxis } from '../actions';
 import { executeOperations } from '../data_parsing/parse';
 import JSONTree from 'react-json-tree';
+import Tabs from 'react-bootstrap/Tabs';
+import Tab from 'react-bootstrap/Tab';
 import { clone } from 'ramda';
 
 const mapStateToProps = state => {
@@ -41,6 +43,8 @@ class Datasets extends Component {
       const dataSource = this.props.sources.find(
         source => source.id === sourceId,
       );
+
+      this.props.addYaxis(newDataSetId, this.state.dataSetTitle);
   
       this.props.dispatch(
         addDataset(
@@ -60,6 +64,17 @@ class Datasets extends Component {
 
   onSelectDataSetTitle = (event) => {
     this.setState({dataSetTitle: event.target.value})
+  }
+
+  onChangeYaxis = (event) => {
+    const dataSet = this.props.datasets.find(dataset => dataset.isActive === true);
+    this.props.changeYaxis(dataSet.id, event.target.value);
+    this.props.dispatch(
+      updateDatasetYaxis(
+        dataSet.id,
+        event.target.value
+      )
+    );
   }
 
   editDataset = (id) => {
@@ -122,7 +137,6 @@ class Datasets extends Component {
   }
 
   render() {
-    const dataProperties = this.state.dataProperties;
     const activeDataset = this.props.datasets.find(dataset => dataset.isActive === true);
 
     return (
@@ -156,20 +170,38 @@ class Datasets extends Component {
           </div>
         </div>
         {activeDataset ?
-        <div className="row">
-          <div className="col-md-12">
-            <h4>Dataset Configuration</h4>
+        <React.Fragment>
+          <div className="row">
+            <div className="col-md-12">
+              <h4>Dataset Configuration</h4>
+            </div>
           </div>
-          <div className="col-md-6">
-            <Operations dataSetId={activeDataset.id} dataSourceId={activeDataset.sourceId} />
+          <div className="row">
+            <div className="col-md-6">
+              <Tabs defaultActiveKey="operations" id="dataset-tabs">
+                <Tab eventKey="operations" title="Operations">
+                  <Operations run={this.runDataSet} dataSetId={activeDataset.id} dataSourceId={activeDataset.sourceId} />
+                </Tab>
+                <Tab eventKey="settings" title="Settings">
+                  <div className="row">
+                    <div className="col-md-4">
+                      <label>Change Y-axis</label>
+                      <select value={activeDataset.yaxis} onChange={this.onChangeYaxis} className="form-control" id="datasetSource">
+                        <option value={null} hidden>-- Select a Y-axis --</option>
+                        {this.props.datasets.map(dataset => {
+                          return <option value={dataset.id}>{`yaxis-${dataset.title}`}</option>;
+                        })}
+                      </select>
+                    </div>
+                  </div>
+                </Tab>
+              </Tabs>
+            </div>
+            <div style={{ maxHeight:"400px", overflow:"scroll", backgroundColor:"rgb(0, 43, 54)" }} className="col-md-6">
+              {activeDataset ? <JSONTree data={activeDataset.rawData} /> : null}
+            </div>
           </div>
-          <div style={{ maxHeight:"400px", overflow:"scroll", backgroundColor:"rgb(0, 43, 54)" }} className="col-md-6">
-            {activeDataset ? <JSONTree data={activeDataset.rawData} /> : null}
-          </div>
-          <div className="col-md-12">
-            <button onClick={this.runDataSet} className="btn btn-success">Run Dataset</button>
-          </div>
-        </div>
+        </React.Fragment>
         : null}
       </React.Fragment>
     );
