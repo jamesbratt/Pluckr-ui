@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Datasets from './Datasets';
+import classNames from 'classnames';
 
 var Highcharts = require('highcharts');
 
@@ -116,11 +117,23 @@ class ChartRuntime extends Component {
     this.setChartConfig();
   }
 
-  render() { 
+  render() {
+    const overlayClasses = classNames({
+      'overlay': true,
+      'overlay-hide': this.chartInstance && this.chartInstance.series.length > 0,
+    });
+
     return (
       <div className="wrapper">
         <div className="row">
-          <div className="col-md-12">
+          <div style={{position: 'relative'}} className="col-md-12">
+            <div className={overlayClasses}>
+              <div className="overlay-text">
+                <div className="overlay-text-inner">
+                  <p>Start building your graph by adding a dataset</p>
+                </div>
+              </div>
+            </div>
             <div style={{ ...style }} id={this.props.chartId} />
           </div>
         </div>

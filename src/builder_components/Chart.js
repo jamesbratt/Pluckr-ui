@@ -3,7 +3,6 @@ import Modal from 'react-bootstrap/Modal';
 import { connect } from 'react-redux';
 import { addSource } from '../actions';
 import { GenerateGuid } from '../utils/Helpers';
-import { getStravaData, STRAVA_RESOURCES } from '../data_sources/Strava';
 import ChartRuntime from './ChartRuntime';
 import { DATA_TYPES } from '../Constants';
 
@@ -16,7 +15,7 @@ class Chart extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      show: false,
+      show: true,
       selectedProvider: null,
       selectedResource: null,
       sourceName: null,

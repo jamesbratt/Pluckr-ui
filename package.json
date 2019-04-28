@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "bootstrap": "^4.2.1",
+    "classnames": "^2.2.6",
     "highcharts": "^7.0.2",
     "ramda": "^0.26.1",
     "react": "^16.7.0",
