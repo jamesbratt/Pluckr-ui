@@ -24,12 +24,16 @@ export const OPERATION_FUNCTIONS = [
     accepts: ['XAXIS', 'YAXIS']
   },
   {
-    name: 'FOR_EVERY',
+    name: 'FOR_EVERY_ITEM',
     accepts: ['FUNCTION']
   },
   {
     name: 'TARGET',
     accepts: ['DATA_KEY', 'FUNCTION']
+  },
+  {
+    name: 'TARGET_BY_INDEX',
+    accepts: ['DATA_INDEX', 'FUNCTION']
   },
   {
     name: 'ADD_KEY',
@@ -65,6 +69,10 @@ export const OPERATION_FUNCTIONS = [
   },
   {
     name: 'COUNT',
+    accepts: []
+  },
+  {
+    name: 'SORT_NUMERICAL_XAXIS',
     accepts: []
   },
   {

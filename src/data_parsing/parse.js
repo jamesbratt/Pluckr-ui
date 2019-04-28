@@ -20,6 +20,15 @@ const constructSeries = (node, data, ast) => {
   throw new Error('CONSTRUCT_SERIES can only be executed on a list of items');
 }
 
+const sortNumericalXaxis = (node, data, ast) => {
+  if (Array.isArray(data)) {
+    return data.sort((a,b) => {
+      return a[0] - b[0];
+    });
+  }
+  throw new Error('SORT_NUMERICAL_XAXIS can only be executed on a list of items');
+}
+
 const forEvery = (node, data, ast) => {
   if (Array.isArray(data)) {
     const arg = ast.find(childNode => childNode.parent === node.id);
@@ -27,7 +36,7 @@ const forEvery = (node, data, ast) => {
       return executeFunction(arg, dataPoint, ast);
     })
   }
-  throw new Error('FOR_EVERY can only be executed on a list of items');
+  throw new Error('FOR_EVERY_ITEM can only be executed on a list of items');
 }
 
 const target = (node, data, ast) => {
@@ -37,15 +46,23 @@ const target = (node, data, ast) => {
     const func = args.find(arg => arg.name === 'FUNCTION');
     const keyToTarget = target.value;
 
-    /*assocPath(
-      [keyToTarget],
-      executeFunction(func, data[keyToTarget], ast),
-      data,
-    );*/
-
     return executeFunction(func, data[keyToTarget], ast);
   }
   throw new Error('TARGET can only be executed on a data structure with keys');
+}
+
+const targetByIndex = (node, data, ast) => {
+  if (Array.isArray(data)) {
+    const args = ast.filter(childNode => childNode.parent === node.id);
+    const target = args.find(arg => arg.name === 'DATA_INDEX');
+    const func = args.find(arg => arg.name === 'FUNCTION');
+    const indexToTarget = parseInt(target.value);
+
+    const newIndexValue = executeFunction(func, data[indexToTarget], ast);
+    data.splice(indexToTarget, 1, newIndexValue);
+    return data;
+  }
+  throw new Error('TARGET_BY_INDEX can only be executed on a list of items');
 }
 
 const addKey = (node, data, ast) => {
@@ -196,7 +213,13 @@ const executeFunction = (node, data, ast) => {
         data,
         ast
       );
-    case 'FOR_EVERY':
+    case 'SORT_NUMERICAL_XAXIS':
+      return sortNumericalXaxis(
+        node,
+        data,
+        ast
+      );
+    case 'FOR_EVERY_ITEM':
       return forEvery(
         node,
         data,
@@ -204,6 +227,12 @@ const executeFunction = (node, data, ast) => {
       );
     case 'TARGET':
       return target(
+        node,
+        data,
+        ast,
+      );
+    case 'TARGET_BY_INDEX':
+      return targetByIndex(
         node,
         data,
         ast,
