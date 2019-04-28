@@ -3,7 +3,8 @@ import { connect } from 'react-redux';
 import Datasets from './Datasets';
 import classNames from 'classnames';
 
-var Highcharts = require('highcharts');
+const Highcharts = require('highcharts');
+require('highcharts/modules/exporting')(Highcharts);
 
 const style = {
   width: '100%',
