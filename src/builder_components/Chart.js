@@ -50,6 +50,12 @@ class Chart extends Component {
         .then(response => {
           this.setState({
             show: false,
+            selectedProvider: null,
+            selectedResource: null,
+            sourceName: null,
+            parameterFields: [],
+            parameterValues: [],
+
           }, () => {
             this.props.dispatch(
               addSource(
