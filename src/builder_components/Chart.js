@@ -200,7 +200,9 @@ class Chart extends Component {
         <div id="data-sources" className="row">
           <div className="col-md-12">
             <h3 className="float-left">{this.props.name}</h3>
-            <button onClick={this.handleShow} type="button" className="btn btn-primary float-right">New Data Source</button>
+            <button onClick={this.handleShow} type="button" className="btn btn-primary float-right">
+            New Data Source <span class="badge badge-light">{availableSources.length}</span>
+            </button>
           </div>
         </div>
         <Modal show={this.state.show} onHide={this.handleClose}>
