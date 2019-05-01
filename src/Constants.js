@@ -72,6 +72,10 @@ export const OPERATION_FUNCTIONS = [
     accepts: []
   },
   {
+    name: 'LIST_REVERSE',
+    accepts: []
+  },
+  {
     name: 'SORT_NUMERICAL_XAXIS',
     accepts: []
   },

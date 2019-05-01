@@ -177,6 +177,13 @@ const countItems = (node, data, ast) => {
   throw new Error('COUNT can only be executed on a list of items');
 }
 
+const listReverse = (node, data, ast) => {
+  if (Array.isArray(data)) {
+    return data.reverse();
+  }
+  throw new Error('LIST_REVERSE can only be executed on a list of items');
+}
+
 const getMonth = (node, data, ast) => {
   const args = ast.filter(childNode => childNode.parent === node.id);
   const dateKey = args.find(arg => arg.name === 'DATA_KEY');
@@ -287,6 +294,12 @@ const executeFunction = (node, data, ast) => {
       );
     case 'GET_MONTH':
       return getMonth(
+        node,
+        data,
+        ast,
+      );
+    case 'LIST_REVERSE':
+      return listReverse(
         node,
         data,
         ast,
