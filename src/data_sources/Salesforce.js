@@ -8,7 +8,7 @@ export const SALESFORCE_RESOURCES = {
 
 export const getUserInfo = () => {
   const token = getToken('salesforce');
-  return fetch(`${SALESFORCE_URI}/services/oauth2/userinfo`, {
+  return fetch(`${SALESFORCE_URI}/services/data/v20.0/sobjects/Account/`, {
     headers:{
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${token}`
