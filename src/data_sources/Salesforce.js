@@ -1,6 +1,6 @@
 import { getToken } from '../utils/Helpers';
 
-const SALESFORCE_URI = 'https://login.salesforce.com';
+const SALESFORCE_URI = 'https://um5.salesforce.com';
 
 export const SALESFORCE_RESOURCES = {
   leads: {},
