@@ -1,8 +1,8 @@
 export const EASY_OAUTH_REDIRECT = 'https://easyoauth.com/project/login/1';
-export const EASY_OAUTH_AUTH_ENDPOINT = 'http://easyoauth.com/project/authorise/1/';
+export const EASY_OAUTH_AUTH_ENDPOINT = 'https://easyoauth.com/project/authorise/1/';
 
 export const STRAVA_REDIRECT = 'https://easyoauth.com/project/login/1';
-export const STRAVA_AUTH_ENDPOINT = 'http://easyoauth.com/project/authorise/1/';
+export const STRAVA_AUTH_ENDPOINT = 'https://easyoauth.com/project/authorise/1/';
 
 export const GITHUB_REDIRECT = 'https://easyoauth.com/project/login/2';
 export const GITHUB_AUTH_ENDPOINT = 'https://easyoauth.com/project/authorise/2/';
