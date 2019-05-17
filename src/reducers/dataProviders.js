@@ -1,6 +1,7 @@
 
 import { getStravaData, getProfile, STRAVA_RESOURCES } from '../data_sources/Strava';
 import { getGitHubData, getUser, GITHUB_RESOURCES } from '../data_sources/Github';
+import { getSalesforceData, getUserInfo, SALESFORCE_RESOURCES } from '../data_sources/Salesforce';
 import { assocPath } from 'ramda';
 import { STRAVA_REDIRECT, GITHUB_REDIRECT, SALESFORCE_REDIRECT } from '../Constants';
 
@@ -23,10 +24,10 @@ const initialState = [
   },
   {
     provider: 'salesforce',
-    ping: null,
+    ping: getUserInfo,
     redirectUrl: SALESFORCE_REDIRECT,
-    request: null,
-    resources: null,
+    request: getSalesforceData,
+    resources: SALESFORCE_RESOURCES,
     isActive: false,
   },
 ];
