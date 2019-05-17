@@ -2,7 +2,7 @@
 import { getStravaData, getProfile, STRAVA_RESOURCES } from '../data_sources/Strava';
 import { getGitHubData, getUser, GITHUB_RESOURCES } from '../data_sources/Github';
 import { assocPath } from 'ramda';
-import { STRAVA_REDIRECT, GITHUB_REDIRECT } from '../Constants';
+import { STRAVA_REDIRECT, GITHUB_REDIRECT, SALESFORCE_REDIRECT } from '../Constants';
 
 const initialState = [
   {
@@ -19,6 +19,14 @@ const initialState = [
     redirectUrl: GITHUB_REDIRECT,
     request: getGitHubData,
     resources: GITHUB_RESOURCES,
+    isActive: false,
+  },
+  {
+    provider: 'salesforce',
+    ping: null,
+    redirectUrl: SALESFORCE_REDIRECT,
+    request: null,
+    resources: null,
     isActive: false,
   },
 ];

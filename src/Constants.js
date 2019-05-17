@@ -7,6 +7,9 @@ export const STRAVA_AUTH_ENDPOINT = 'http://easyoauth.com/project/authorise/1/';
 export const GITHUB_REDIRECT = 'https://easyoauth.com/project/login/2';
 export const GITHUB_AUTH_ENDPOINT = 'https://easyoauth.com/project/authorise/2/';
 
+export const SALESFORCE_REDIRECT = 'https://easyoauth.com/project/login/5';
+export const SALESFORCE_AUTH_ENDPOINT = 'https://easyoauth.com/project/authorise/5/';
+
 export const CHART_TYPES = [
   { value: 'line', label: 'Line Chart' },
   { value: 'area', label: 'Area Chart' }

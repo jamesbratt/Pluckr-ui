@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router, Redirect } from "react-router-dom";
-import { STRAVA_AUTH_ENDPOINT, GITHUB_AUTH_ENDPOINT } from './Constants';
+import { STRAVA_AUTH_ENDPOINT, GITHUB_AUTH_ENDPOINT, SALESFORCE_AUTH_ENDPOINT } from './Constants';
 import { assocPath } from 'ramda';
 
 const PROVIDER_MAP = {
   strava: STRAVA_AUTH_ENDPOINT,
   github: GITHUB_AUTH_ENDPOINT,
+  salesforce: SALESFORCE_AUTH_ENDPOINT,
 };
 
 class Auth extends Component {
