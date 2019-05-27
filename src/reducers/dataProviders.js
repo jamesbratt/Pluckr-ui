@@ -22,14 +22,14 @@ const initialState = [
     resources: GITHUB_RESOURCES,
     isActive: false,
   },
-  {
+  /*{
     provider: 'salesforce',
     ping: getUserInfo,
     redirectUrl: SALESFORCE_REDIRECT,
     request: getSalesforceData,
     resources: SALESFORCE_RESOURCES,
     isActive: false,
-  },
+  },*/
 ];
 
 const dataProviders = (state = initialState, action) => {

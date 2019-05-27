@@ -38,6 +38,7 @@ class Builder extends Component {
 
   render() {
     const chartToEdit = this.props.charts.find(chart => chart.isActive === true);
+    const activeProviders = this.props.dataProviders.filter(provider => provider.isActive === true);
     return (
       <div id='chart-canvas'>
         <nav className="navbar navbar-expand-lg navbar-light bg-light">
@@ -56,7 +57,11 @@ class Builder extends Component {
             <div className="add-chart-center-outer">
               <div className="add-chart-center">
                 <h1>Build a New Chart</h1>
-                <AddChart />
+                <p>Get started by connecting to data providers from the top menu</p>
+                {activeProviders.length > 0 ?
+                  <AddChart />
+                : null
+                }
               </div>
             </div>
           : null}
