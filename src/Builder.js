@@ -57,7 +57,8 @@ class Builder extends Component {
             <div className="add-chart-center-outer">
               <div className="add-chart-center">
                 <h1>Build a New Chart</h1>
-                <p>Get started by connecting to data providers from the top menu</p>
+                <p>Get started by connecting to data providers from the top menu,<br />
+                or to view an example of how to use Pluckr, check out <a href="https://youtu.be/KhWq5K_IFUk" target="_blank">this clip.</a></p>
                 {activeProviders.length > 0 ?
                   <AddChart />
                 : null
