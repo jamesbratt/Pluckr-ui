@@ -1,17 +1,22 @@
 import React, { Component } from 'react';
 import { Provider } from 'react-redux';
-import { createStore } from 'redux';
+import thunkMiddleware from 'redux-thunk'
+import { createStore, applyMiddleware, compose } from 'redux';
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import chartConfigReducers from './reducers'
 import Auth from './Auth';
 import Wrapper from './Wrapper';
 import pluckrAuthHoc from './pluckrAuthHoc';
 
+const composeEnhancer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+
 const store = createStore(
   chartConfigReducers,
-  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+  composeEnhancer(
+    applyMiddleware(thunkMiddleware),
+  ),
 );
-
+    
 const ChartsAuthChecked = pluckrAuthHoc(
   Wrapper,
 );

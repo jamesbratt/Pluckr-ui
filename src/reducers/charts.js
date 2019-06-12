@@ -2,6 +2,8 @@ import { append, assocPath } from 'ramda';
 
 const charts = (state = [], action) => {
   switch (action.type) {
+    case 'RECEIVE_CHARTS':
+      return state;
     case 'ADD_CHART':
       const charts = state.map(chart => {
         if (chart.isActive) {

@@ -1,5 +1,11 @@
 import React, { Component } from 'react';
 import Wrapper from './Wrapper';
+import { fetchUser } from './actions';
+import { connect } from 'react-redux';
+
+const mapStateToProps = state => {
+  return state
+};
 
 class Login extends Component {
   constructor(props) {
@@ -16,24 +22,16 @@ class Login extends Component {
     const username = this.usernameRef.current.value;
     const password = this.passwordRef.current.value;
 
-    fetch('https://api.pluckr.io/api/v1/authentication/login/', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ username, password })
-    })
-    .then((response) => {
-      return response.json();
-    })
-    .then((response) => {
-        localStorage.setItem('pluckr_token', JSON.stringify(response['api_key']));
-        this.setState({ isAuthenticatedWithPluckr: true })
-    })
+    this.props.dispatch(
+      fetchUser(
+        username,
+        password,
+      )
+    );
   }
 
   render() {
-    if(this.state.isAuthenticatedWithPluckr) {
+    if(this.props.user.length > 0) {
       return <Wrapper />
     } else {
         return (
@@ -53,4 +51,4 @@ class Login extends Component {
   }
 }
 
-export default Login;
+export default connect(mapStateToProps)(Login);
