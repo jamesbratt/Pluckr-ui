@@ -7,6 +7,11 @@ import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
 import './css/builder.css';
 
+const VIEWS = {
+  chart_list: 'CHART_LIST',
+  chart_detail: 'CHART_DETAIL',
+};
+
 const mapStateToProps = state => {
   return state
 };
@@ -15,7 +20,8 @@ class Wrapper extends Component {
     constructor(props) {
         super(props);
         this.state = {
-          providerModalShow: false
+          providerModalShow: false,
+          views: VIEWS.chart_list,
         }
     }
 
@@ -38,6 +44,19 @@ class Wrapper extends Component {
     }
 
     render() {
+      let view = null;
+
+      switch(this.state.views) {
+        case VIEWS.chart_list:
+          view = <Charts />
+          break;
+        case VIEWS.chart_detail:
+          view = <Charts />
+          break;
+        default:
+          view = null;
+      }
+
       return (
         <div id='chart-canvas'>
           <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
@@ -52,17 +71,17 @@ class Wrapper extends Component {
             </Navbar.Collapse>
           </Navbar>
           <div className='container-fluid wrapper'>
-            <Charts />
+            {view}
           </div>
           <Modal show={this.state.providerModalShow} onHide={this.closeProviderModal}>
-          <Modal.Header closeButton>
-            <Modal.Title>Connect to a data provider</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-          </Modal.Body>
-          <Modal.Footer>
-          </Modal.Footer>
-        </Modal>
+            <Modal.Header closeButton>
+              <Modal.Title>Connect to a data provider</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+            </Modal.Body>
+            <Modal.Footer>
+            </Modal.Footer>
+          </Modal>
         </div>
       )
     }
