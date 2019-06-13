@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Modal from 'react-bootstrap/Modal';
-import { fetchCharts } from './actions';
+import { fetchCharts, deleteChart } from './actions';
 import AddChart from './builder_components/AddChart';
 
 const mapStateToProps = state => {
@@ -28,9 +28,22 @@ class Charts extends Component {
     }
 
     componentDidUpdate(prevProps) {
-      if (this.props.charts.length > prevProps.charts.length)
+      if (this.props.charts.length > prevProps.charts.length) {
         this.setState({createChartModalShow: false})
       }
+    }
+
+    removeChart = (chartId) => {
+      const user = this.props.user[0].username;
+      const apiKey = this.props.user[0].api_key;
+      this.props.dispatch(
+        deleteChart(
+          apiKey,
+          user,
+          chartId,         
+        )
+      );
+    }
 
     render() {
       return (
@@ -46,7 +59,13 @@ class Charts extends Component {
                 return (
                   <div className='col-md-3'>
                     <div className='add-chart-card'>
-                      <h3>{chart.name}</h3>
+                      <div className="chart-card-inner">
+                        <h3>{chart.name}</h3>
+                        <div className="btn-group-fixed">
+                          <button type="button" class="btn btn-primary">Edit</button>
+                          <button onClick={() => this.removeChart(chart.id)} type="button" class="btn btn-danger">Delete</button>
+                        </div>
+                      </div>
                     </div>
                   </div>                
                 )

@@ -35,6 +35,13 @@ export const addChart = (data) => {
   }
 };
 
+export const removeChart = (chartId) => {
+  return {
+    type: 'REMOVE_CHART',
+    chartId,
+  }
+};
+
 export const receiveCharts = (data) => {
   return {
     type: 'RECEIVE_CHARTS',
@@ -90,6 +97,22 @@ export const createChart = (apiKey, username, name, chart_type) => {
     })
     .then(json => {
       dispatch(addChart(json))
+    })
+  }
+}
+
+export const deleteChart = (apiKey, username, chartId) => {
+
+  return dispatch => {
+    return fetch(`https://api.pluckr.io/api/v1/chart/${chartId}/`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `ApiKey ${username}:${apiKey}`
+        },
+    })
+    .then(() => {
+      dispatch(removeChart(chartId))
     })
   }
 }
