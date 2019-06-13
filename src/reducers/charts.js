@@ -1,38 +1,11 @@
-import { append, assocPath } from 'ramda';
+import { prepend, assocPath } from 'ramda';
 
 const charts = (state = [], action) => {
   switch (action.type) {
     case 'RECEIVE_CHARTS':
-      return state;
+      return action.data;
     case 'ADD_CHART':
-      const charts = state.map(chart => {
-        if (chart.isActive) {
-          return assocPath(['isActive'], false, chart);
-        }
-        return chart;
-      })
-
-      let seriesType;
-      if (action.chartType === 'linear') {
-        seriesType = 'line';
-      }
-
-      if (action.chartType === 'datetime') {
-        seriesType = 'line';
-      }
-
-      if (action.chartType === 'category') {
-        seriesType = 'bar';
-      }
-  
-      const newChart = {
-        id: action.id,
-        name: action.chartName,
-        xaxis: action.chartType,
-        seriesType: seriesType,
-        isActive: true,
-      };
-      return append(newChart, charts);
+      return prepend(action.data, state);
 
     // NOT IN USE
     case 'MAKE_CHART_ACTIVE':

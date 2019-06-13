@@ -5,6 +5,7 @@ import { setDataProviders } from './actions';
 import Modal from 'react-bootstrap/Modal';
 import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
+import './css/builder.css';
 
 const mapStateToProps = state => {
   return state

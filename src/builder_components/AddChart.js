@@ -1,6 +1,5 @@
 import React from 'react';
-import { GenerateGuid } from '../utils/Helpers';
-import { addChart } from '../actions';
+import { createChart } from '../actions';
 import { connect } from 'react-redux';
 
 const chartNameRef = React.createRef();
@@ -15,9 +14,14 @@ const AddChart = (props) => {
   const addNewChart = (event) => {
     event.preventDefault();
     if(chartNameRef.current.value && chartTypeRef.current.value) {
+
+      const user = props.user[0].username;
+      const apiKey = props.user[0].api_key;
+
       props.dispatch(
-        addChart(
-          GenerateGuid(),
+        createChart(
+          apiKey,
+          user,
           chartNameRef.current.value,
           chartTypeRef.current.value,
         )
@@ -28,15 +32,21 @@ const AddChart = (props) => {
   } 
 
   return (
-    <form className="form-inline my-2 my-lg-0">
-      <input ref={chartNameRef} className="form-control mr-sm-2" type="text" placeholder="What is your chart called?" aria-label="New Chart" />
-      <select ref={chartTypeRef} className="form-control mr-sm-2">
-        <option value={null}>-- Select a Chart --</option>
-        <option value="linear">Linear Line Chart</option>
-        <option value="datetime">Time-based Line Chart</option>
-        <option value="category">Bar Chart</option>
-      </select>
-      <button onClick={addNewChart} className="btn btn-outline-success my-2 my-sm-0" type="submit">Create Chart</button>
+    <form>
+      <div className="form-group">
+        <label>Chart Name</label>
+        <input ref={chartNameRef} className="form-control" type="text" placeholder="What is your chart called?" aria-label="New Chart" />
+      </div>
+      <div class="form-group">
+        <label>Chart Type</label>
+        <select ref={chartTypeRef} className="form-control">
+          <option value={null}>-- Select a Chart --</option>
+          <option value="linear">Linear Line Chart</option>
+          <option value="datetime">Time-based Line Chart</option>
+          <option value="category">Bar Chart</option>
+        </select>
+      </div>
+      <button onClick={addNewChart} className="btn btn-success" type="submit">Create Chart</button>
     </form>
   );
 }

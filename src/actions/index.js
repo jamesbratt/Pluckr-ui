@@ -1,3 +1,5 @@
+// USERS
+
 export const receiveUser = (userData) => {
   return {
     type: 'RECEIVE_USER',
@@ -24,12 +26,12 @@ export const fetchUser = (username, password) => {
   }
 }
 
-export const addChart = (id, chartName, chartType) => {
+// CHARTS
+
+export const addChart = (data) => {
   return {
     type: 'ADD_CHART',
-    id,
-    chartName,
-    chartType,
+    data,
   }
 };
 
@@ -37,24 +39,6 @@ export const receiveCharts = (data) => {
   return {
     type: 'RECEIVE_CHARTS',
     data
-  }
-};
-
-export const getChart = (id, chartName, chartType) => {
-  return {
-    type: 'ADD_CHART',
-    id,
-    chartName,
-    chartType,
-  }
-};
-
-export const deleteChart = (id, chartName, chartType) => {
-  return {
-    type: 'ADD_CHART',
-    id,
-    chartName,
-    chartType,
   }
 };
 
@@ -68,6 +52,45 @@ export const fetchCharts = (apiKey, username) => {
     })
       .then(response => response.json())
       .then(json => dispatch(receiveCharts(json.objects)))
+  }
+}
+
+export const createChart = (apiKey, username, name, chart_type) => {
+
+  let series_type;
+  if (chart_type === 'linear') {
+    series_type = 'line';
+  }
+
+  if (chart_type === 'datetime') {
+    series_type = 'line';
+  }
+
+  if (chart_type === 'category') {
+    series_type = 'bar';
+  }
+
+  const payload = {
+    name,
+    chart_type,
+    series_type,
+  };
+
+  return dispatch => {
+    return fetch('https://api.pluckr.io/api/v1/chart/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `ApiKey ${username}:${apiKey}`
+        },
+        body: JSON.stringify(payload)
+    })
+    .then((response) => {
+      return response.json();
+    })
+    .then(json => {
+      dispatch(addChart(json))
+    })
   }
 }
 
