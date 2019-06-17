@@ -62,7 +62,7 @@ class Charts extends Component {
                       <div className="chart-card-inner">
                         <h3>{chart.name}</h3>
                         <div className="btn-group-fixed">
-                          <button type="button" class="btn btn-primary">Edit</button>
+                          <button onClick={() => this.props.switchView('CHART_DETAIL', chart.id)} type="button" class="btn btn-primary">Edit</button>
                           <button onClick={() => this.removeChart(chart.id)} type="button" class="btn btn-danger">Delete</button>
                         </div>
                       </div>

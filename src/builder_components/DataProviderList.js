@@ -1,17 +1,22 @@
 import React from 'react';
-import NavDropdown from 'react-bootstrap/NavDropdown';
 
 const DataProviderList = (props) => {
 
   const dataProviders = props.dataProviders.map((dataProvider) => {
-    const isActiveStyle = dataProvider.isActive ? 'green' : '#212529';
-    return <NavDropdown.Item style={{color: isActiveStyle}} href={dataProvider.redirectUrl}>{dataProvider.provider}</NavDropdown.Item>
+    return (
+      <li class="media">
+        <div class="media-body">
+          <h5 class="mt-0 mb-1"><a href={dataProvider.redirectUrl}>{dataProvider.provider}</a></h5>
+          Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
+        </div>
+      </li>
+    );
   })
 
   return (
-    <NavDropdown title="Data Providers">
+    <ul class="list-unstyled">
       {dataProviders}
-    </NavDropdown>
+    </ul>
   );
 }
 
