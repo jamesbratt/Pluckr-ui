@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import { connect } from 'react-redux';
-import { addSource } from '../actions';
+import { createDataSource, fetchDataSources } from '../actions';
 import { GenerateGuid } from '../utils/Helpers';
 import ChartRuntime from './ChartRuntime';
 import { DATA_TYPES } from '../Constants';
@@ -42,8 +42,11 @@ class Chart extends Component {
 
   addDataSource = (event) => {
     const selectedResource = this.state.selectedResource;
+    const selectedProvider = this.state.selectedProvider.provider;
     const params = this.state.parameterValues;
     const sourceName = this.state.sourceName;
+    const user = this.props.user[0].username;
+    const apiKey = this.props.user[0].api_key;
     event.preventDefault();
     if(selectedResource && sourceName) {
       this.state.selectedProvider.request(selectedResource, params)
@@ -58,11 +61,14 @@ class Chart extends Component {
 
           }, () => {
             this.props.dispatch(
-              addSource(
-                GenerateGuid(),
+              createDataSource(
+                apiKey,
+                user,
                 sourceName,
                 this.props.id,
+                selectedProvider,
                 selectedResource,
+                params,
                 response.data,
                 response.properties,
               )
@@ -143,6 +149,18 @@ class Chart extends Component {
     this.setState({ sourceName: event.target.value });
   }
 
+  componentDidMount() {
+    const user = this.props.user[0].username;
+    const apiKey = this.props.user[0].api_key;
+    this.props.dispatch(
+      fetchDataSources(
+        apiKey,
+        user,
+        this.props.id,
+      )
+    );
+  }
+
   componentDidUpdate(prevProps) {
     if(prevProps.id !== this.props.id) {
       this.setState({
@@ -158,7 +176,7 @@ class Chart extends Component {
     let parameters = [];
 
     const availableSources = this.props.sources.filter((source) => {
-      return source.chartId === this.props.id;
+      return source.chart === '/api/v1/chart/' + String(this.props.id) + '/';
     });
 
     if (this.state.parameterFields.length > 0) {

@@ -74,7 +74,7 @@ class ChartRuntime extends Component {
         text: this.props.chartName
       },
       xAxis: {
-        type: this.props.chartConfig.xaxis,
+        type: this.props.chartConfig.chart_type,
       },
       yAxis: {
         title: false
@@ -86,7 +86,7 @@ class ChartRuntime extends Component {
     };
 
     this.chartInstance = Highcharts.chart(
-      this.props.chartId,
+      this.props.chartName,
       chartConfig
     );
 
@@ -135,7 +135,7 @@ class ChartRuntime extends Component {
                 </div>
               </div>
             </div>
-            <div style={{ ...style }} id={this.props.chartId} />
+            <div style={{ ...style }} id={this.props.chartName} />
           </div>
         </div>
         <Datasets

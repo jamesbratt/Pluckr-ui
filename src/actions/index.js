@@ -133,17 +133,134 @@ export const makeChartActive = (id, isActive) => {
   }
 };
 
-export const addSource = (id, sourceName, chartId, resource, data, properties) => {
+// Data Sources
+
+export const addSource = (id, sourceName, chartId, resource, params, data, properties) => {
   return {
     type: 'ADD_SOURCE',
     id,
     sourceName,
     chartId,
     resource,
+    params,
     data,
     properties,
   }
 };
+
+export const receiveDataSources = (data) => {
+  return {
+    type: 'RECEIVE_DATA_SOURCES',
+    data
+  }
+};
+
+export const fetchDataSources = (apiKey, username, chartId) => {
+  return (dispatch, getState) => {
+    const { dataProviders } = getState();
+  
+    return fetch(`https://api.pluckr.io/api/v1/datasource/?chart=${chartId}`, {
+      headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `ApiKey ${username}:${apiKey}`
+      },
+    })
+      .then(response => response.json())
+      .then(json => {
+        const dataSources = json.objects;
+        if (dataSources.length > 0) {
+          const dataSourceRequests = dataSources.map(dataSource => {
+            const provider = dataProviders.find(dataProvider => dataProvider.provider === dataSource.provider);
+              return {
+                source: dataSource,
+                data: provider.request(dataSource.resource, JSON.parse(dataSource.params))
+              };
+          });
+
+          Promise.all(dataSourceRequests).then(responses => {
+            const dataSourcesToAddToState = [];
+            responses.forEach(response => {
+              const source = {
+                id: response.source.id,
+                name: response.source.name,
+                chart: response.source.chart,
+                resource: response.source.resource,
+                provider: response.source.provider,
+                params: JSON.parse(response.source.params),
+                rawData: response.data.data,
+                properties: response.data.properties,
+              };
+
+              dataSourcesToAddToState.push(source);
+            });
+
+            dispatch(
+              receiveDataSources(
+                dataSourcesToAddToState
+              )
+            );
+          });
+
+        } else {
+          dispatch(
+            receiveDataSources(
+              dataSources
+            )
+          );
+        }
+      })
+      .catch(error => alert(error));
+  }
+}
+
+export const createDataSource = (
+  apiKey,
+  username,
+  name,
+  chartId,
+  provider,
+  resource,
+  params,
+  rawData,
+  properties,
+) => {
+
+  const payload = {
+    name,
+    chart: { pk: chartId },
+    provider,
+    resource,
+    params: JSON.stringify(params),
+  };
+
+  return dispatch => {
+    return fetch('https://api.pluckr.io/api/v1/datasource/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `ApiKey ${username}:${apiKey}`
+        },
+        body: JSON.stringify(payload)
+    })
+    .then((response) => {
+      return response.json();
+    })
+    .then(json => {
+      dispatch(
+        addSource(
+          json.id,
+          json.name,
+          json.chart,
+          json.resource,
+          JSON.parse(json.params),
+          rawData,
+          properties,
+        )
+      )
+    })
+    .catch(error => alert(error));
+  }
+}
 
 export const addDataset = (id, sourceId, chartId, isActive, title, data) => {
   return {
