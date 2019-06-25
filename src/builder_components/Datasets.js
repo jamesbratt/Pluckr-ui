@@ -25,7 +25,7 @@ class Datasets extends Component {
 
   getSourceData = (event) => {
       const selectedSource = this.props.sources.find(
-        source => source.id === event.target.value
+        source => source.id === parseInt(event.target.value),
       );
       this.setState({
         dataProperties: selectedSource.properties,
@@ -41,7 +41,7 @@ class Datasets extends Component {
       const sourceId = this.state.selectedDataSource;
 
       const dataSource = this.props.sources.find(
-        source => source.id === sourceId,
+        source => source.id === parseInt(sourceId),
       );
 
       this.props.addYaxis(newDataSetId, this.state.dataSetTitle);
@@ -92,7 +92,7 @@ class Datasets extends Component {
     const operations = this.props.operations.filter(operation => operation.dataSetId === dataSet.id);
 
     const dataSource = this.props.sources.find(
-      source => source.id === (this.state.selectedDataSource || dataSet.sourceId),
+      source => source.id === (parseInt(this.state.selectedDataSource) || parseInt(dataSet.sourceId)),
     );
 
     // Having to clone the source data here as for some reason
@@ -146,7 +146,7 @@ class Datasets extends Component {
               <select className="form-control mr-sm-2" id="datasetSource" value={this.state.selectedDataSource} onChange={this.getSourceData}>
                 <option value={null} hidden>-- Select a data source --</option>
                 {this.props.sources.map(source => {
-                  if(source.chartId === this.props.chartId) {
+                  if(source.chart === this.props.chartId) {
                     return <option value={source.id}>{source.name}</option>;
                   }
                 })}

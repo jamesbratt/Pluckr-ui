@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import { connect } from 'react-redux';
 import { createDataSource, fetchDataSources } from '../actions';
-import { GenerateGuid } from '../utils/Helpers';
 import ChartRuntime from './ChartRuntime';
 import { DATA_TYPES } from '../Constants';
 
@@ -15,7 +14,7 @@ class Chart extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      show: true,
+      show: false,
       selectedProvider: null,
       selectedResource: null,
       sourceName: null,
@@ -176,7 +175,7 @@ class Chart extends Component {
     let parameters = [];
 
     const availableSources = this.props.sources.filter((source) => {
-      return source.chart === '/api/v1/chart/' + String(this.props.id) + '/';
+      return source.chart === this.props.id;
     });
 
     if (this.state.parameterFields.length > 0) {

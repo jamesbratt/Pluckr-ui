@@ -1,3 +1,5 @@
+import { merge } from 'ramda';
+
 // USERS
 
 export const receiveUser = (userData) => {
@@ -171,27 +173,20 @@ export const fetchDataSources = (apiKey, username, chartId) => {
         if (dataSources.length > 0) {
           const dataSourceRequests = dataSources.map(dataSource => {
             const provider = dataProviders.find(dataProvider => dataProvider.provider === dataSource.provider);
-              return {
-                source: dataSource,
-                data: provider.request(dataSource.resource, JSON.parse(dataSource.params))
-              };
+              return provider.request(dataSource.resource, JSON.parse(dataSource.params), dataSource.id);
           });
 
           Promise.all(dataSourceRequests).then(responses => {
             const dataSourcesToAddToState = [];
             responses.forEach(response => {
+              const sourceConfig = dataSources.find(dataSource => dataSource.id === response.sourceId);
+              sourceConfig['chart'] = parseInt(sourceConfig.chart.replace('/api/v1/chart/', '').replace('/', ''));
               const source = {
-                id: response.source.id,
-                name: response.source.name,
-                chart: response.source.chart,
-                resource: response.source.resource,
-                provider: response.source.provider,
-                params: JSON.parse(response.source.params),
-                rawData: response.data.data,
-                properties: response.data.properties,
+                rawData: response.data,
+                properties: response.properties,
               };
 
-              dataSourcesToAddToState.push(source);
+              dataSourcesToAddToState.push(merge(sourceConfig, source));
             });
 
             dispatch(

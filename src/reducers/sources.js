@@ -8,7 +8,7 @@ const sources = (state = [], action) => {
       const newSource = {
         id: action.id,
         name: action.sourceName,
-        chartId: action.chartId,
+        chart: parseInt(action.chartId.replace('/api/v1/chart/', '').replace('/', '')),
         resource: action.resource,
         params: action.params,
         rawData: action.data,

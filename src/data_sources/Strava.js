@@ -156,7 +156,7 @@ export const getProfile = () => {
   });
 };
 
-export const getStravaData = (resource, params) => {
+export const getStravaData = (resource, params, sourceId = null) => {
   let call;
   switch(resource) {
     case STRAVA_RESOURCES.activities.name:
@@ -176,6 +176,7 @@ export const getStravaData = (resource, params) => {
   return call(params)
   .then(response => {
     return {
+      sourceId,
       data: response,
       properties: RESOURCE_PROPERTIES[resource],
     };
