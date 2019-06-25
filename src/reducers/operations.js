@@ -1,16 +1,16 @@
-import { append, merge } from 'ramda';
+import { append, assocPath, merge } from 'ramda';
 
 const operations = (state = [], action) => {
   switch (action.type) {
     case 'ADD_OPERATION':
-      const newOperation = {
-        id: action.id,
-        dataSetId: action.dataSetId,
-        rootFunction: action.rootFunction,
-        ast: action.ast,
-        order: state.length + 1,
-      };
+      const newOperation = assocPath(['dataset'], parseInt(action.data.dataset.replace('/api/v1/dataset/', '').replace('/', '')), action.data);
       return append(newOperation, state);
+
+    case 'RECEIVE_OPERATIONS':
+      const operations = action.data.map(operation => {
+        return assocPath(['dataset'], parseInt(operation.dataset.replace('/api/v1/dataset/', '').replace('/', '')), operation);
+      });
+      return operations;
 
     case 'UPDATE_OPERATION':
       const updates = {

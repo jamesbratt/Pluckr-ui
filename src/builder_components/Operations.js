@@ -3,7 +3,7 @@ import Modal from 'react-bootstrap/Modal';
 import OperationConfiguration from './OperationConfiguration';
 import DatasetPreview from './DatasetPreview';
 import { GenerateGuid } from '../utils/Helpers';
-import { addOperation, updateOperation } from '../actions';
+import { createOperation, updateOperation, fetchOperations } from '../actions';
 import { connect } from 'react-redux';
 import { OPERATION_FUNCTIONS } from '../Constants';
 import { difference } from 'ramda';
@@ -44,10 +44,12 @@ class Operations extends Component {
   }
 
   addOperation = () => {
-    const newOperationId = GenerateGuid();
+    const user = this.props.user[0].username;
+    const apiKey = this.props.user[0].api_key;
     this.props.dispatch(
-      addOperation(
-        newOperationId,
+      createOperation(
+        apiKey,
+        user,
         this.props.dataSetId,
         this.state.rootFunction,
         this.state.operationAst,
@@ -189,11 +191,23 @@ class Operations extends Component {
   onOperationEdit = (operation) => {
     this.setState({
       operationAst: operation.ast,
-      rootFunction: operation.rootFunction,
+      rootFunction: operation.root_function,
       operationEdit: operation,
     }, () => {
         this.handleShow();
     });
+  }
+
+  componentDidMount() {
+    const user = this.props.user[0].username;
+    const apiKey = this.props.user[0].api_key;
+    this.props.dispatch(
+      fetchOperations(
+        apiKey,
+        user,
+        this.props.dataSetId,
+      )
+    );
   }
 
   render() {
@@ -204,9 +218,9 @@ class Operations extends Component {
     );
 
     const operations = this.props.operations.map(operation => {
-      if (operation.dataSetId === this.props.dataSetId) {
+      if (operation.dataset === this.props.dataSetId) {
         return <li class="list-group-item">
-          {operation.rootFunction}
+          {operation.root_function}
           <button className="btn btn-light btn-sm float-right" onClick={() => this.onOperationEdit(operation)}>Edit</button>
         </li>
       }

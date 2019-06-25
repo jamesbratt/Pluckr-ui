@@ -356,15 +356,78 @@ export const runDataset = (datasetId, rawData) => {
   }
 }
 
-export const addOperation = (id, dataSetId, rootFunction, ast) => {
+// OPERATIONS
+
+export const receiveOperations = (data) => {
   return {
-    type: 'ADD_OPERATION',
-    id,
-    dataSetId,
-    rootFunction,
-    ast,
+    type: 'RECEIVE_OPERATIONS',
+    data,
   }
 };
+
+export const addOperation = (data) => {
+  return {
+    type: 'ADD_OPERATION',
+    data,
+  }
+};
+
+export const fetchOperations = (apiKey, username, datasetId) => {
+  return dispatch => {
+    return fetch(`https://api.pluckr.io/api/v1/operation/`, {
+      headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `ApiKey ${username}:${apiKey}`
+      },
+    })
+      .then(response => response.json())
+      .then(json => {
+        const operations = json.objects.length > 0 ? json.objects.map(operation => {
+          return assocPath(['ast'], JSON.parse(operation.ast), operation);
+        }) : json.objects;
+        dispatch(receiveOperations(operations))
+      })
+  }
+}
+
+export const createOperation = (
+  apiKey,
+  username,
+  dataSetId,
+  rootFunction,
+  ast,
+) => {
+
+  const payload = {
+    name: '',
+    dataset: { pk: dataSetId },
+    root_function: rootFunction,
+    ast: JSON.stringify(ast),
+  };
+
+  return dispatch => {
+    return fetch('https://api.pluckr.io/api/v1/operation/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `ApiKey ${username}:${apiKey}`
+        },
+        body: JSON.stringify(payload)
+    })
+    .then((response) => {
+      return response.json();
+    })
+    .then(json => {
+      json['ast'] = JSON.parse(json.ast);
+      dispatch(
+        addOperation(
+          json,
+        )
+      )
+    })
+    .catch(error => alert(error));
+  }
+}
 
 export const updateOperation = (id, rootFunction, ast) => {
   return {
@@ -374,6 +437,8 @@ export const updateOperation = (id, rootFunction, ast) => {
     ast,
   }
 };
+
+// DATA PROVIDERS
 
 export const setDataProviders = (payload) => {
   return {

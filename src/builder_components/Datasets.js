@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Operations from './Operations';
 import { connect } from 'react-redux';
-import { createDataSet, fetchDatasets, makeDatasetActive, runDataset, updateDatasetYaxis } from '../actions';
+import { createDataSet, fetchDatasets, runDataset, updateDatasetYaxis } from '../actions';
 import { executeOperations } from '../data_parsing/parse';
 import JSONTree from 'react-json-tree';
 import Tabs from 'react-bootstrap/Tabs';
@@ -184,7 +184,10 @@ class Datasets extends Component {
             <div className="col-md-6">
               <Tabs defaultActiveKey="operations" id="dataset-tabs">
                 <Tab eventKey="operations" title="Operations">
-                  <Operations run={this.runDataSet} dataSetId={activeDataset.id} dataSourceId={activeDataset.data_source} />
+                  <Operations
+                    run={this.runDataSet}
+                    dataSetId={activeDataset.id}
+                    dataSourceId={activeDataset.data_source.replace('/api/v1/datasource/', '').replace('/', '')} />
                 </Tab>
                 <Tab eventKey="settings" title="Settings">
                   <div className="row">
