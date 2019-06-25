@@ -1,4 +1,4 @@
-import { merge } from 'ramda';
+import { assocPath, merge } from 'ramda';
 
 // USERS
 
@@ -257,17 +257,80 @@ export const createDataSource = (
   }
 }
 
-export const addDataset = (id, sourceId, chartId, isActive, title, data) => {
+// DATASETS
+
+export const receiveDatasets = (data) => {
+  return {
+    type: 'RECEIVE_DATASETS',
+    data
+  }
+};
+
+export const addDataset = (data) => {
   return {
     type: 'ADD_DATASET',
-    id,
-    sourceId,
-    chartId,
-    isActive,
-    title,
     data,
   }
 };
+
+export const fetchDatasets = (apiKey, username, chartId) => {
+  return dispatch => {
+    return fetch(`https://api.pluckr.io/api/v1/dataset/?chart=${chartId}`, {
+      headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `ApiKey ${username}:${apiKey}`
+      },
+    })
+      .then(response => response.json())
+      .then(json => {
+        const datasets = json.objects.map(dataset => {
+          return assocPath(['data'], JSON.parse(dataset.data), dataset);
+        });
+        dispatch(receiveDatasets(datasets))
+      })
+  }
+}
+
+export const createDataSet = (
+  apiKey,
+  username,
+  name,
+  chartId,
+  sourceId,
+  data,
+) => {
+
+  const payload = {
+    name,
+    chart: { pk: chartId },
+    data_source: { pk: sourceId },
+    y_axis_id: null,
+    data: JSON.stringify(data),
+  };
+
+  return dispatch => {
+    return fetch('https://api.pluckr.io/api/v1/dataset/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `ApiKey ${username}:${apiKey}`
+        },
+        body: JSON.stringify(payload)
+    })
+    .then((response) => {
+      return response.json();
+    })
+    .then(json => {
+      json['data'] = JSON.parse(json.data);
+      dispatch(
+        addDataset(
+          json,
+        )
+      )
+    })
+    .catch(error => alert(error));
+  }
+}
 
 export const makeDatasetActive = (id, isActive) => {
   return {
