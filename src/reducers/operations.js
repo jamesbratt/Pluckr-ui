@@ -10,7 +10,7 @@ const operations = (state = [], action) => {
       const operations = action.data.map(operation => {
         return assocPath(['dataset'], parseInt(operation.dataset.replace('/api/v1/dataset/', '').replace('/', '')), operation);
       });
-      return operations;
+      return operations.reverse();
 
     case 'UPDATE_OPERATION':
       const updates = {

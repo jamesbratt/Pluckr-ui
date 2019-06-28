@@ -210,6 +210,12 @@ class Operations extends Component {
     );
   }
 
+  componentDidUpdate(prevProps) {
+    if (this.props.operations > prevProps.operations) {
+      console.log('RUNNNN');
+    }
+  }
+
   render() {
     let astToForm = null;
 
@@ -295,7 +301,7 @@ class Operations extends Component {
         <ul class="list-group operations">
           {operations}
         </ul>
-        <button style={{marginTop: '1em'}} onClick={this.props.run} className="btn btn-success">Run Dataset</button>
+        <button style={{marginTop: '1em'}} onClick={() => this.props.run(this.props.dataSetId)} className="btn btn-success">Run Dataset</button>
       </div>
     );
 

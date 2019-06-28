@@ -1,4 +1,5 @@
-import { assocPath, merge } from 'ramda';
+import { assocPath, clone, merge } from 'ramda';
+import { executeOperations } from '../data_parsing/parse';
 
 // USERS
 
@@ -273,6 +274,14 @@ export const addDataset = (data) => {
   }
 };
 
+export const updateDataset = (datasetId, rawData) => {
+  return {
+    type: 'UPDATE_DATASET',
+    datasetId,
+    rawData
+  }
+}
+
 export const fetchDatasets = (apiKey, username, chartId) => {
   return dispatch => {
     return fetch(`https://api.pluckr.io/api/v1/dataset/?chart=${chartId}`, {
@@ -332,6 +341,76 @@ export const createDataSet = (
   }
 }
 
+export const runDataSet = (
+  apiKey,
+  username,
+  dataSetId,
+  callback,
+  seriesType,
+) => {
+
+  return (dispatch, getState) => {
+
+    const { datasets, operations, sources } = getState();
+
+    let data = [];
+    const currentDataSet = datasets.find(dataset => dataset.id === dataSetId);
+    const currentOperations = operations.filter(operation => operation.dataset === dataSetId);
+
+    const currentDataSource = sources.find(
+      source => source.id === parseInt(currentDataSet.data_source),
+    );
+
+    // Having to clone the source data here as for some reason
+    // the highcharts api is mutating the raw data in the sources store
+    const clonedData = clone(currentDataSource.rawData);
+
+    try {
+      data = executeOperations(
+        clonedData,
+        currentDataSet,
+        currentOperations,
+      );
+    } catch (error) {
+      alert(error);
+    }
+
+    const payload = {
+      chart: {pk: currentDataSet.chart},
+      data: JSON.stringify(data),
+    };
+    
+    return fetch(`https://api.pluckr.io/api/v1/dataset/${dataSetId}/`, {
+      method: 'PATCH',
+      headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `ApiKey ${username}:${apiKey}`
+      },
+      body: JSON.stringify(payload)
+    })
+      .then((response) => {
+        return response.json();
+      })
+      .then(json => {
+        json['data'] = JSON.parse(json.data);
+        dispatch(
+          updateDataset(
+            dataSetId,
+            json.data,
+          )
+        )
+
+        callback(
+          currentDataSet.id,
+          currentDataSet.name,
+          data,
+          seriesType,
+        );
+      })
+      .catch(error => alert(error));
+  }
+}
+
 export const makeDatasetActive = (id, isActive) => {
   return {
     type: 'MAKE_DATASET_ACTIVE',
@@ -348,13 +427,13 @@ export const updateDatasetYaxis = (id, yaxisId) => {
   }
 };
 
-export const runDataset = (datasetId, rawData) => {
+/*export const runDataset = (datasetId, rawData) => {
   return {
     type: 'RUN_DATASET',
     datasetId,
     rawData
   }
-}
+}*/
 
 // OPERATIONS
 

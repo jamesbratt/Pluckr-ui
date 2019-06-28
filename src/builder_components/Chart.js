@@ -218,7 +218,7 @@ class Chart extends Component {
           <div className="col-md-12">
             <h3 className="float-left">{this.props.name}</h3>
             <button onClick={this.handleShow} type="button" className="btn btn-primary float-right">
-            New Data Source <span class="badge badge-light">{availableSources.length}</span>
+            New Data Source <span className="badge badge-light">{availableSources.length}</span>
             </button>
           </div>
         </div>
@@ -228,28 +228,28 @@ class Chart extends Component {
           </Modal.Header>
           <Modal.Body>
             <form>
-              <div class="form-group">
+              <div className="form-group">
                 <label>Title</label>
                 <input value={this.state.sourceName || ''} onChange={this.onSourceNameChange} type="text" className="form-control" placeholder="Enter a title" />
               </div>
-              <div class="form-group">
+              <div className="form-group">
                 <label>Data Provider</label>
                 <select onChange={this.onProviderChange} className="form-control" id="dataProvider">
                   <option value="">-- Select a data provider --</option>;
                   {this.props.dataProviders.map((dataProvider) => {
                     if (dataProvider.isActive) {
-                      return <option value={dataProvider.provider}>{dataProvider.provider}</option>
+                      return <option key={dataProvider.provider} value={dataProvider.provider}>{dataProvider.provider}</option>
                     }
                   })}
                 </select>            
               </div>
               {this.state.selectedProvider ?
-                <div class="form-group">
+                <div className="form-group">
                   <label>Resource</label>
                   <select onChange={this.onResourceChange} className="form-control" id="dataSourceResource">
                     <option value="">-- Select a resource --</option>;
                     {Object.keys(this.state.selectedProvider.resources).map(resourceKey => {
-                      return <option value={this.state.selectedProvider.resources[resourceKey].name}>{this.state.selectedProvider.resources[resourceKey].label}</option>
+                      return <option key={this.state.selectedProvider.resources[resourceKey].name} value={this.state.selectedProvider.resources[resourceKey].name}>{this.state.selectedProvider.resources[resourceKey].label}</option>
                     })}
                   </select>            
                 </div>

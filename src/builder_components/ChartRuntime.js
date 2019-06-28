@@ -50,7 +50,7 @@ class ChartRuntime extends Component {
         data: data,
       });
     } else {
-      newDataSeries['yAxis'] = `yaxis-${datasetId}`;
+      // newDataSeries['yAxis'] = `yaxis-${datasetId}`;
       this.chartInstance.addSeries(newDataSeries)  
     }
   }
@@ -91,12 +91,12 @@ class ChartRuntime extends Component {
     );
 
     this.props.datasets.forEach((dataset) => {
-      if(dataset.chartId === this.props.chartId) {
+      if(dataset.chart === this.props.chartId) {
         this.addDataSeries(
           dataset.id,
-          dataset.title,
-          dataset.rawData,
-          this.props.chartConfig.seriesType,
+          dataset.name,
+          dataset.data,
+          this.props.chartConfig.series_type,
           dataset, // Just expects everything
         );
       }
@@ -104,10 +104,10 @@ class ChartRuntime extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if(prevProps.chartId !== this.props.chartId) {
-      this.chartInstance.destroy();
+    // if(prevProps.chartId !== this.props.chartId) {
+      // this.chartInstance.destroy();
       this.setChartConfig();
-    }
+    // }
   }
 
   componentWillUnmount() {
@@ -121,7 +121,7 @@ class ChartRuntime extends Component {
   render() {
     const overlayClasses = classNames({
       'overlay': true,
-      'overlay-hide': this.chartInstance && this.chartInstance.series.length > 0,
+      'overlay-hide': this.chartInstance && this.props.datasets.length > 0,
     });
 
     return (

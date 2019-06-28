@@ -322,7 +322,7 @@ export const executeOperations = (rawData, dataSet, operations) => {
       id: 'root',
       name: 'FUNCTION',
       parent: null,
-      value: operation.rootFunction,
+      value: operation.root_function,
     }
     data = executeFunction(
       rootNode,

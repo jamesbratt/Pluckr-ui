@@ -57,13 +57,13 @@ class Charts extends Component {
             {
               this.props.charts.map((chart) => {
                 return (
-                  <div className='col-md-3'>
+                  <div key={chart.name} className='col-md-3'>
                     <div className='add-chart-card'>
                       <div className="chart-card-inner">
                         <h3>{chart.name}</h3>
                         <div className="btn-group-fixed">
-                          <button onClick={() => this.props.switchView('CHART_DETAIL', chart.id)} type="button" class="btn btn-primary">Edit</button>
-                          <button onClick={() => this.removeChart(chart.id)} type="button" class="btn btn-danger">Delete</button>
+                          <button onClick={() => this.props.switchView('CHART_DETAIL', chart.id)} type="button" className="btn btn-primary">Edit</button>
+                          <button onClick={() => this.removeChart(chart.id)} type="button" className="btn btn-danger">Delete</button>
                         </div>
                       </div>
                     </div>

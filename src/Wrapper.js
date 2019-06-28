@@ -84,7 +84,7 @@ class Wrapper extends Component {
               <Nav className="mr-auto">
               </Nav>
               <Nav>
-                <button onClick={() => this.setState({providerModalShow: true})} class="btn btn-primary my-2 my-sm-0">Connect Data Providers</button>
+                <button onClick={() => this.setState({providerModalShow: true})} className="btn btn-primary my-2 my-sm-0">Connect Data Providers</button>
               </Nav>
             </Navbar.Collapse>
           </Navbar>

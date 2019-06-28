@@ -6,7 +6,10 @@ const datasets = (state = [], action) => {
       return append(action.data, state);
 
     case 'RECEIVE_DATASETS':
-      return action.data;
+      const datasets = action.data.map(dataset => {
+        return assocPath(['data_source'], parseInt(dataset.data_source.replace('/api/v1/datasource/', '').replace('/', '')), dataset);
+      });
+      return datasets;
 
     case 'MAKE_DATASET_ACTIVE':
       return state.map(dataset => {
@@ -24,12 +27,12 @@ const datasets = (state = [], action) => {
         return dataset;
       });
 
-    case 'RUN_DATASET':
+    case 'UPDATE_DATASET':
       return state.map(dataset => {
         if (dataset.id === action.datasetId) {
           const updatedData = merge(
             dataset,
-            { 'rawData': action.rawData, },
+            { 'data': action.rawData, },
           );
           return updatedData;
         }

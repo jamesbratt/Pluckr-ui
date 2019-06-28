@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Operations from './Operations';
 import { connect } from 'react-redux';
-import { createDataSet, fetchDatasets, runDataset, updateDatasetYaxis } from '../actions';
+import { createDataSet, fetchDatasets, runDataSet, updateDatasetYaxis } from '../actions';
 import { executeOperations } from '../data_parsing/parse';
 import JSONTree from 'react-json-tree';
 import Tabs from 'react-bootstrap/Tabs';
@@ -17,7 +17,7 @@ class Datasets extends Component {
     super(props);
     this.state = {
       dataProperties: [],
-      selectedDataSource: null,
+      selectedDataSource: '',
       dataSetTitle: null,
       activeDataset: null,
     };
@@ -77,9 +77,23 @@ class Datasets extends Component {
 
   editDataset = (id) => {
     this.setState({ activeDataset: id });
-  } 
+  }
+  
+  runDataSet = (id) => {
+    const user = this.props.user[0].username;
+    const apiKey = this.props.user[0].api_key;
+    this.props.dispatch(
+      runDataSet(
+        apiKey,
+        user,
+        id,
+        this.props.addData,
+        this.props.chartConfig.series_type,
+      )
+    );
+  }
 
-  runDataSet = () => {
+  /*runDataSet = () => {
     let data = [];
     const dataSet = this.props.datasets.find(dataset => dataset.isActive === true);
     const operations = this.props.operations.filter(operation => operation.dataSetId === dataSet.id);
@@ -115,7 +129,7 @@ class Datasets extends Component {
         data
       )
     );
-  }
+  }*/
 
   componentDidMount() {
     const user = this.props.user[0].username;
@@ -152,7 +166,7 @@ class Datasets extends Component {
                 <option value={null} hidden>-- Select a data source --</option>
                 {this.props.sources.map(source => {
                   if(source.chart === this.props.chartId) {
-                    return <option value={source.id}>{source.name}</option>;
+                    return <option key={source.name} value={source.id}>{source.name}</option>;
                   }
                 })}
               </select>
@@ -162,8 +176,8 @@ class Datasets extends Component {
             <div id="data-sets">
               <ul className="list-inline">
                 {this.props.datasets.map(dataset => {
-                  if(dataset.chart === '/api/v1/chart/' + this.props.chartId + '/') {
-                    return <li className="list-inline-item">
+                  if(dataset.chart === this.props.chartId) {
+                    return <li key={dataset.name} className="list-inline-item">
                       {dataset.name}
                       <button onClick={() => this.editDataset(dataset.id)} type="button" className="edit-dataset">Edit</button>
                     </li>;
@@ -187,7 +201,7 @@ class Datasets extends Component {
                   <Operations
                     run={this.runDataSet}
                     dataSetId={activeDataset.id}
-                    dataSourceId={activeDataset.data_source.replace('/api/v1/datasource/', '').replace('/', '')} />
+                    dataSourceId={activeDataset.data_source} />
                 </Tab>
                 <Tab eventKey="settings" title="Settings">
                   <div className="row">
