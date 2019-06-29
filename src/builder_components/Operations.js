@@ -44,8 +44,11 @@ class Operations extends Component {
   }
 
   addOperation = () => {
+    const { operations } = this.props;
+    const foo = operations.filter(operation => operation.dataset === this.props.dataSetId);
     const user = this.props.user[0].username;
     const apiKey = this.props.user[0].api_key;
+    const sortOrder = foo.length > 0 ? foo[foo.length-1].sort_order + 1 : 0;
     this.props.dispatch(
       createOperation(
         apiKey,
@@ -53,6 +56,7 @@ class Operations extends Component {
         this.props.dataSetId,
         this.state.rootFunction,
         this.state.operationAst,
+        sortOrder,
       )
     );
 

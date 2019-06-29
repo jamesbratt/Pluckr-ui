@@ -488,6 +488,7 @@ export const createOperation = (
   dataSetId,
   rootFunction,
   ast,
+  sortOrder,
 ) => {
 
   const payload = {
@@ -495,6 +496,7 @@ export const createOperation = (
     dataset: { pk: dataSetId },
     root_function: rootFunction,
     ast: JSON.stringify(ast),
+    sort_order: sortOrder,
   };
 
   return dispatch => {
