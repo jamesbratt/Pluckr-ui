@@ -8,6 +8,9 @@ const operations = (state = [], action) => {
     case 'RECEIVE_OPERATIONS':
       return action.data.reverse();
 
+    case 'REMOVE_OPERATION':
+      return state.filter(operation => operation.id !== action.operationId);
+
     case 'UPDATE_OPERATION':
       const updates = {
         rootFunction: action.rootFunction,

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Operations from './Operations';
 import { connect } from 'react-redux';
-import { createDataSet, fetchDatasets, runDataSet } from '../actions';
+import { createDataSet, deleteDataset, fetchDatasets, runDataSet } from '../actions';
 import JSONTree from 'react-json-tree';
 import Tabs from 'react-bootstrap/Tabs';
 import Tab from 'react-bootstrap/Tab';
@@ -76,6 +76,18 @@ class Datasets extends Component {
   editDataset = (id) => {
     this.setState({ activeDataset: id });
   }
+
+  deleteDataset = (id) => {
+    const user = this.props.user[0].username;
+    const apiKey = this.props.user[0].api_key;
+    this.props.dispatch(
+      deleteDataset(
+        apiKey,
+        user,
+        id,
+      )
+    );
+  }
   
   runDataSet = (id) => {
     const user = this.props.user[0].username;
@@ -139,7 +151,8 @@ class Datasets extends Component {
                   if(dataset.chart === this.props.chartId) {
                     return <li key={dataset.name} className="list-inline-item">
                       {dataset.name}
-                      <button onClick={() => this.editDataset(dataset.id)} type="button" className="edit-dataset">Edit</button>
+                      <button style={{marginLeft: '1em'}} onClick={() => this.editDataset(dataset.id)} type="button" className="edit-dataset">Edit</button>
+                      <button style={{marginLeft: '1em'}} onClick={() => this.deleteDataset(dataset.id)} type="button" className="edit-dataset">Delete</button>
                     </li>;
                   }
                 })}

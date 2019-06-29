@@ -8,6 +8,9 @@ const datasets = (state = [], action) => {
     case 'RECEIVE_DATASETS':
       return action.data;
 
+    case 'REMOVE_DATASET':
+      return state.filter(dataset => dataset.id !== action.datasetId);
+
     case 'UPDATE_DATASET':
       return state.map(dataset => {
         if (dataset.id === action.datasetId) {

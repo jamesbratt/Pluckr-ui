@@ -253,6 +253,13 @@ export const addDataset = (data) => {
   }
 };
 
+export const removeDataset = (datasetId) => {
+  return {
+    type: 'REMOVE_DATASET',
+    datasetId,
+  }
+};
+
 export const updateDataset = (datasetId, rawData) => {
   return {
     type: 'UPDATE_DATASET',
@@ -317,6 +324,22 @@ export const createDataSet = (
       )
     })
     .catch(error => alert(error));
+  }
+}
+
+export const deleteDataset = (apiKey, username, datasetId) => {
+
+  return dispatch => {
+    return fetch(`https://api.pluckr.io/api/v1/dataset/${datasetId}/`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `ApiKey ${username}:${apiKey}`
+        },
+    })
+    .then(() => {
+      dispatch(removeDataset(datasetId))
+    })
   }
 }
 
@@ -409,6 +432,13 @@ export const addOperation = (data) => {
   }
 };
 
+export const removeOperation = (operationId) => {
+  return {
+    type: 'REMOVE_OPERATION',
+    operationId,
+  }
+};
+
 export const updateOperation = (id, rootFunction, ast) => {
   return {
     type: 'UPDATE_OPERATION',
@@ -433,6 +463,22 @@ export const fetchOperations = (apiKey, username) => {
         }) : json.objects;
         dispatch(receiveOperations(operations))
       })
+  }
+}
+
+export const deleteOperation = (apiKey, username, operationId) => {
+
+  return dispatch => {
+    return fetch(`https://api.pluckr.io/api/v1/operation/${operationId}/`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `ApiKey ${username}:${apiKey}`
+        },
+    })
+    .then(() => {
+      dispatch(removeOperation(operationId))
+    })
   }
 }
 

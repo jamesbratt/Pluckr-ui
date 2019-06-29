@@ -3,7 +3,7 @@ import Modal from 'react-bootstrap/Modal';
 import OperationConfiguration from './OperationConfiguration';
 import DatasetPreview from './DatasetPreview';
 import { GenerateGuid } from '../utils/Helpers';
-import { createOperation, updateOperationAst, fetchOperations } from '../actions';
+import { createOperation, deleteOperation, updateOperationAst, fetchOperations } from '../actions';
 import { connect } from 'react-redux';
 import { OPERATION_FUNCTIONS } from '../Constants';
 import { difference } from 'ramda';
@@ -202,6 +202,18 @@ class Operations extends Component {
     });
   }
 
+  deleteOperation = (id) => {
+    const user = this.props.user[0].username;
+    const apiKey = this.props.user[0].api_key;
+    this.props.dispatch(
+      deleteOperation(
+        apiKey,
+        user,
+        id,
+      )
+    );
+  }
+
   componentDidMount() {
     const user = this.props.user[0].username;
     const apiKey = this.props.user[0].api_key;
@@ -225,7 +237,10 @@ class Operations extends Component {
       if (operation.dataset === this.props.dataSetId) {
         return <li class="list-group-item">
           {operation.root_function}
-          <button className="btn btn-light btn-sm float-right" onClick={() => this.onOperationEdit(operation)}>Edit</button>
+          <div className="operation-actions float-right">
+            <button className="btn btn-light btn-sm" onClick={() => this.onOperationEdit(operation)}>Edit</button>
+            <button style={{ marginLeft: '1em' }} className="btn btn-danger btn-sm" onClick={() => this.deleteOperation(operation.id)}>Delete</button>
+          </div>
         </li>
       }
     });
