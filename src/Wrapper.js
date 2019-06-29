@@ -7,7 +7,6 @@ import DataProviderList from './builder_components/DataProviderList';
 import Modal from 'react-bootstrap/Modal';
 import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
-import './css/builder.css';
 
 const VIEWS = {
   chart_list: 'CHART_LIST',
@@ -53,6 +52,11 @@ class Wrapper extends Component {
       this.setState(payload)
     }
 
+    logout = () => {
+      localStorage.removeItem('pluckr_token');
+      window.location.href = "/";
+    }
+
     closeProviderModal = () => {
       this.setState({ providerModalShow: false })
     }
@@ -83,6 +87,7 @@ class Wrapper extends Component {
             <Navbar.Collapse id="responsive-navbar-nav">
               <Nav className="mr-auto">
                 <Nav.Link onClick={() => this.switchView(VIEWS.chart_list)}>Charts</Nav.Link>
+                <Nav.Link onClick={this.logout}>Log Out</Nav.Link>
               </Nav>
               <Nav>
                 <button onClick={() => this.setState({providerModalShow: true})} className="btn btn-primary my-2 my-sm-0">Connect Data Providers</button>

@@ -19,12 +19,17 @@ export const fetchUser = (username, password) => {
         body: JSON.stringify({ username, password })
     })
     .then((response) => {
-      return response.json();
+      if(response.status >= 200 && response.status <= 300) {
+        return response.json();
+      } else {
+        throw Error('Invalid username or password');
+      }
     })
     .then(json => {
       localStorage.setItem('pluckr_token', JSON.stringify(json));
       dispatch(receiveUser(json))
     })
+    .catch(error => alert(error));
   }
 }
 

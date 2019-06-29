@@ -35,17 +35,17 @@ class Login extends Component {
       return <Wrapper />
     } else {
         return (
-            <form onSubmit={this.login}>
-                <div>
-                    <label>Username</label>
-                    <input ref={this.usernameRef} type="text" name="username" />
-                </div>
-                <div>
-                    <label>Password</label>
-                    <input ref={this.passwordRef} type="password" name="password" />
-                </div>
-                <button type="submit">Sign In</button>
+          <div className="login-wrapper">
+            <form onSubmit={this.login} className="form-signin">
+              <h1 className="h3 mb-3 font-weight-normal">Please sign in</h1>
+              <label className="sr-only">Email address</label>
+              <input ref={this.usernameRef} type="text" name="username" className="form-control" placeholder="Username" required="" autofocus="" />
+              <label className="sr-only">Password</label>
+              <input ref={this.passwordRef} type="password" id="inputPassword" className="form-control" placeholder="Password" name="password" required="" />
+              <button className="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+              <p className="mt-5 mb-3 text-muted">© 2017-2018</p>
             </form>
+          </div>
         );
     }
   }

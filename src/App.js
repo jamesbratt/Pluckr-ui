@@ -7,6 +7,7 @@ import chartConfigReducers from './reducers'
 import Auth from './Auth';
 import Wrapper from './Wrapper';
 import pluckrAuthHoc from './pluckrAuthHoc';
+import './css/builder.css';
 
 const composeEnhancer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
@@ -34,10 +35,10 @@ class App extends Component {
     return (
       <Provider store={store}>
         <Router>
-          <div>
+          <React.Fragment>
             <Route exact path="/" component={ChartsAuthChecked} />
             <Route path="/authenticate" component={Auth} />
-          </div>
+          </React.Fragment>
         </Router>
       </Provider>
 
