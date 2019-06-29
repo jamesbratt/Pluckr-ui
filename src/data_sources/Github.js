@@ -70,7 +70,7 @@ export const getUser = () => {
   });
 };
 
-export const getGitHubData = (resource, params) => {
+export const getGitHubData = (resource, params, sourceId = null) => {
   let call;
   switch(resource) {
     case GITHUB_RESOURCES.repo_commits.name:
@@ -83,6 +83,7 @@ export const getGitHubData = (resource, params) => {
   return call(params)
   .then(response => {
     return {
+      sourceId,
       data: response,
       properties: RESOURCE_PROPERTIES[resource],
     };
