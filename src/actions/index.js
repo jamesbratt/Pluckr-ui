@@ -409,7 +409,16 @@ export const addOperation = (data) => {
   }
 };
 
-export const fetchOperations = (apiKey, username, datasetId) => {
+export const updateOperation = (id, rootFunction, ast) => {
+  return {
+    type: 'UPDATE_OPERATION',
+    id,
+    rootFunction,
+    ast,
+  }
+};
+
+export const fetchOperations = (apiKey, username) => {
   return dispatch => {
     return fetch(`https://api.pluckr.io/api/v1/operation/`, {
       headers: {
@@ -466,14 +475,53 @@ export const createOperation = (
   }
 }
 
-export const updateOperation = (id, rootFunction, ast) => {
-  return {
-    type: 'UPDATE_OPERATION',
-    id,
-    rootFunction,
-    ast,
+export const updateOperationAst = (
+  apiKey,
+  username,
+  operationId,
+  root_function,
+  ast,
+) => {
+
+  return (dispatch, getState) => {
+
+    const { operations } = getState();
+
+    const currentOperation = operations.find(operation => operation.id === operationId);
+
+    // Because the api is dehydrating these fields
+    // we need to add them into a PATCH payload
+    // TODO find solution for this on the api
+    const payload = {
+      dataset: {pk: currentOperation.dataset},
+      root_function,
+      ast: JSON.stringify(ast),
+    };
+    
+    return fetch(`https://api.pluckr.io/api/v1/operation/${operationId}/`, {
+      method: 'PATCH',
+      headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `ApiKey ${username}:${apiKey}`
+      },
+      body: JSON.stringify(payload)
+    })
+      .then((response) => {
+        return response.json();
+      })
+      .then(json => {
+        json['ast'] = JSON.parse(json.ast);
+        dispatch(
+          updateOperation(
+            operationId,
+            json.root_function,
+            json.ast,
+          )
+        )
+      })
+      .catch(error => alert(error));
   }
-};
+}
 
 // DATA PROVIDERS
 export const setDataProviders = (payload) => {

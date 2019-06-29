@@ -3,7 +3,7 @@ import Modal from 'react-bootstrap/Modal';
 import OperationConfiguration from './OperationConfiguration';
 import DatasetPreview from './DatasetPreview';
 import { GenerateGuid } from '../utils/Helpers';
-import { createOperation, updateOperation, fetchOperations } from '../actions';
+import { createOperation, updateOperationAst, fetchOperations } from '../actions';
 import { connect } from 'react-redux';
 import { OPERATION_FUNCTIONS } from '../Constants';
 import { difference } from 'ramda';
@@ -64,8 +64,12 @@ class Operations extends Component {
   }
 
   updateOperation = () => {
+    const user = this.props.user[0].username;
+    const apiKey = this.props.user[0].api_key;
     this.props.dispatch(
-      updateOperation(
+      updateOperationAst(
+        apiKey,
+        user,
         this.state.operationEdit.id,
         this.state.rootFunction,
         this.state.operationAst,
@@ -208,12 +212,6 @@ class Operations extends Component {
         this.props.dataSetId,
       )
     );
-  }
-
-  componentDidUpdate(prevProps) {
-    if (this.props.operations > prevProps.operations) {
-      console.log('RUNNNN');
-    }
   }
 
   render() {
