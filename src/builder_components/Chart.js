@@ -178,6 +178,10 @@ class Chart extends Component {
       return source.chart === this.props.id;
     });
 
+    const availableDataSets = this.props.datasets.filter((dataset) => {
+      return dataset.chart === this.props.id;
+    });
+
     if (this.state.parameterFields.length > 0) {
       parameters = this.state.parameterFields.map(parameterField => {
         switch(parameterField.type) {
@@ -263,7 +267,15 @@ class Chart extends Component {
             <button onClick={this.addDataSource} type="submit" className="btn btn-primary mb-2">Add Data Source</button>
           </Modal.Footer>
         </Modal>
-        {availableSources.length > 0 ? <ChartRuntime chartId={this.props.id} chartName={this.props.name} sources={availableSources} chartConfig={this.props.chartConfig} /> : null}
+        {availableSources.length > 0 ?
+          <ChartRuntime
+            chartId={this.props.id}
+            chartName={this.props.name}
+            sources={availableSources}
+            datasets={availableDataSets}
+            chartConfig={this.props.chartConfig}
+          /> 
+        : null}
       </div>
     );
   }

@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import Datasets from './Datasets';
 import classNames from 'classnames';
 
@@ -10,10 +9,6 @@ const style = {
   width: '100%',
   height: '400px',
   margin: '0 auto',
-};
-
-const mapStateToProps = state => {
-  return state
 };
 
 class ChartRuntime extends Component {
@@ -104,9 +99,9 @@ class ChartRuntime extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if(prevProps.datasets.length === 0 && this.props.datasets.length > 0) {
-      this.setChartConfig();
-    }
+      if(prevProps.datasets.length !== this.props.datasets.length) {
+        this.setChartConfig();
+      }
   }
 
   componentWillUnmount() {
@@ -150,6 +145,4 @@ class ChartRuntime extends Component {
   }
 }
 
-export default connect(
-  mapStateToProps
-)(ChartRuntime);
+export default ChartRuntime;

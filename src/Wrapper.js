@@ -82,6 +82,7 @@ class Wrapper extends Component {
             <Navbar.Toggle aria-controls="responsive-navbar-nav" />
             <Navbar.Collapse id="responsive-navbar-nav">
               <Nav className="mr-auto">
+                <Nav.Link onClick={() => this.switchView(VIEWS.chart_list)}>Charts</Nav.Link>
               </Nav>
               <Nav>
                 <button onClick={() => this.setState({providerModalShow: true})} className="btn btn-primary my-2 my-sm-0">Connect Data Providers</button>
