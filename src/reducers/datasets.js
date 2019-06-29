@@ -1,4 +1,4 @@
-import { append, assocPath, merge } from 'ramda';
+import { append, merge } from 'ramda';
 
 const datasets = (state = [], action) => {
   switch (action.type) {
@@ -6,26 +6,7 @@ const datasets = (state = [], action) => {
       return append(action.data, state);
 
     case 'RECEIVE_DATASETS':
-      const datasets = action.data.map(dataset => {
-        return assocPath(['data_source'], parseInt(dataset.data_source.replace('/api/v1/datasource/', '').replace('/', '')), dataset);
-      });
-      return datasets;
-
-    case 'MAKE_DATASET_ACTIVE':
-      return state.map(dataset => {
-        if (dataset.id === action.id) {
-          return assocPath(['isActive'], action.isActive, dataset);
-        }
-        return assocPath(['isActive'], false, dataset);
-      });
-
-    case 'UPDATE_DATASET_YAXIS':
-      return state.map(dataset => {
-        if (dataset.id === action.id) {
-          return assocPath(['yaxis'], action.yaxisId, dataset);
-        }
-        return dataset;
-      });
+      return action.data;
 
     case 'UPDATE_DATASET':
       return state.map(dataset => {

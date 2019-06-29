@@ -104,10 +104,9 @@ class ChartRuntime extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    // if(prevProps.chartId !== this.props.chartId) {
-      // this.chartInstance.destroy();
+    if(prevProps.datasets.length === 0 && this.props.datasets.length > 0) {
       this.setChartConfig();
-    // }
+    }
   }
 
   componentWillUnmount() {

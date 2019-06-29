@@ -1,12 +1,10 @@
 import React, { Component } from 'react';
 import Operations from './Operations';
 import { connect } from 'react-redux';
-import { createDataSet, fetchDatasets, runDataSet, updateDatasetYaxis } from '../actions';
-import { executeOperations } from '../data_parsing/parse';
+import { createDataSet, fetchDatasets, runDataSet } from '../actions';
 import JSONTree from 'react-json-tree';
 import Tabs from 'react-bootstrap/Tabs';
 import Tab from 'react-bootstrap/Tab';
-import { clone } from 'ramda';
 
 const mapStateToProps = state => {
   return state
@@ -64,7 +62,7 @@ class Datasets extends Component {
     this.setState({dataSetTitle: event.target.value})
   }
 
-  onChangeYaxis = (event) => {
+  /*onChangeYaxis = (event) => {
     const dataSet = this.props.datasets.find(dataset => dataset.isActive === true);
     this.props.changeYaxis(dataSet.id, event.target.value);
     this.props.dispatch(
@@ -73,7 +71,7 @@ class Datasets extends Component {
         event.target.value
       )
     );
-  }
+  }*/
 
   editDataset = (id) => {
     this.setState({ activeDataset: id });
@@ -92,44 +90,6 @@ class Datasets extends Component {
       )
     );
   }
-
-  /*runDataSet = () => {
-    let data = [];
-    const dataSet = this.props.datasets.find(dataset => dataset.isActive === true);
-    const operations = this.props.operations.filter(operation => operation.dataSetId === dataSet.id);
-
-    const dataSource = this.props.sources.find(
-      source => source.id === (parseInt(this.state.selectedDataSource) || parseInt(dataSet.sourceId)),
-    );
-
-    // Having to clone the source data here as for some reason
-    // the highcharts api is mutating the raw data in the sources store
-    const clonedData = clone(dataSource.rawData);
-
-    try {
-      data = executeOperations(
-        clonedData,
-        dataSet,
-        operations,
-      );
-    } catch (error) {
-      alert(error);
-    } 
-
-    this.props.addData(
-      dataSet.id,
-      dataSet.title,
-      data, // the actual data
-      this.props.chartConfig.seriesType,
-    );
-
-    this.props.dispatch(
-      runDataset(
-        dataSet.id,
-        data
-      )
-    );
-  }*/
 
   componentDidMount() {
     const user = this.props.user[0].username;

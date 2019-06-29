@@ -2,7 +2,6 @@ import { assocPath, clone, merge } from 'ramda';
 import { executeOperations } from '../data_parsing/parse';
 
 // USERS
-
 export const receiveUser = (userData) => {
   return {
     type: 'RECEIVE_USER',
@@ -30,7 +29,6 @@ export const fetchUser = (username, password) => {
 }
 
 // CHARTS
-
 export const addChart = (data) => {
   return {
     type: 'ADD_CHART',
@@ -120,24 +118,7 @@ export const deleteChart = (apiKey, username, chartId) => {
   }
 }
 
-export const updateChartXaxis = (id, axisType) => {
-  return {
-    type: 'UPDATE_CHART_XAXIS',
-    id,
-    axisType,
-  }
-};
-
-export const makeChartActive = (id, isActive) => {
-  return {
-    type: 'MAKE_CHART_ACTIVE',
-    id,
-    isActive,
-  }
-};
-
-// Data Sources
-
+// DATA SOURCES
 export const addSource = (id, sourceName, chartId, resource, params, data, properties) => {
   return {
     type: 'ADD_SOURCE',
@@ -181,7 +162,6 @@ export const fetchDataSources = (apiKey, username, chartId) => {
             const dataSourcesToAddToState = [];
             responses.forEach(response => {
               const sourceConfig = dataSources.find(dataSource => dataSource.id === response.sourceId);
-              sourceConfig['chart'] = parseInt(sourceConfig.chart.replace('/api/v1/chart/', '').replace('/', ''));
               const source = {
                 rawData: response.data,
                 properties: response.properties,
@@ -259,7 +239,6 @@ export const createDataSource = (
 }
 
 // DATASETS
-
 export const receiveDatasets = (data) => {
   return {
     type: 'RECEIVE_DATASETS',
@@ -375,8 +354,12 @@ export const runDataSet = (
       alert(error);
     }
 
+    // Because the api is dehydrating these fields
+    // we need to add them into a PATCH payload
+    // TODO find solution for this on the api
     const payload = {
       chart: {pk: currentDataSet.chart},
+      data_source: {pk: currentDataSet.data_source},
       data: JSON.stringify(data),
     };
     
@@ -411,32 +394,7 @@ export const runDataSet = (
   }
 }
 
-export const makeDatasetActive = (id, isActive) => {
-  return {
-    type: 'MAKE_DATASET_ACTIVE',
-    id,
-    isActive,
-  }
-};
-
-export const updateDatasetYaxis = (id, yaxisId) => {
-  return {
-    type: 'UPDATE_DATASET_YAXIS',
-    id,
-    yaxisId,
-  }
-};
-
-/*export const runDataset = (datasetId, rawData) => {
-  return {
-    type: 'RUN_DATASET',
-    datasetId,
-    rawData
-  }
-}*/
-
 // OPERATIONS
-
 export const receiveOperations = (data) => {
   return {
     type: 'RECEIVE_OPERATIONS',
@@ -518,7 +476,6 @@ export const updateOperation = (id, rootFunction, ast) => {
 };
 
 // DATA PROVIDERS
-
 export const setDataProviders = (payload) => {
   return {
     type: 'SET_PROVIDERS',
