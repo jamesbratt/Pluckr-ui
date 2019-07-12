@@ -6,7 +6,7 @@ import { assocPath } from 'ramda';
 import { STRAVA_REDIRECT, GITHUB_REDIRECT, SALESFORCE_REDIRECT } from '../Constants';
 
 const initialState = [
-  {
+  /*{
     provider: 'strava',
     ping: getProfile,
     redirectUrl: STRAVA_REDIRECT,
@@ -21,15 +21,15 @@ const initialState = [
     request: getGitHubData,
     resources: GITHUB_RESOURCES,
     isActive: false,
-  },
-  /*{
+  },*/
+  {
     provider: 'salesforce',
     ping: getUserInfo,
     redirectUrl: SALESFORCE_REDIRECT,
     request: getSalesforceData,
     resources: SALESFORCE_RESOURCES,
     isActive: false,
-  },*/
+  },
 ];
 
 const dataProviders = (state = initialState, action) => {

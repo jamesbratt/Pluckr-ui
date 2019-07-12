@@ -11,7 +11,7 @@ export const receiveUser = (userData) => {
 
 export const fetchUser = (username, password) => {
   return dispatch => {
-    return fetch('https://api.pluckr.io/api/v1/authentication/login/', {
+    return fetch(`${process.env.REACT_APP_PLUCKR_API_URI}/api/v1/authentication/login/`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -57,7 +57,7 @@ export const receiveCharts = (data) => {
 
 export const fetchCharts = (apiKey, username) => {
   return dispatch => {
-    return fetch(`https://api.pluckr.io/api/v1/chart/`, {
+    return fetch(`${process.env.REACT_APP_PLUCKR_API_URI}/api/v1/chart/`, {
       headers: {
           'Content-Type': 'application/json',
           'Authorization': `ApiKey ${username}:${apiKey}`
@@ -90,7 +90,7 @@ export const createChart = (apiKey, username, name, chart_type) => {
   };
 
   return dispatch => {
-    return fetch('https://api.pluckr.io/api/v1/chart/', {
+    return fetch(`${process.env.REACT_APP_PLUCKR_API_URI}/api/v1/chart/`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -110,7 +110,7 @@ export const createChart = (apiKey, username, name, chart_type) => {
 export const deleteChart = (apiKey, username, chartId) => {
 
   return dispatch => {
-    return fetch(`https://api.pluckr.io/api/v1/chart/${chartId}/`, {
+    return fetch(`${process.env.REACT_APP_PLUCKR_API_URI}/api/v1/chart/${chartId}/`, {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json',
@@ -148,7 +148,7 @@ export const fetchDataSources = (apiKey, username, chartId) => {
   return (dispatch, getState) => {
     const { dataProviders } = getState();
   
-    return fetch(`https://api.pluckr.io/api/v1/datasource/?chart=${chartId}`, {
+    return fetch(`${process.env.REACT_APP_PLUCKR_API_URI}/api/v1/datasource/?chart=${chartId}`, {
       headers: {
           'Content-Type': 'application/json',
           'Authorization': `ApiKey ${username}:${apiKey}`
@@ -215,7 +215,7 @@ export const createDataSource = (
   };
 
   return dispatch => {
-    return fetch('https://api.pluckr.io/api/v1/datasource/', {
+    return fetch(`${process.env.REACT_APP_PLUCKR_API_URI}/api/v1/datasource/`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -275,7 +275,7 @@ export const updateDataset = (datasetId, rawData) => {
 
 export const fetchDatasets = (apiKey, username, chartId) => {
   return dispatch => {
-    return fetch(`https://api.pluckr.io/api/v1/dataset/?chart=${chartId}`, {
+    return fetch(`${process.env.REACT_APP_PLUCKR_API_URI}/api/v1/dataset/?chart=${chartId}`, {
       headers: {
           'Content-Type': 'application/json',
           'Authorization': `ApiKey ${username}:${apiKey}`
@@ -309,7 +309,7 @@ export const createDataSet = (
   };
 
   return dispatch => {
-    return fetch('https://api.pluckr.io/api/v1/dataset/', {
+    return fetch(`${process.env.REACT_APP_PLUCKR_API_URI}/api/v1/dataset/`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -335,7 +335,7 @@ export const createDataSet = (
 export const deleteDataset = (apiKey, username, datasetId) => {
 
   return dispatch => {
-    return fetch(`https://api.pluckr.io/api/v1/dataset/${datasetId}/`, {
+    return fetch(`${process.env.REACT_APP_PLUCKR_API_URI}/api/v1/dataset/${datasetId}/`, {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json',
@@ -391,7 +391,7 @@ export const runDataSet = (
       data: JSON.stringify(data),
     };
     
-    return fetch(`https://api.pluckr.io/api/v1/dataset/${dataSetId}/`, {
+    return fetch(`${process.env.REACT_APP_PLUCKR_API_URI}/api/v1/dataset/${dataSetId}/`, {
       method: 'PATCH',
       headers: {
           'Content-Type': 'application/json',
@@ -455,7 +455,7 @@ export const updateOperation = (id, rootFunction, ast) => {
 
 export const fetchOperations = (apiKey, username) => {
   return dispatch => {
-    return fetch(`https://api.pluckr.io/api/v1/operation/`, {
+    return fetch(`${process.env.REACT_APP_PLUCKR_API_URI}/api/v1/operation/`, {
       headers: {
           'Content-Type': 'application/json',
           'Authorization': `ApiKey ${username}:${apiKey}`
@@ -474,7 +474,7 @@ export const fetchOperations = (apiKey, username) => {
 export const deleteOperation = (apiKey, username, operationId) => {
 
   return dispatch => {
-    return fetch(`https://api.pluckr.io/api/v1/operation/${operationId}/`, {
+    return fetch(`${process.env.REACT_APP_PLUCKR_API_URI}/api/v1/operation/${operationId}/`, {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json',
@@ -505,7 +505,7 @@ export const createOperation = (
   };
 
   return dispatch => {
-    return fetch('https://api.pluckr.io/api/v1/operation/', {
+    return fetch(`${process.env.REACT_APP_PLUCKR_API_URI}/api/v1/operation/`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -551,7 +551,7 @@ export const updateOperationAst = (
       ast: JSON.stringify(ast),
     };
     
-    return fetch(`https://api.pluckr.io/api/v1/operation/${operationId}/`, {
+    return fetch(`${process.env.REACT_APP_PLUCKR_API_URI}/api/v1/operation/${operationId}/`, {
       method: 'PATCH',
       headers: {
           'Content-Type': 'application/json',
