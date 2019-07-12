@@ -48,7 +48,7 @@ class Chart extends Component {
     const apiKey = this.props.user[0].api_key;
     event.preventDefault();
     if(selectedResource && sourceName) {
-      this.state.selectedProvider.request(selectedResource, params)
+      this.state.selectedProvider.request(selectedResource, params, user, apiKey)
         .then(response => {
           this.setState({
             show: false,

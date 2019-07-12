@@ -7,6 +7,7 @@ import DataProviderList from './builder_components/DataProviderList';
 import Modal from 'react-bootstrap/Modal';
 import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
+import { getToken } from './utils/Helpers';
 
 const VIEWS = {
   chart_list: 'CHART_LIST',
@@ -28,17 +29,17 @@ class Wrapper extends Component {
     }
 
     componentDidMount() {
-      const pings = this.props.dataProviders.map(
-        dataProvider => dataProvider.ping()
-      );
-    
-      Promise.all(pings).then(responses => { 
-        this.props.dispatch(
-          setDataProviders(
-            responses
-          )
-        );
+      const cachedProviders = this.props.dataProviders.filter(dataProvider => {
+          if (getToken(dataProvider.provider)) {
+              return dataProvider;
+          }
       });
+    
+      this.props.dispatch(
+          setDataProviders(
+          cachedProviders
+          )
+      );
     }
 
     switchView = (view, chartId = null) => {

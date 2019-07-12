@@ -54,3 +54,23 @@ export const injectParametersIntoEndpoint = (resourcEndpoint, params) => {
 
   return { endPoint, parameters };
 }
+
+export const proxyRequest = (url, key, integration_type, username, apiKey) => {
+  const payload = {
+    url,
+    key,
+    integration_type,
+  }
+  return fetch(`${process.env.REACT_APP_PLUCKR_API_URI}/api/v1/integration-request/`, {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `ApiKey ${username}:${apiKey}`
+    },
+    body: JSON.stringify(payload)
+  }).then(response => {
+    return response.json();
+  }).then(response => {
+    return response;
+  })
+}

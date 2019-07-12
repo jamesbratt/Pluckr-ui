@@ -1,6 +1,7 @@
-import { getToken } from '../utils/Helpers';
+import { getToken, proxyRequest } from '../utils/Helpers';
 
 const SALESFORCE_URI = 'https://um5.salesforce.com';
+const INTEGRATION_TYPE = 'salesforce';
 
 export const SALESFORCE_RESOURCES = {
   sobjects: {
@@ -11,33 +12,14 @@ export const SALESFORCE_RESOURCES = {
   },
 };
 
-const getSObjects = (params) => {
-    const token = getToken('salesforce');
-    return fetch(`${SALESFORCE_URI}/services/data/v40.0/sobjects/`, {
-      headers:{
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      }
-    }).then(response => {
-      return response.json();
-    }).then(response => {
-      return response;
-    })
+const getSObjects = (params, username, apiKey) => {
+  // Do something with the passed params...
+  const key = getToken(INTEGRATION_TYPE);
+  const url = `${SALESFORCE_URI}/services/data/v40.0/sobjects/`;
+  return proxyRequest(url, key, INTEGRATION_TYPE, username, apiKey);
 };
 
-export const getUserInfo = () => {
-  const token = getToken('salesforce');
-  return fetch(`${SALESFORCE_URI}/services/data/v40.0/sobjects/`, {
-    headers:{
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`
-    }
-  }).then(response => {
-    return { provider: 'salesforce', status: response.status };
-  });
-};
-
-export const getSalesforceData = (resource, params) => {
+export const getSalesforceData = (resource, params, username, apiKey) => {
   let call;
   switch(resource) {
     case SALESFORCE_RESOURCES.sobjects.name:
@@ -47,7 +29,7 @@ export const getSalesforceData = (resource, params) => {
     console.error('Invalid');
     break;
   }
-  return call(params)
+  return call(params, username, apiKey)
   .then(response => {
     return {
       data: response,
