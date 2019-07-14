@@ -4,6 +4,8 @@ import { getGitHubData, getUser, GITHUB_RESOURCES } from '../data_sources/Github
 import { getSalesforceData, SALESFORCE_RESOURCES } from '../data_sources/Salesforce';
 import { assocPath } from 'ramda';
 import { STRAVA_REDIRECT, GITHUB_REDIRECT, SALESFORCE_REDIRECT } from '../Constants';
+import salesforceLogo from '../img/salesforce-logo.png';
+import stravaLogo from '../img/strava-logo.png';
 
 const initialState = [
   {
@@ -13,6 +15,7 @@ const initialState = [
     request: getStravaData,
     resources: STRAVA_RESOURCES,
     isActive: false,
+    icon: stravaLogo,
   },
   {
     provider: 'github',
@@ -28,6 +31,7 @@ const initialState = [
     request: getSalesforceData,
     resources: SALESFORCE_RESOURCES,
     isActive: false,
+    icon: salesforceLogo,
   },
 ];
 

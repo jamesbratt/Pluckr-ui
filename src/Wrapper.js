@@ -6,6 +6,8 @@ import { setDataProviders } from './actions';
 import DataProviderList from './builder_components/DataProviderList';
 import Modal from 'react-bootstrap/Modal';
 import Navbar from 'react-bootstrap/Navbar';
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
+import Tooltip from 'react-bootstrap/Tooltip';
 import Nav from 'react-bootstrap/Nav';
 import { getToken } from './utils/Helpers';
 
@@ -88,14 +90,37 @@ class Wrapper extends Component {
             <Navbar.Collapse id="responsive-navbar-nav">
               <Nav className="mr-auto">
                 <Nav.Link onClick={() => this.switchView(VIEWS.chart_list)}>Charts</Nav.Link>
-                <Nav.Link onClick={this.logout}>Log Out</Nav.Link>
               </Nav>
               <Nav>
-                <button onClick={() => this.setState({providerModalShow: true})} className="btn btn-primary my-2 my-sm-0">Connect Data Providers</button>
+                <Nav.Link onClick={this.logout}>Log Out</Nav.Link>
               </Nav>
             </Navbar.Collapse>
           </Navbar>
           <div className='container-fluid wrapper'>
+            <div className="data-providers clearfix">
+              <div className="float-right">
+                {
+                  this.props.dataProviders.map(provider => {
+                    return provider.isActive ?
+                      <OverlayTrigger
+                        key={provider.provider}
+                        placement='bottom'
+                        overlay={
+                          <Tooltip id={`tooltip-bottom`}>
+                           Connected to {provider.provider}
+                          </Tooltip>
+                        }
+                      >
+                        <div className="active-provider">
+                          <img width={50} src={provider.icon} alt={provider.provider} />
+                        </div> 
+                      </OverlayTrigger> :
+                    null;
+                  })
+                }
+                <button onClick={() => this.setState({providerModalShow: true})} className="btn btn-outline-secondary my-2 my-sm-0">Connect Data Providers</button>
+              </div>
+            </div>
             {view}
           </div>
           <Modal show={this.state.providerModalShow} onHide={this.closeProviderModal}>

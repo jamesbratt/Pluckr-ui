@@ -213,3 +213,8 @@ body {
   border-top-left-radius: 0;
   border-top-right-radius: 0;
 }
+
+.active-provider {
+  margin-right: 1em;
+  display: inline-block;
+}
