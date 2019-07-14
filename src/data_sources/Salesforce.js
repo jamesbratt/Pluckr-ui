@@ -337,6 +337,10 @@ export const SALESFORCE_RESOURCES = {
 };
 
 const constructSFQLQuery = (params, resource) => {
+  if (!params) {
+    throw Error('You must select some fields');
+  }
+
   let query = 'SELECT';
   params.value.forEach((param, index) => {
     const endComma = index === params.value.length -1 ? '' : ',';
@@ -352,7 +356,7 @@ const doSalesforceQuery = (params, resource, username, apiKey) => {
   return proxyRequest(url, key, INTEGRATION_TYPE, username, apiKey);
 };
 
-export const getSalesforceData = (resource, params, username, apiKey) => {
+export const getSalesforceData = (resource, params, username, apiKey, sourceId = null) => {
   let call;
   switch(resource) {
     case SALESFORCE_RESOURCES.lead.name:
@@ -370,8 +374,9 @@ export const getSalesforceData = (resource, params, username, apiKey) => {
   return call(params, resource, username, apiKey)
   .then(response => {
     return {
+      sourceId,
       data: response,
       properties: null,
-    };
-  })
+    }
+  }) 
 };

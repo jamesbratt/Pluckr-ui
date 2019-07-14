@@ -228,8 +228,7 @@ class Chart extends Component {
       <div id="chart-config">
         <div id="data-sources" className="row">
           <div className="col-md-12">
-            <h3 className="float-left">{this.props.name}</h3>
-            <button onClick={this.handleShow} type="button" className="btn btn-primary float-right">
+            <button onClick={this.handleShow} type="button" className="btn btn-primary">
             New Data Source <span className="badge badge-light">{availableSources.length}</span>
             </button>
           </div>
@@ -275,15 +274,13 @@ class Chart extends Component {
             <button onClick={this.addDataSource} type="submit" className="btn btn-primary mb-2">Add Data Source</button>
           </Modal.Footer>
         </Modal>
-        {availableSources.length > 0 ?
-          <ChartRuntime
-            chartId={this.props.id}
-            chartName={this.props.name}
-            sources={availableSources}
-            datasets={availableDataSets}
-            chartConfig={this.props.chartConfig}
-          /> 
-        : null}
+        <ChartRuntime
+          chartId={this.props.id}
+          chartName={this.props.name}
+          sources={availableSources}
+          datasets={availableDataSets}
+          chartConfig={this.props.chartConfig}
+        /> 
       </div>
     );
   }

@@ -160,7 +160,13 @@ export const fetchDataSources = (apiKey, username, chartId) => {
         if (dataSources.length > 0) {
           const dataSourceRequests = dataSources.map(dataSource => {
             const provider = dataProviders.find(dataProvider => dataProvider.provider === dataSource.provider);
-              return provider.request(dataSource.resource, JSON.parse(dataSource.params), dataSource.id);
+              return provider.request(
+                dataSource.resource,
+                JSON.parse(dataSource.params),
+                username,
+                apiKey,
+                dataSource.id
+              );
           });
 
           Promise.all(dataSourceRequests).then(responses => {
