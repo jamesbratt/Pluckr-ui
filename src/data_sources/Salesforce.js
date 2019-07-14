@@ -336,10 +336,19 @@ export const SALESFORCE_RESOURCES = {
   },
 };
 
-const doSalesforceQuery = (params, username, apiKey) => {
-  // Do something with the passed params...
+const constructSFQLQuery = (params, resource) => {
+  let query = 'SELECT';
+  params.value.forEach((param, index) => {
+    const endComma = index === params.value.length -1 ? '' : ',';
+    query += `+${param}${endComma}`
+  });
+  return `${query}+FROM+${resource}`; 
+}
+
+const doSalesforceQuery = (params, resource, username, apiKey) => {
+  const query = constructSFQLQuery(params.find(params => params.name === 'fields'), resource);
   const key = getToken(INTEGRATION_TYPE);
-  const url = `${SALESFORCE_URI}/services/data/v40.0/query`;
+  const url = `${SALESFORCE_URI}/services/data/v40.0/query?q=${query}`;
   return proxyRequest(url, key, INTEGRATION_TYPE, username, apiKey);
 };
 
@@ -358,7 +367,7 @@ export const getSalesforceData = (resource, params, username, apiKey) => {
     console.error('Invalid');
     break;
   }
-  return call(params, username, apiKey)
+  return call(params, resource, username, apiKey)
   .then(response => {
     return {
       data: response,
