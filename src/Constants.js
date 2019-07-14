@@ -19,6 +19,7 @@ export const DATA_TYPES = {
   date: 'date',
   int: 'integer',
   string: 'string',
+  list: 'list',
 };
 
 export const OPERATION_FUNCTIONS = [

@@ -1,4 +1,5 @@
 import { getToken, proxyRequest } from '../utils/Helpers';
+import { DATA_TYPES } from '../Constants';
 
 const SALESFORCE_URI = 'https://um5.salesforce.com';
 const INTEGRATION_TYPE = 'salesforce';
@@ -64,7 +65,9 @@ export const SALESFORCE_RESOURCES = {
       'Title',
       'Website',
     ],
-    parameters: []
+    parameters: [
+      { name: 'fields', type: DATA_TYPES.list },
+    ]
   },
   campaign: {
     name: 'campaign',
@@ -104,7 +107,9 @@ export const SALESFORCE_RESOURCES = {
       'SystemModstamp',
       'Type',
     ],
-    parameters: []
+    parameters: [
+      { name: 'fields', type: DATA_TYPES.list },
+    ]
   },
   opportunity: {
     name: 'opportunity',
@@ -150,7 +155,9 @@ export const SALESFORCE_RESOURCES = {
       'TrackingNumber__c',
       'Type',
     ], 
-    parameters: []
+    parameters: [
+      { name: 'fields', type: DATA_TYPES.list },
+    ]
   },
   contact: {
     name: 'contact',
@@ -212,7 +219,9 @@ export const SALESFORCE_RESOURCES = {
       'SystemModstamp',
       'Title',
     ],
-    parameters: []
+    parameters: [
+      { name: 'fields', type: DATA_TYPES.list },
+    ]
   },
   account: {
     name: 'account',
@@ -279,7 +288,9 @@ export const SALESFORCE_RESOURCES = {
       'Website',
       'YearStarted',
     ],
-    parameters: []
+    parameters: [
+      { name: 'fields', type: DATA_TYPES.list },
+    ]
   },
   case: {
     name: 'case',
@@ -319,7 +330,9 @@ export const SALESFORCE_RESOURCES = {
       'SystemModstamp',
       'Type',
     ],
-    parameters: []
+    parameters: [
+      { name: 'fields', type: DATA_TYPES.list },
+    ]
   },
 };
 
@@ -333,12 +346,12 @@ const doSalesforceQuery = (params, username, apiKey) => {
 export const getSalesforceData = (resource, params, username, apiKey) => {
   let call;
   switch(resource) {
-    case SALESFORCE_RESOURCES.sobjects.lead:
-    case SALESFORCE_RESOURCES.sobjects.campaign:
-    case SALESFORCE_RESOURCES.sobjects.opportunity:
-    case SALESFORCE_RESOURCES.sobjects.contact:
-    case SALESFORCE_RESOURCES.sobjects.account:
-    case SALESFORCE_RESOURCES.sobjects.case:
+    case SALESFORCE_RESOURCES.lead.name:
+    case SALESFORCE_RESOURCES.campaign.name:
+    case SALESFORCE_RESOURCES.opportunity.name:
+    case SALESFORCE_RESOURCES.contact.name:
+    case SALESFORCE_RESOURCES.account.name:
+    case SALESFORCE_RESOURCES.case.name:
     call = doSalesforceQuery;
         break;
   default:

@@ -3,6 +3,7 @@ import Modal from 'react-bootstrap/Modal';
 import { connect } from 'react-redux';
 import { createDataSource, fetchDataSources } from '../actions';
 import ChartRuntime from './ChartRuntime';
+import Picker from './Picker';
 import { DATA_TYPES } from '../Constants';
 
 const mapStateToProps = state => {
@@ -114,6 +115,7 @@ class Chart extends Component {
       this.setState({
         selectedResource: resourceName,
         parameterFields: availableFields,
+        parameterValues: [],
       });
     } else {
       this.setState({
@@ -203,6 +205,12 @@ class Chart extends Component {
                 </div>
               </React.Fragment>
             );
+            case DATA_TYPES.list:
+              return (
+                <React.Fragment>
+                  <Picker callBack={this.onParameterChange} label={parameterField.name} items={this.state.selectedProvider.resources[this.state.selectedResource].fields} />
+                </React.Fragment>
+              );
           default:
             return (
               <React.Fragment>
