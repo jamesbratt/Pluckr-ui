@@ -1,11 +1,12 @@
 
 import { getStravaData, getProfile, STRAVA_RESOURCES } from '../data_sources/Strava';
-import { getGitHubData, getUser, GITHUB_RESOURCES } from '../data_sources/Github';
+import { getGitHubData, GITHUB_RESOURCES } from '../data_sources/Github';
 import { getSalesforceData, SALESFORCE_RESOURCES } from '../data_sources/Salesforce';
 import { assocPath } from 'ramda';
-import { STRAVA_REDIRECT, GITHUB_REDIRECT, SALESFORCE_REDIRECT } from '../Constants';
+import { GITHUB_REDIRECT, SALESFORCE_REDIRECT } from '../Constants';
 import salesforceLogo from '../img/salesforce-logo.png';
 import stravaLogo from '../img/strava-logo.png';
+import githubLogo from '../img/github-logo.png';
 
 const initialState = [
   {
@@ -19,11 +20,11 @@ const initialState = [
   },
   {
     provider: 'github',
-    ping: getUser,
-    redirectUrl: '',
+    redirectUrl: GITHUB_REDIRECT,
     request: getGitHubData,
     resources: GITHUB_RESOURCES,
     isActive: false,
+    icon: githubLogo,
   },
   {
     provider: 'salesforce',

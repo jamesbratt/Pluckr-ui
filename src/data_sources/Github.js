@@ -1,7 +1,8 @@
-import { ConvertToIso, generateQueryString, getToken, injectParametersIntoEndpoint } from '../utils/Helpers';
+import { ConvertToIso, generateQueryString, getToken, injectParametersIntoEndpoint, proxyRequest } from '../utils/Helpers';
 import { DATA_TYPES } from '../Constants';
 
 const GITHUB_URI = 'https://api.github.com';
+const INTEGRATION_TYPE = 'github';
 
 export const GITHUB_RESOURCES = {
   repo_commits: {
@@ -29,7 +30,7 @@ const RESOURCE_PROPERTIES = {
   ],
 }
 
-const getRepoCommits = (params) => {
+const getRepoCommits = (params, resource, username, apiKey) => {
   const urlComponents = injectParametersIntoEndpoint(
     GITHUB_RESOURCES.repo_commits.endpoint,
     params,
@@ -38,39 +39,18 @@ const getRepoCommits = (params) => {
   const { endPoint } = urlComponents;
   const { parameters } = urlComponents;
 
-  const token = getToken('github');
+  const key = getToken(INTEGRATION_TYPE);
   const queryString = parameters.length > 0 ? '?' +
     generateQueryString(
       parameters,
       'repo_commits',
       GITHUB_RESOURCES['repo_commits'].parameters,
     ) : '';
-
-  return fetch(`${GITHUB_URI}${endPoint}${queryString}`, {
-    headers:{
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`
-    }
-  }).then(response => {
-    return response.json();
-  }).then(response => {
-    return response;
-  })
+  const url = `${GITHUB_URI}${endPoint}${queryString}`;
+  return proxyRequest(url, key, INTEGRATION_TYPE, username, apiKey);
 };
 
-export const getUser = () => {
-  const token = getToken('github');
-  return fetch(`${GITHUB_URI}/user`, {
-    headers:{
-      'Content-Type': 'application/json',
-      'Authorization': `token ${token}`
-    }
-  }).then(response => {
-    return { provider: 'github', status: response.status };
-  });
-};
-
-export const getGitHubData = (resource, params, sourceId = null) => {
+export const getGitHubData = (resource, params, username, apiKey, sourceId = null) => {
   let call;
   switch(resource) {
     case GITHUB_RESOURCES.repo_commits.name:
@@ -80,7 +60,7 @@ export const getGitHubData = (resource, params, sourceId = null) => {
     console.error('Invalid');
     break;
   }
-  return call(params)
+  return call(params, resource, username, apiKey)
   .then(response => {
     return {
       sourceId,

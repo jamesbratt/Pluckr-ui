@@ -112,7 +112,7 @@ class Wrapper extends Component {
                         }
                       >
                         <div className="active-provider">
-                          <img width={50} src={provider.icon} alt={provider.provider} />
+                          <img height={40} src={provider.icon} alt={provider.provider} />
                         </div> 
                       </OverlayTrigger> :
                     null;

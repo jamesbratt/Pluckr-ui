@@ -1,17 +1,10 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router, Redirect } from "react-router-dom";
-import { SALESFORCE_AUTH_ENDPOINT } from './Constants';
 import { assocPath } from 'ramda';
 import { connect } from 'react-redux';
 
 const mapStateToProps = state => {
   return state
-};
-
-const PROVIDER_MAP = {
-  // strava: STRAVA_AUTH_ENDPOINT,
-  // github: GITHUB_AUTH_ENDPOINT,
-  salesforce: SALESFORCE_AUTH_ENDPOINT,
 };
 
 class Auth extends Component {
@@ -25,7 +18,6 @@ class Auth extends Component {
   componentDidMount() {
     const urlSegments = window.location.pathname.split('/');
     const providerName = urlSegments[urlSegments.length - 1];
-    const providerAuthEndpoint = PROVIDER_MAP[providerName];
     const url = new URL(window.location);
     const code = decodeURIComponent(url.searchParams.get("code"));
 
@@ -38,7 +30,7 @@ class Auth extends Component {
         }
     }
 
-    if (code && providerAuthEndpoint) {
+    if (code) {
       fetch(`${process.env.REACT_APP_PLUCKR_API_URI}/api/v1/integration-auth/`, {
         method: 'POST',
         headers: {
