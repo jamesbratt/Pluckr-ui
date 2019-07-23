@@ -27,3 +27,4 @@ chart-app-workspace.code-workspace
 
 .vscode
 .env.local
+.env.development
