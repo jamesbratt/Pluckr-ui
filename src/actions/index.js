@@ -2,6 +2,14 @@ import { assocPath, clone, merge } from 'ramda';
 import { executeOperations } from '../data_parsing/parse';
 
 // USERS
+export const setLoader = (isLoading) => {
+  return {
+    type: 'SET_LOADER',
+    isLoading
+  }
+};
+
+// USERS
 export const receiveUser = (userData) => {
   return {
     type: 'RECEIVE_USER',
@@ -146,6 +154,7 @@ export const receiveDataSources = (data) => {
 
 export const fetchDataSources = (apiKey, username, chartId) => {
   return (dispatch, getState) => {
+    dispatch(setLoader(true));
     const { dataProviders } = getState();
   
     return fetch(`${process.env.REACT_APP_PLUCKR_API_URI}/api/v1/datasource/?chart=${chartId}`, {
@@ -186,6 +195,7 @@ export const fetchDataSources = (apiKey, username, chartId) => {
                 dataSourcesToAddToState
               )
             );
+            dispatch(setLoader(false));
           });
 
         } else {
@@ -194,6 +204,7 @@ export const fetchDataSources = (apiKey, username, chartId) => {
               dataSources
             )
           );
+          dispatch(setLoader(false));
         }
       })
       .catch(error => alert(error));
