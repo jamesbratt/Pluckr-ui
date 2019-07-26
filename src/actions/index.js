@@ -132,12 +132,13 @@ export const deleteChart = (apiKey, username, chartId) => {
 }
 
 // DATA SOURCES
-export const addSource = (id, sourceName, chartId, resource, params, data, properties) => {
+export const addSource = (id, sourceName, chartId, provider, resource, params, data, properties) => {
   return {
     type: 'ADD_SOURCE',
     id,
     sourceName,
     chartId,
+    provider,
     resource,
     params,
     data,
@@ -149,6 +150,13 @@ export const receiveDataSources = (data) => {
   return {
     type: 'RECEIVE_DATA_SOURCES',
     data
+  }
+};
+
+export const setActiveDataSource = (sourceId) => {
+  return {
+    type: 'SET_ACTIVE_SOURCE',
+    sourceId
   }
 };
 
@@ -232,6 +240,7 @@ export const createDataSource = (
   };
 
   return dispatch => {
+    dispatch(setLoader(true));
     return fetch(`${process.env.REACT_APP_PLUCKR_API_URI}/api/v1/datasource/`, {
         method: 'POST',
         headers: {
@@ -249,12 +258,14 @@ export const createDataSource = (
           json.id,
           json.name,
           json.chart,
+          json.provider,
           json.resource,
           JSON.parse(json.params),
           rawData,
           properties,
         )
-      )
+      );
+      dispatch(setLoader(false));
     })
     .catch(error => alert(error));
   }

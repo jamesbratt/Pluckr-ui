@@ -14,7 +14,7 @@ const mapStateToProps = (state) => {
   return {
     user: state.user[0],
     dataProviders: state.dataProviders,
-    sources: state.sources,
+    sources: state.sources.data,
   };
 };
 
@@ -75,7 +75,7 @@ class DataSourceDetail extends Component {
         selectedProvider,
         selectedResource: dataSource.resource,
         parameterFields: selectedProvider.resources[dataSource.resource].parameters,
-        parameterValues: JSON.parse(dataSource.params),
+        parameterValues: typeof dataSource.params === 'string' ? JSON.parse(dataSource.params) : dataSource.params,
       })
     }
   }
