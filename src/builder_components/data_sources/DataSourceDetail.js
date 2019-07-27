@@ -3,7 +3,6 @@ import Picker from '../Picker';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Alert from 'react-bootstrap/Alert';
-import Breadcrumb from 'react-bootstrap/Breadcrumb';
 import JSONTree from 'react-json-tree';
 import { pathOr } from 'ramda';
 import { DATA_TYPES } from '../../Constants';
@@ -230,11 +229,9 @@ class DataSourceDetail extends Component {
     }
     return (
       <React.Fragment>
-        <Breadcrumb>
-          <Breadcrumb.Item>Data Sources</Breadcrumb.Item>
-        </Breadcrumb>
         <Row>
           <Col md={6}>
+            <h2>{this.state.sourceName ? this.state.sourceName : 'Create a new data source'}</h2>
             <div className="form-group">
               <label>Title</label>
               <input value={this.state.sourceName || ''} onChange={this.onSourceNameChange} type="text" className="form-control" placeholder="Enter a title" />
@@ -263,12 +260,19 @@ class DataSourceDetail extends Component {
             : null
             }
             {parameters}
-            <button onClick={this.addDataSource} type="submit" className="btn btn-primary mb-2">Add Data Source</button>
+            {!this.props.id ? <button onClick={this.addDataSource} type="submit" className="btn btn-primary mb-2">Add Data Source</button> : null}
           </Col>
           <Col md={6}>
             {
               this.state.data ?
-              <JSONTree data={this.state.data} /> :
+              <JSONTree
+                theme={{
+                  tree: ({ style }) => ({
+                    style: { ...style, padding: "1em" }, 
+                  }),
+                }}
+                data={this.state.data}
+               /> :
               <Alert variant="info">
                 There is no data to display yet...
               </Alert>

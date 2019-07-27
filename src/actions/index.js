@@ -153,9 +153,10 @@ export const receiveDataSources = (data) => {
   }
 };
 
-export const setActiveDataSource = (sourceId) => {
+export const switchSourceView = (view, sourceId = null) => {
   return {
-    type: 'SET_ACTIVE_SOURCE',
+    type: 'SWITCH_SOURCE_VIEW',
+    view,
     sourceId
   }
 };

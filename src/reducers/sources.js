@@ -1,11 +1,11 @@
-import { assocPath, prepend } from 'ramda';
+import { merge, prepend } from 'ramda';
 
-const sources = (state = { data: [], active: null, }, action) => {
+const sources = (state = { data: [], active: null, view:'SOURCE_LIST_VIEW' }, action) => {
   switch (action.type) {
     case 'RECEIVE_DATA_SOURCES':
-      return { data: action.data, active: null};
-    case 'SET_ACTIVE_SOURCE':
-      return assocPath(['active'], action.sourceId, state);
+      return merge(state, { data: action.data });
+    case 'SWITCH_SOURCE_VIEW':
+      return merge(state, { view: action.view, active: action.sourceId });
     case 'ADD_SOURCE':
       const newSource = {
         id: action.id,
@@ -17,7 +17,7 @@ const sources = (state = { data: [], active: null, }, action) => {
         rawData: action.data,
         properties: action.properties,
       };
-      return { data: prepend(newSource, state), active: action.id };
+      return { data: prepend(newSource, state), active: action.id, view:'SOURCE_EDIT_VIEW' };
 
     default:
       return state;

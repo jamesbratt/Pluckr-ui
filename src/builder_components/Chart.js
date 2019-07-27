@@ -1,17 +1,10 @@
 import React, { Component } from 'react';
-import DataSourceList from './data_sources/DataSourceList';
-import DataSourceDetail from './data_sources/DataSourceDetail';
-import WithLoading from '../LoaderHoc.js';
+import DataSourceController from './data_sources/DataSourceController';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import Nav from 'react-bootstrap/Nav';
 import { connect } from 'react-redux';
-import { fetchDataSources } from '../actions';
-
-const DataSourceListWithLoading = WithLoading(DataSourceList);
-const DataSourceDetailWithLoading = WithLoading(DataSourceDetail);
-
-const VIEWS = {
-  datasource_list: 'DATASOURCE_LIST',
-  datasource_detail: 'DATASOURCE_DETAIL',
-};
+import { switchSourceView } from '../actions';
 
 const mapStateToProps = (state) => {
   return {
@@ -22,45 +15,20 @@ const mapStateToProps = (state) => {
 };
 
 class Chart extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      views: VIEWS.datasource_list,
-      editingId: null,
-    };
-  }
-
-  componentDidMount() {
-    const { api_key, username } = this.props.user;
-    this.props.dispatch(fetchDataSources(
-      api_key,
-      username,
-      this.props.id,
-    ));
-  };
-
-  switchView = (view, id = null) => {
-    const payload = { views: view };
-
-    if (id) {
-      payload['editingId'] = id;
-    };
-
-    this.setState(payload)
-  }
 
   render() {
-    let view = null;
-
-    if(this.props.sources.active || this.state.views === VIEWS.datasource_detail) {
-        view = <DataSourceDetailWithLoading chartId={this.props.id} id={this.props.sources.active} />;
-    } else { 
-        view = <DataSourceListWithLoading chartId={this.props.id} switchView={this.switchView} />
-    }
     return (
-      <React.Fragment>
-        {view}
-      </React.Fragment>
+      <Row>
+        <Col md={2}>
+          <Nav className="flex-column">
+            <Nav.Link onClick={() => this.props.dispatch(switchSourceView('SOURCE_LIST_VIEW'))}>Data Sources</Nav.Link>
+            <Nav.Link eventKey="link-1">Chart Editor</Nav.Link>
+          </Nav>
+        </Col>
+        <Col md={10}>
+          <DataSourceController id={this.props.id} />
+        </Col>
+      </Row>
     );
   };
 };
