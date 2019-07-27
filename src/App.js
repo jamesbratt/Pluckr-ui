@@ -8,6 +8,7 @@ import Auth from './Auth';
 import Wrapper from './Wrapper';
 import pluckrAuthHoc from './pluckrAuthHoc';
 import ChartConfigHoc from './ChartConfigHoc';
+import Chart from './builder_components/editor/Chart';
 import DataSourceList from './builder_components/data_sources/DataSourceList';
 import DataSourceDetail from './builder_components/data_sources/DataSourceDetail';
 import Navbar from 'react-bootstrap/Navbar';
@@ -29,6 +30,7 @@ const ChartsAuthChecked = pluckrAuthHoc(
 
 const DataSourceListWrapped = ChartConfigHoc(DataSourceList);
 const DataSourceDetailWrapped = ChartConfigHoc(DataSourceDetail);
+const ChartEditorWrapped = ChartConfigHoc(Chart);
 
 class App extends Component {
 
@@ -65,6 +67,7 @@ class App extends Component {
               <div className='container-fluid wrapper'>
                 <Route exact path="/" component={ChartsAuthChecked} />
                 <Route path="/authenticate" component={Auth} />
+                <Route path={`/:id/chart`} component={ChartEditorWrapped} />
                 <Route path={`/:id/data-sources`} component={DataSourceListWrapped} />
                 <Route path={`/:id/create-data-source`} component={DataSourceDetailWrapped} />
                 <Route path={`/:id/edit-data-source/:data_source_id`} component={DataSourceDetailWrapped} />
