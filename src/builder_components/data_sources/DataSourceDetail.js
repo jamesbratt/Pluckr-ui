@@ -41,7 +41,7 @@ const mapDispatchToProps = (dispatch) => {
         rawData,
         properties,
       ));
-    },
+    }
   };
 };
 
@@ -61,10 +61,10 @@ class DataSourceDetail extends Component {
   }
 
   componentDidMount() {
-    const { id, sources, dataProviders } = this.props;
+    const { sources, dataProviders } = this.props;
 
-    if(id) {
-      const dataSource = sources.find(source => source.id === id);
+    if(this.props.match.params.data_source_id) {
+      const dataSource = sources.find(source => source.id === parseInt(this.props.match.params.data_source_id));
       const selectedProvider = dataProviders.find(
         dataProvider => dataProvider.provider === dataSource.provider,
       );
@@ -98,7 +98,7 @@ class DataSourceDetail extends Component {
               api_key,
               username,
               sourceName,
-              this.props.chartId,
+              this.props.match.params.id,
               selectedProvider,
               selectedResource,
               params,
@@ -230,7 +230,7 @@ class DataSourceDetail extends Component {
     return (
       <React.Fragment>
         <Row>
-          <Col md={6}>
+          <Col md={4}>
             <h2>{this.state.sourceName ? this.state.sourceName : 'Create a new data source'}</h2>
             <div className="form-group">
               <label>Title</label>
@@ -260,9 +260,9 @@ class DataSourceDetail extends Component {
             : null
             }
             {parameters}
-            {!this.props.id ? <button onClick={this.addDataSource} type="submit" className="btn btn-primary mb-2">Add Data Source</button> : null}
+            {!this.props.match.params.data_source_id ? <button onClick={this.addDataSource} type="submit" className="btn btn-primary mb-2">Add Data Source</button> : null}
           </Col>
-          <Col md={6}>
+          <Col md={8}>
             {
               this.state.data ?
               <JSONTree

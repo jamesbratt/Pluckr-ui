@@ -153,14 +153,6 @@ export const receiveDataSources = (data) => {
   }
 };
 
-export const switchSourceView = (view, sourceId = null) => {
-  return {
-    type: 'SWITCH_SOURCE_VIEW',
-    view,
-    sourceId
-  }
-};
-
 export const fetchDataSources = (apiKey, username, chartId) => {
   return (dispatch, getState) => {
     dispatch(setLoader(true));

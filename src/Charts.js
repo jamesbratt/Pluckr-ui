@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import Modal from 'react-bootstrap/Modal';
 import { fetchCharts, deleteChart } from './actions';
 import AddChart from './builder_components/AddChart';
+import { Link } from "react-router-dom";
 
 const mapStateToProps = state => {
   return state
@@ -62,7 +63,7 @@ class Charts extends Component {
                       <div className="chart-card-inner">
                         <h3>{chart.name}</h3>
                         <div className="btn-group-fixed">
-                          <button onClick={() => this.props.switchView('CHART_DETAIL', chart.id)} type="button" className="btn btn-primary">Edit</button>
+                          <Link to={`/${chart.id}/data-sources`}>Edit</Link>
                           <button onClick={() => this.removeChart(chart.id)} type="button" className="btn btn-danger">Delete</button>
                         </div>
                       </div>
