@@ -1,5 +1,5 @@
 import React from 'react';
-import { OPERATION_FUNCTIONS } from '../Constants';
+import { OPERATION_FUNCTIONS } from '../../Constants';
 import Modal from 'react-bootstrap/Modal';
 
 const OperationConfiguration = (props) => {

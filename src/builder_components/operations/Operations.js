@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import Modal from 'react-bootstrap/Modal';
-import OperationConfiguration from '../OperationConfiguration';
+import OperationConfiguration from './OperationConfiguration';
 import DatasetPreview from '../DatasetPreview';
 import { GenerateGuid } from '../../utils/Helpers';
-import { createOperation, deleteOperation, updateOperationAst, fetchOperations } from '../../actions';
+import { createOperation, deleteOperation, updateOperationAst, fetchOperations, runDataSet } from '../../actions';
 import { connect } from 'react-redux';
 import { OPERATION_FUNCTIONS } from '../../Constants';
 import { difference } from 'ramda';
@@ -60,8 +60,17 @@ class Operations extends Component {
         this.state.rootFunction,
         this.state.operationAst,
         sortOrder,
-      )
-    );
+      )).then(() => {
+        this.props.dispatch(
+          runDataSet(
+            api_key,
+            username,
+            parseInt(this.props.dataSetId),
+            () => {},
+            '',
+          )
+        )
+     });
 
     this.setState({
       show: false,
@@ -80,7 +89,17 @@ class Operations extends Component {
         this.state.rootFunction,
         this.state.operationAst,
       )
-    );
+    ).then(() => {
+      this.props.dispatch(
+        runDataSet(
+          api_key,
+          username,
+          parseInt(this.props.dataSetId),
+          () => {},
+          '',
+        )
+      )
+   });
 
     this.setState({
       show: false,
@@ -216,7 +235,17 @@ class Operations extends Component {
         username,
         id,
       )
-    );
+    ).then(() => {
+      this.props.dispatch(
+        runDataSet(
+          api_key,
+          username,
+          parseInt(this.props.dataSetId),
+          () => {},
+          '',
+        )
+      )
+   });
   }
 
   componentDidMount() {
@@ -241,7 +270,7 @@ class Operations extends Component {
       if (operation.dataset === parseInt(this.props.dataSetId)) {
         return <li class="list-group-item">
           {operation.root_function}
-          <div className="operation-actions float-right">
+          <div key={operation.id} className="operation-actions float-right">
             <button className="btn btn-light btn-sm" onClick={() => this.onOperationEdit(operation)}>Edit</button>
             <button style={{ marginLeft: '1em' }} className="btn btn-danger btn-sm" onClick={() => this.deleteOperation(operation.id)}>Delete</button>
           </div>
@@ -318,7 +347,6 @@ class Operations extends Component {
         <ul class="list-group operations">
           {operations}
         </ul>
-        <button style={{marginTop: '1em'}} onClick={() => this.props.run(this.props.dataSetId)} className="btn btn-success">Run Dataset</button>
       </div>
     );
 

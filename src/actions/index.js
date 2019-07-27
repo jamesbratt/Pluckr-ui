@@ -385,7 +385,7 @@ export const runDataSet = (
     const currentDataSet = datasets.find(dataset => dataset.id === dataSetId);
     const currentOperations = operations.filter(operation => operation.dataset === dataSetId);
 
-    const currentDataSource = sources.find(
+    const currentDataSource = sources.data.find(
       source => source.id === parseInt(currentDataSet.data_source),
     );
 
@@ -503,7 +503,8 @@ export const deleteOperation = (apiKey, username, operationId) => {
         },
     })
     .then(() => {
-      dispatch(removeOperation(operationId))
+      dispatch(removeOperation(operationId));
+      return Promise.resolve();
     })
   }
 }
@@ -544,6 +545,7 @@ export const createOperation = (
           json,
         )
       )
+      return Promise.resolve();
     })
     .catch(error => alert(error));
   }
@@ -591,7 +593,8 @@ export const updateOperationAst = (
             json.root_function,
             json.ast,
           )
-        )
+        );
+        return Promise.resolve();
       })
       .catch(error => alert(error));
   }
