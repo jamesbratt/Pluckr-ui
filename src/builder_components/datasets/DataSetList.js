@@ -49,7 +49,6 @@ class DataSetList extends Component {
         {
           this.props.datasets.length > 0 ?
           <React.Fragment>
-            <h2>Available Datasets</h2>
             <button className="btn btn-primary" onClick={() =>this.setState({ createChartModalShow: true })}>Create a Dataset</button>
             <Table striped bordered hover>
               <thead>
@@ -67,7 +66,7 @@ class DataSetList extends Component {
                       <td>{dataset.name}</td>
                       <td></td>
                       <td></td>
-                      <td><Link to={`${this.props.url}/edit-dataset/${dataset.id}`}>View</Link></td>
+                      <td><Link to={`${this.props.url}/edit-dataset/${dataset.id}`}>Configure</Link></td>
                     </tr>
                   )
                 })}

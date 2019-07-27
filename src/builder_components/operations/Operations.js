@@ -1,15 +1,19 @@
 import React, { Component } from 'react';
 import Modal from 'react-bootstrap/Modal';
-import OperationConfiguration from './OperationConfiguration';
-import DatasetPreview from './DatasetPreview';
-import { GenerateGuid } from '../utils/Helpers';
-import { createOperation, deleteOperation, updateOperationAst, fetchOperations } from '../actions';
+import OperationConfiguration from '../OperationConfiguration';
+import DatasetPreview from '../DatasetPreview';
+import { GenerateGuid } from '../../utils/Helpers';
+import { createOperation, deleteOperation, updateOperationAst, fetchOperations } from '../../actions';
 import { connect } from 'react-redux';
-import { OPERATION_FUNCTIONS } from '../Constants';
+import { OPERATION_FUNCTIONS } from '../../Constants';
 import { difference } from 'ramda';
 
-const mapStateToProps = state => {
-  return state;
+const mapStateToProps = (state) => {
+  return {
+    sources: state.sources.data,
+    operations: state.operations,
+    user: state.user[0],
+  };
 };
 
 class Operations extends Component {
@@ -46,13 +50,12 @@ class Operations extends Component {
   addOperation = () => {
     const { operations } = this.props;
     const foo = operations.filter(operation => operation.dataset === this.props.dataSetId);
-    const user = this.props.user[0].username;
-    const apiKey = this.props.user[0].api_key;
+    const { api_key, username } = this.props.user;
     const sortOrder = foo.length > 0 ? foo[foo.length-1].sort_order + 1 : 0;
     this.props.dispatch(
       createOperation(
-        apiKey,
-        user,
+        api_key,
+        username,
         this.props.dataSetId,
         this.state.rootFunction,
         this.state.operationAst,
@@ -68,12 +71,11 @@ class Operations extends Component {
   }
 
   updateOperation = () => {
-    const user = this.props.user[0].username;
-    const apiKey = this.props.user[0].api_key;
+    const { api_key, username } = this.props.user;
     this.props.dispatch(
       updateOperationAst(
-        apiKey,
-        user,
+        api_key,
+        username,
         this.state.operationEdit.id,
         this.state.rootFunction,
         this.state.operationAst,
@@ -207,24 +209,22 @@ class Operations extends Component {
   }
 
   deleteOperation = (id) => {
-    const user = this.props.user[0].username;
-    const apiKey = this.props.user[0].api_key;
+    const { api_key, username } = this.props.user;
     this.props.dispatch(
       deleteOperation(
-        apiKey,
-        user,
+        api_key,
+        username,
         id,
       )
     );
   }
 
   componentDidMount() {
-    const user = this.props.user[0].username;
-    const apiKey = this.props.user[0].api_key;
+    const { api_key, username } = this.props.user;
     this.props.dispatch(
       fetchOperations(
-        apiKey,
-        user,
+        api_key,
+        username,
         this.props.dataSetId,
       )
     );
@@ -238,7 +238,7 @@ class Operations extends Component {
     );
 
     const operations = this.props.operations.map(operation => {
-      if (operation.dataset === this.props.dataSetId) {
+      if (operation.dataset === parseInt(this.props.dataSetId)) {
         return <li class="list-group-item">
           {operation.root_function}
           <div className="operation-actions float-right">
