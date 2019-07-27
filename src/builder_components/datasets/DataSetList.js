@@ -74,7 +74,7 @@ class DataSetList extends Component {
             </Table>
           </React.Fragment> :
           <div>
-            <h2>Get started by creating a data set</h2>
+            <h3>Get started by creating a data set</h3>
             <p className="lead">Datasets represent the data visualised in your chart</p>
             <button className="btn btn-primary" onClick={() => this.setState({ createChartModalShow: true })}>Create a Dataset</button>
           </div>
