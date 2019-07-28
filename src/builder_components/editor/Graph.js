@@ -1,3 +1,5 @@
+import { clone } from 'ramda';
+
 let chartInstance = null;
 
 export const setChart = (instance) => {
@@ -14,11 +16,13 @@ export const destroyChart = () => {
 
 export const addDataSeries = (datasetId, title, data, chartType) => {
 
+  const clonedData = clone(data);
+
   const newDataSeries = {
     id: datasetId,
     name: title,
     type: chartType,
-    data: data,
+    data: clonedData,
   };
 
   const existingSeries = chartInstance.get(datasetId);
@@ -26,7 +30,7 @@ export const addDataSeries = (datasetId, title, data, chartType) => {
   if (existingSeries) {
     existingSeries.update({
       name: title,
-      data: data,
+      data: clonedData,
     });
   } else {
     chartInstance.addSeries(newDataSeries)  

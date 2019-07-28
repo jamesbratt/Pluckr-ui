@@ -30,7 +30,7 @@ class Chart extends Component {
     this.chartInstance = getChart();
   }
 
-  setUpChart = (chart) => {
+  setUpChartData = (chart) => {
     this.props.datasets.forEach((dataset) => {
       if(dataset.chart === chart.id) {
         addDataSeries(
@@ -70,13 +70,12 @@ class Chart extends Component {
     );
 
     setChart(chartInstance);
-    this.setUpChart(chart);
   }
 
   componentDidUpdate(prevProps) {
     const { id } = this.props.match.params;
     const chart = this.props.charts.find(chart => chart.id === parseInt(id));
-    this.setUpChart(chart);
+    this.setUpChartData(chart);
   }
 
   componentWillUnmount() {
