@@ -7,10 +7,12 @@ import { createOperation, deleteOperation, updateOperationAst, fetchOperations, 
 import { connect } from 'react-redux';
 import { OPERATION_FUNCTIONS } from '../../Constants';
 import { difference } from 'ramda';
+import { addDataSeries } from '../editor/Graph';
 
 const mapStateToProps = (state) => {
   return {
     sources: state.sources.data,
+    charts: state.charts,
     operations: state.operations,
     user: state.user[0],
   };
@@ -50,6 +52,7 @@ class Operations extends Component {
   addOperation = () => {
     const { operations } = this.props;
     const foo = operations.filter(operation => operation.dataset === this.props.dataSetId);
+    const chart = this.props.charts.find(chart => chart.id === this.props.chartId);
     const { api_key, username } = this.props.user;
     const sortOrder = foo.length > 0 ? foo[foo.length-1].sort_order + 1 : 0;
     this.props.dispatch(
@@ -66,8 +69,8 @@ class Operations extends Component {
             api_key,
             username,
             parseInt(this.props.dataSetId),
-            () => {},
-            '',
+            addDataSeries,
+            chart.series_type,
           )
         )
      });

@@ -2,8 +2,12 @@ import React, { Component } from 'react';
 import ChartTabs from './ChartTabs';
 import DataSetDetail from '../datasets/DataSetDetail';
 import classNames from 'classnames';
+import { addDataSeries, destroyChart, getChart, setChart } from './Graph';
 import { connect } from 'react-redux';
 import { Route } from "react-router-dom";
+
+const Highcharts = require('highcharts');
+require('highcharts/modules/exporting')(Highcharts);
 
 const style = {
   width: '100%',
@@ -15,15 +19,77 @@ const mapStateToProps = (state) => {
   return {
     user: state.user[0],
     datasets: state.datasets,
+    charts: state.charts,
   };
 };
 
 class Chart extends Component {
+
+  constructor(props) {
+    super(props);
+    this.chartInstance = getChart();
+  }
+
+  setUpChart = (chart) => {
+    this.props.datasets.forEach((dataset) => {
+      if(dataset.chart === chart.id) {
+        addDataSeries(
+          dataset.id,
+          dataset.name,
+          dataset.data,
+          chart.series_type,
+          dataset,
+        );
+      }
+    })
+  }
+
+  componentDidMount() {
+    const { id } = this.props.match.params;
+    const chart = this.props.charts.find(chart => chart.id === parseInt(id));
+
+    const chartConfig = {
+      title: {
+        text: chart.name
+      },
+      xAxis: {
+        type: chart.chart_type,
+      },
+      yAxis: {
+        title: false
+      },    
+      legend: {
+        align: 'left',
+        verticalAlign: 'top',
+      }
+    };
+  
+    const chartInstance = Highcharts.chart(
+      `chart-${chart.id}`,
+      chartConfig
+    );
+
+    setChart(chartInstance);
+    this.setUpChart(chart);
+  }
+
+  componentDidUpdate(prevProps) {
+    const { id } = this.props.match.params;
+    const chart = this.props.charts.find(chart => chart.id === parseInt(id));
+    this.setUpChart(chart);
+  }
+
+  componentWillUnmount() {
+    destroyChart();
+  }
+
   render() {
+
+    const { id } = this.props.match.params;
 
     const overlayClasses = classNames({
       'overlay': true,
-      'overlay-hide': this.chartInstance && this.props.datasets.length > 0,
+      'overlay-hide': this.props.datasets.length > 0,
     });
 
     return (
@@ -37,7 +103,7 @@ class Chart extends Component {
               </div>
             </div>
           </div>
-          <div style={{ ...style }} id={this.props.chartName} />
+          <div style={{ ...style }} id={`chart-${id}`} />
         </div>
         <Route
           exact

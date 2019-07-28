@@ -2,11 +2,32 @@ import * as React from "react";
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Nav from 'react-bootstrap/Nav';
+import { fetchDatasets } from './actions';
 import { Link } from "react-router-dom";
+import { connect } from 'react-redux';
 
 const ChartConfigHoc = WrappedComponent => {
 
+  const mapStateToProps = (state) => {
+    return {
+      user: state.user[0],
+    };
+  };
+
+  const mapDispatchToProps = (dispatch) => {
+    return {
+      fetchDatasets: (apiKey, user, chartId) => {
+        dispatch(fetchDatasets(
+          apiKey,
+          user,
+          chartId,
+        ));
+      }
+    };
+  };
+
   class ComponentWithNav extends React.Component {
+    
     render() {
       return (
         <Row>
@@ -24,7 +45,7 @@ const ChartConfigHoc = WrappedComponent => {
     }
   };
 
-  return ComponentWithNav;
+  return connect(mapStateToProps, mapDispatchToProps)(ComponentWithNav);
 };
 
 export default ChartConfigHoc;

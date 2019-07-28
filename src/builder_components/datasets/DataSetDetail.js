@@ -25,7 +25,7 @@ class DataSetDetail extends Component {
           <Row>
             <Col md={4}>
               <Operations
-                run={() =>{}}
+                chartId={parseInt(this.props.match.params.id)}
                 dataSetId={this.props.match.params.dataset_id}
                 dataSourceId={dataset.data_source}
               />
