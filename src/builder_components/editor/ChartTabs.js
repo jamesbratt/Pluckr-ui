@@ -17,8 +17,14 @@ class ChartTabs extends Component {
       <Tab eventKey="operations" title="Datasets">
         <DataSetList chartId={this.props.chartId} url={this.props.url} />
       </Tab>
-      <Tab eventKey="settings" title="Chart Axis Configuration">
-        Settings
+      <Tab eventKey="axis" title="Chart Axis Configuration">
+        Axis
+      </Tab>
+      <Tab eventKey="styling" title="Chart Styling">
+        Styling
+      </Tab>
+      <Tab eventKey="settings" title="Chart Configuration">
+        Setting
       </Tab>
     </Tabs>
     )
