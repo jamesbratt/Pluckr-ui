@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import Picker from '../Picker';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import Alert from 'react-bootstrap/Alert';
 import JSONTree from 'react-json-tree';
 import { pathOr } from 'ramda';
 import { DATA_TYPES } from '../../Constants';
@@ -273,9 +272,7 @@ class DataSourceDetail extends Component {
                 }}
                 data={this.state.data}
                /> :
-              <Alert variant="info">
-                There is no data to display yet...
-              </Alert>
+              null
             }
           </Col>
         </Row>

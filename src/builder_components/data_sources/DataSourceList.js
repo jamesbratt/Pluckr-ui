@@ -52,7 +52,7 @@ class DataSourceList extends Component {
             this.props.sources.data.length > 0 ?
             <React.Fragment>
               <h2>Available Data Sources</h2>
-              <Link to="create-data-source">Create a Data Source</Link>
+              <Link className="btn btn-primary" to="create-data-source">Create a Data Source</Link>
               <Table striped bordered hover>
                 <thead>
                   <tr>
@@ -69,7 +69,7 @@ class DataSourceList extends Component {
                         <td>{source.name}</td>
                         <td>{source.provider}</td>
                         <td>{source.resource}</td>
-                        <td><Link to={`edit-data-source/${source.id}`}>Edit</Link></td>
+                        <td><Link className="btn btn-sm btn-primary" to={`edit-data-source/${source.id}`}>Edit</Link></td>
                       </tr>
                     )
                   })}
@@ -79,7 +79,7 @@ class DataSourceList extends Component {
             <div>
               <h2>Get started by creating a data source</h2>
               <p className="lead">Data sources use your connected data providers to retrieve specific data</p>
-              <Link to="create-data-source">Create a Data Source</Link>
+              <Link className="btn btn-primary" to="create-data-source">Create a Data Source</Link>
             </div>
         }
       </React.Fragment>

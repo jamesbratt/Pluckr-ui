@@ -63,7 +63,7 @@ class Charts extends Component {
                       <div className="chart-card-inner">
                         <h3>{chart.name}</h3>
                         <div className="btn-group-fixed">
-                          <Link to={`/${chart.id}/data-sources`}>Edit</Link>
+                          <Link class="btn btn-primary" to={`/${chart.id}/data-sources`}>Edit</Link>
                           <button onClick={() => this.removeChart(chart.id)} type="button" className="btn btn-danger">Delete</button>
                         </div>
                       </div>

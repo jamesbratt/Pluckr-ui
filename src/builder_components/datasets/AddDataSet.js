@@ -46,6 +46,8 @@ const AddDataSet = (props) => {
         dataSource.rawData,
       );
 
+      props.close();
+
     } else {
       alert('Fill out all required dataset fields');
     }

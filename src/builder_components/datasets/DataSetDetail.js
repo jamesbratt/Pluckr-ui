@@ -3,6 +3,7 @@ import Tabs from 'react-bootstrap/Tabs';
 import Tab from 'react-bootstrap/Tab';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import DataSetSettings from './DataSetSettings';
 import Operations from '../operations/Operations';
 import JSONTree from 'react-json-tree';
 import { connect } from 'react-redux';
@@ -43,7 +44,7 @@ class DataSetDetail extends Component {
           </Row>
         </Tab>
         <Tab eventKey="settings" title="Settings">
-          Settings
+          <DataSetSettings dataSetId={this.props.match.params.dataset_id} />
         </Tab>
       </Tabs>
     </div>

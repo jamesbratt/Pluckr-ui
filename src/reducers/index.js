@@ -7,6 +7,7 @@ import operations from './operations';
 import dataProviders from './dataProviders';
 import user from './user';
 import loader from './loader';
+import axis from './axis';
 
 const chartConfigReducers = combineReducers({
   charts,
@@ -16,6 +17,7 @@ const chartConfigReducers = combineReducers({
   dataProviders,
   user,
   loader,
+  axis,
 });
  
 export default chartConfigReducers;

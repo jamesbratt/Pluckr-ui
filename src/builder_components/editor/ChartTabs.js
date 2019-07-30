@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Tabs from 'react-bootstrap/Tabs';
 import Tab from 'react-bootstrap/Tab';
 import DataSetList from '../datasets/DataSetList';
+import AxisList from '../axis/AxisList';
 import { connect } from 'react-redux';
 
 const mapStateToProps = (state) => {
@@ -18,7 +19,7 @@ class ChartTabs extends Component {
         <DataSetList chartId={this.props.chartId} url={this.props.url} />
       </Tab>
       <Tab eventKey="axis" title="Chart Axis Configuration">
-        Axis
+        <AxisList />
       </Tab>
       <Tab eventKey="styling" title="Chart Styling">
         Styling

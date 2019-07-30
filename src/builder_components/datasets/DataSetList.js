@@ -84,7 +84,7 @@ class DataSetList extends Component {
             <Modal.Title>Create a New Dataset</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-              <AddDataSet chartId={this.props.chartId} />
+              <AddDataSet chartId={this.props.chartId} close={() => this.setState({createChartModalShow: false})} />
           </Modal.Body>
           <Modal.Footer>
           </Modal.Footer>
