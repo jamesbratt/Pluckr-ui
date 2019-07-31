@@ -44,7 +44,13 @@ class DataSetDetail extends Component {
           </Row>
         </Tab>
         <Tab eventKey="settings" title="Settings">
+          Settings
+        </Tab>
+        <Tab eventKey="yaxis-settings" title="Y-axis Settings">
           <DataSetYaxisSettings dataset={dataset} />
+        </Tab>
+        <Tab eventKey="styling" title="Styling">
+          Styling
         </Tab>
       </Tabs>
     </div>
