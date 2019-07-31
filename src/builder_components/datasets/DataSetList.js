@@ -3,7 +3,7 @@ import Table from 'react-bootstrap/Table';
 import Modal from 'react-bootstrap/Modal';
 import AddDataSet from './AddDataSet';
 import { connect } from 'react-redux';
-import { fetchDatasets } from '../../actions';
+import { fetchDatasets } from '../../actions/dataset';
 import { Link } from "react-router-dom";
 
 const mapStateToProps = (state) => {

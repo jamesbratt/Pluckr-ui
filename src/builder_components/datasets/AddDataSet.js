@@ -1,5 +1,5 @@
 import React from 'react';
-import { createDataSet } from '../../actions';
+import { createDataSet } from '../../actions/dataset';
 import { connect } from 'react-redux';
 
 const dataSetNameRef = React.createRef();

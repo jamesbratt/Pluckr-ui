@@ -2,7 +2,7 @@ import * as React from "react";
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Nav from 'react-bootstrap/Nav';
-import { fetchDatasets } from './actions';
+import { fetchDatasets } from './actions/dataset';
 import { Link } from "react-router-dom";
 import { connect } from 'react-redux';
 
