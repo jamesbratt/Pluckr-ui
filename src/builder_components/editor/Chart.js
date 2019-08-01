@@ -54,6 +54,7 @@ class Chart extends Component {
       },
       xAxis: {
         type: chart.chart_type,
+        id: 'master-x-axis'
       },
       yAxis: {
         title: false

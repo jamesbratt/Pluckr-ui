@@ -18,6 +18,17 @@ export const addYaxis = (axis) => {
   chartInstance.addAxis(axis);
 };
 
+export const updateXaxis = (title, type, isEnabled) => {
+  const xAxis = chartInstance.get('master-x-axis');
+  xAxis.update({
+    title: {
+      text: title
+    },
+    type: type,
+    visible: isEnabled,
+  });
+}
+
 export const updateYaxis = (dataSetId, title, isOpposite, isEnabled) => {
   const yAxisId = `${dataSetId}`;
   const existingYaxis = chartInstance.get(yAxisId);
@@ -75,6 +86,8 @@ export const addDataSeries = (datasetId, title, data, chartType, dataset) => {
         },
         opposite: y_axis_is_opposite,
         id: yAxisId,
+        // gridLineWidth: 0,
+        // minorGridLineWidth: 0,
       };
     
       addYaxis(axis);
