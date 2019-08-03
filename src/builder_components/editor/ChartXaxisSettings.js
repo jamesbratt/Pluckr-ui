@@ -1,4 +1,6 @@
 import React from 'react';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
 import { pathOr } from 'ramda';
 import { updateXaxis } from './Graph';
 import { connect } from 'react-redux';
@@ -19,7 +21,7 @@ const mapDispatchToProps = (dispatch) => {
 
 const ChartXaxisSettings = (props) => {
 
-  const save = () => {
+  const onChange = () => {
     const title = pathOr(null, ['value'], axisTitleRef.current);
     const type = pathOr(null, ['value'], chartTypeRef.current);
     const isEnabled = pathOr(null, ['checked'], axisIsEnabledRef.current);
@@ -27,26 +29,27 @@ const ChartXaxisSettings = (props) => {
   }
 
   return (
-    <React.Fragment>
-      <div class="form-group form-check">
-        <input ref={axisIsEnabledRef} type="checkbox" class="form-check-input" name="axis-display" />
-        <label class="form-check-label">Enable X-axis</label>
-      </div>
-      <div className="form-group">
-        <label>Axis Title</label>
-        <input ref={axisTitleRef} className="form-control" type="text" placeholder="X-axis title" />
-      </div>
-      <div class="form-group">
-        <label>Chart Type</label>
-        <select ref={chartTypeRef} className="form-control">
-          <option value={null}>-- Select a Chart --</option>
-          <option value="linear">Linear Line Chart</option>
-          <option value="datetime">Time-based Line Chart</option>
-          <option value="category">Bar Chart</option>
-        </select>
-      </div>
-      <button className="btn btn-primary my-2 my-sm-0" onClick={save}>Save</button>
-    </React.Fragment>
+    <Row>
+      <Col md={4}>
+        <div class="form-group form-check">
+          <input onChange={onChange} ref={axisIsEnabledRef} type="checkbox" class="form-check-input" name="axis-display" />
+          <label class="form-check-label">Enable X-axis</label>
+        </div>
+        <div className="form-group">
+          <label>Axis Title</label>
+          <input onChange={onChange} ref={axisTitleRef} className="form-control" type="text" placeholder="X-axis title" />
+        </div>
+        <div class="form-group">
+          <label>Chart Type</label>
+          <select onChange={onChange} ref={chartTypeRef} className="form-control">
+            <option value={null}>-- Select a Chart --</option>
+            <option value="linear">Linear Line Chart</option>
+            <option value="datetime">Time-based Line Chart</option>
+            <option value="category">Bar Chart</option>
+          </select>
+        </div>
+      </Col>
+    </Row>
   );
 }
 

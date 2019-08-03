@@ -1,7 +1,8 @@
 import React from 'react';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
 import { pathOr } from 'ramda';
 import { updateChart } from '../../actions/chart';
-import { updateXaxis } from './Graph';
 import { connect } from 'react-redux';
 
 const chartTitleRef = React.createRef();
@@ -28,7 +29,7 @@ const mapDispatchToProps = (dispatch) => {
 
 const ChartSettings = (props) => {
 
-  const save = () => {
+  const onChange = () => {
     const title = pathOr(null, ['value'], chartTitleRef.current);
     const { api_key, username } = props.user;
     props.updateChart(api_key, username, props.chartId, [{name: title}]);
@@ -37,13 +38,14 @@ const ChartSettings = (props) => {
   const chart = props.charts.find(chart => chart.id === parseInt(props.chartId))
 
   return (
-    <React.Fragment>
-      <div className="form-group">
-        <label>Chart Title</label>
-        <input defaultValue={chart.name} ref={chartTitleRef} className="form-control" type="text" placeholder="Chart title" />
-      </div>
-      <button className="btn btn-primary my-2 my-sm-0" onClick={save}>Save</button>
-    </React.Fragment>
+    <Row>
+      <Col md={4}>
+        <div className="form-group">
+          <label>Chart Title</label>
+          <input onChange={onChange} defaultValue={chart.name} ref={chartTitleRef} className="form-control" type="text" placeholder="Chart title" />
+        </div>
+      </Col>
+    </Row>
   );
 }
 

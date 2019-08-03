@@ -4,6 +4,7 @@ import Tab from 'react-bootstrap/Tab';
 import DataSetList from '../datasets/DataSetList';
 import ChartXaxisSettings from './ChartXaxisSettings';
 import ChartSettings from './ChartSettings';
+import ChartStyleSettings from './ChartStyleSettings';
 import { connect } from 'react-redux';
 
 const mapStateToProps = (state) => {
@@ -26,7 +27,7 @@ class ChartTabs extends Component {
         <ChartXaxisSettings chartId={this.props.chartId} />
       </Tab>
       <Tab eventKey="styling" title="Chart Styling">
-        Styling
+        <ChartStyleSettings chartId={this.props.chartId} />
       </Tab>
     </Tabs>
     )
