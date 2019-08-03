@@ -11,7 +11,7 @@ class Picker extends Component {
 
   componentDidMount() {
     if (this.props.pickedItems.length > 0) {
-      this.setState({ pickedList: this.props.pickedItems.map(item => item.value) });
+      this.setState({ pickedList: this.props.pickedItems[0].value.map(item => item) });
     }
   }
 

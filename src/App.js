@@ -14,6 +14,7 @@ import DataSourceDetail from './builder_components/data_sources/DataSourceDetail
 import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
 import './css/builder.css';
+import 'font-awesome/css/font-awesome.min.css'
 
 const composeEnhancer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
@@ -56,7 +57,7 @@ class App extends Component {
               <Navbar.Toggle aria-controls="responsive-navbar-nav" />
               <Navbar.Collapse id="responsive-navbar-nav">
                 <Nav className="mr-auto">
-                <Link to="/">Charts</Link>
+                  <Link className="nav-link" to="/">Charts</Link>
                 </Nav>
                 <Nav>
                   <Nav.Link onClick={this.logout}>Log Out</Nav.Link>

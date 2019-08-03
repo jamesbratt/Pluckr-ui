@@ -3,7 +3,7 @@ import Table from 'react-bootstrap/Table';
 import Modal from 'react-bootstrap/Modal';
 import AddDataSet from './AddDataSet';
 import { connect } from 'react-redux';
-import { fetchDatasets } from '../../actions/dataset';
+import { deleteDataset, fetchDatasets } from '../../actions/dataset';
 import { Link } from "react-router-dom";
 
 const mapStateToProps = (state) => {
@@ -21,6 +21,13 @@ const mapDispatchToProps = (dispatch) => {
         user,
         chartId,
       ));
+    },
+    deleteDataset: (apiKey, user, dataSetId) => {
+      dispatch(deleteDataset(
+        apiKey,
+        user,
+        dataSetId,        
+      ))
     }
   };
 };
@@ -43,6 +50,15 @@ class DataSetList extends Component {
     );
   };
 
+  delete = (id) => {
+    const { api_key, username } = this.props.user;
+    this.props.deleteDataset(
+      api_key,
+      username,
+      id,
+    );
+  }
+
   render() {
     return (
       <React.Fragment>
@@ -55,8 +71,7 @@ class DataSetList extends Component {
                 <tr>
                   <th>Name</th>
                   <th>Data Source</th>
-                  <th>Operations</th>
-                  <th>Action</th>
+                  <th>Edit/Delete</th>
                 </tr>
               </thead>
               <tbody>
@@ -65,8 +80,10 @@ class DataSetList extends Component {
                     <tr>
                       <td>{dataset.name}</td>
                       <td></td>
-                      <td></td>
-                      <td><Link to={`${this.props.url}/edit-dataset/${dataset.id}`}>Configure</Link></td>
+                      <td width="10%">
+                        <Link className="btn btn-primary" to={`${this.props.url}/edit-dataset/${dataset.id}`}><i className="fa fa-edit" /></Link>
+                        <button onClick={() => this.delete(dataset.id)} className="btn btn-danger"><i className="fa fa-trash" /></button>
+                      </td>
                     </tr>
                   )
                 })}

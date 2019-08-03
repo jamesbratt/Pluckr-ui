@@ -1,13 +1,15 @@
 import React, { Component } from 'react';
 import Table from 'react-bootstrap/Table';
+import Loader from '../../Loader';
 import { connect } from 'react-redux';
-import { fetchDataSources } from '../../actions';
+import { deleteDataSource, fetchDataSources } from '../../actions';
 import { Link } from "react-router-dom";
 
 const mapStateToProps = (state) => {
   return {
     sources: state.sources,
     user: state.user[0],
+    loader: state.loader,
   };
 };
 
@@ -19,11 +21,25 @@ const mapDispatchToProps = (dispatch) => {
         user,
         chartId,
       ));
+    },
+    deleteDataSource: (apiKey, user, dataSourceId) => {
+      dispatch(deleteDataSource(
+        apiKey,
+        user,
+        dataSourceId,
+      ));
     }
   };
 };
 
 class DataSourceList extends Component {
+
+  constructor(props) {
+    super(props)
+    this.state = {
+      isLoading: true,
+    }
+  }
 
   componentDidMount() {
     const { api_key, username } = this.props.user;
@@ -31,7 +47,7 @@ class DataSourceList extends Component {
       api_key,
       username,
       this.props.match.params.id,
-    );
+    )
   };
 
   componentDidUpdate(prevProps) {
@@ -41,14 +57,23 @@ class DataSourceList extends Component {
         api_key,
         username,
         this.props.match.params.id,
-      );
+      )
     }
   };
+
+  delete = (id) => {
+    const { api_key, username } = this.props.user;
+    this.props.deleteDataSource(
+      api_key,
+      username,
+      id,
+    );
+  }
 
   render() {
     return (
       <React.Fragment>
-        {
+        {this.props.loader ? <Loader /> :
             this.props.sources.data.length > 0 ?
             <React.Fragment>
               <h2>Available Data Sources</h2>
@@ -59,7 +84,7 @@ class DataSourceList extends Component {
                     <th>Name</th>
                     <th>Provider</th>
                     <th>Resource</th>
-                    <th>Action</th>
+                    <th>Edit/Delete</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -69,7 +94,10 @@ class DataSourceList extends Component {
                         <td>{source.name}</td>
                         <td>{source.provider}</td>
                         <td>{source.resource}</td>
-                        <td><Link className="btn btn-sm btn-primary" to={`edit-data-source/${source.id}`}>Edit</Link></td>
+                        <td width="10%">
+                          <Link className="btn btn-primary" to={`edit-data-source/${source.id}`}><i className="fa fa-edit" /></Link>
+                          <button onClick={() => this.delete(source.id)} className="btn btn-danger"><i className="fa fa-trash" /></button>
+                        </td>
                       </tr>
                     )
                   })}

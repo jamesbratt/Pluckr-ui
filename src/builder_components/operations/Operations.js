@@ -275,8 +275,8 @@ class Operations extends Component {
         return <li class="list-group-item">
           {operation.root_function}
           <div key={operation.id} className="operation-actions float-right">
-            <button className="btn btn-light btn-sm" onClick={() => this.onOperationEdit(operation)}>Edit</button>
-            <button style={{ marginLeft: '1em' }} className="btn btn-danger btn-sm" onClick={() => this.deleteOperation(operation.id)}>Delete</button>
+            <button className="btn btn-primary btn-sm" onClick={() => this.onOperationEdit(operation)}><i className="fa fa-edit" /></button>
+            <button style={{ marginLeft: '1em' }} className="btn btn-danger btn-sm" onClick={() => this.deleteOperation(operation.id)}><i className="fa fa-trash" /></button>
           </div>
         </li>
       }

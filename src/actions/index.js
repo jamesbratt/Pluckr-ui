@@ -62,6 +62,25 @@ export const receiveDataSources = (data) => {
   }
 };
 
+export const deleteDataSource = (apiKey, username, datasourceId) => {
+
+  return dispatch => {
+    return fetch(`${process.env.REACT_APP_PLUCKR_API_URI}/api/v1/datasource/${datasourceId}/`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `ApiKey ${username}:${apiKey}`
+        },
+    })
+    .then(() => {
+      dispatch({
+        type: 'DELETE_DATA_SOURCE',
+        datasourceId,
+      })
+    })
+  }
+}
+
 export const fetchDataSources = (apiKey, username, chartId) => {
   return (dispatch, getState) => {
     dispatch(setLoader(true));

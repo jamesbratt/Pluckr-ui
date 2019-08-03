@@ -4,6 +4,8 @@ const sources = (state = { data: [] }, action) => {
   switch (action.type) {
     case 'RECEIVE_DATA_SOURCES':
       return { data: action.data };
+    case 'DELETE_DATA_SOURCE':
+      return { data: state.data.filter(datasource => datasource.id !== parseInt(action.datasourceId)) };
     case 'ADD_SOURCE':
       const newSource = {
         id: action.id,

@@ -12,7 +12,7 @@ const operations = (state = [], action) => {
         return b.sort_order - a.sort_order;
       });*/
   
-      return action.data;
+      return action.data.reverse();
 
     case 'REMOVE_OPERATION':
       return state.filter(operation => operation.id !== action.operationId);
