@@ -1,0 +1,124 @@
+import { updateChartInstance } from '../builder_components/editor/Graph';
+
+export const addChart = (data) => {
+  return {
+    type: 'ADD_CHART',
+    data,
+  }
+};
+
+export const removeChart = (chartId) => {
+  return {
+    type: 'REMOVE_CHART',
+    chartId,
+  }
+};
+
+export const receiveCharts = (data) => {
+  return {
+    type: 'RECEIVE_CHARTS',
+    data
+  }
+};
+
+export const fetchCharts = (apiKey, username) => {
+  return dispatch => {
+    return fetch(`${process.env.REACT_APP_PLUCKR_API_URI}/api/v1/chart/`, {
+      headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `ApiKey ${username}:${apiKey}`
+      },
+    })
+      .then(response => response.json())
+      .then(json => dispatch(receiveCharts(json.objects)))
+  }
+}
+
+export const createChart = (apiKey, username, name, chart_type) => {
+
+  let series_type;
+  if (chart_type === 'linear') {
+    series_type = 'line';
+  }
+
+  if (chart_type === 'datetime') {
+    series_type = 'line';
+  }
+
+  if (chart_type === 'category') {
+    series_type = 'bar';
+  }
+
+  const payload = {
+    name,
+    chart_type,
+    series_type,
+  };
+
+  return dispatch => {
+    return fetch(`${process.env.REACT_APP_PLUCKR_API_URI}/api/v1/chart/`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `ApiKey ${username}:${apiKey}`
+        },
+        body: JSON.stringify(payload)
+    })
+    .then((response) => {
+      return response.json();
+    })
+    .then(json => {
+      dispatch(addChart(json))
+    })
+  }
+}
+
+export const updateChart = (
+  apiKey,
+  username,
+  chartId,
+  updates
+) => {
+
+  return (dispatch) => {
+
+    const payload = Object.assign({}, ...updates);
+    
+    return fetch(`${process.env.REACT_APP_PLUCKR_API_URI}/api/v1/chart/${chartId}/`, {
+      method: 'PATCH',
+      headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `ApiKey ${username}:${apiKey}`
+      },
+      body: JSON.stringify(payload)
+    })
+      .then((response) => {
+        return response.json();
+      })
+      .then(response => {
+        updateChartInstance(payload);
+        dispatch({
+          type: 'UPDATE_CHART',
+          chartId,
+          data: response
+        });
+      })
+      .catch(error => alert(error));
+  }
+}
+
+export const deleteChart = (apiKey, username, chartId) => {
+
+  return dispatch => {
+    return fetch(`${process.env.REACT_APP_PLUCKR_API_URI}/api/v1/chart/${chartId}/`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `ApiKey ${username}:${apiKey}`
+        },
+    })
+    .then(() => {
+      dispatch(removeChart(chartId))
+    })
+  }
+}

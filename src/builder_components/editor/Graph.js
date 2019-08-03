@@ -1,4 +1,4 @@
-import { clone } from 'ramda';
+import { assocPath, clone } from 'ramda';
 
 let chartInstance = null;
 
@@ -27,6 +27,16 @@ export const updateXaxis = (title, type, isEnabled) => {
     type: type,
     visible: isEnabled,
   });
+}
+
+export const updateChartInstance = (updates) => {
+  let chartUpdates = updates;
+  if (updates.name) {
+    const title = updates.name;
+    delete chartUpdates.name;
+    chartUpdates = assocPath(['title'], { text: title }, updates);
+  }
+  chartInstance.update(chartUpdates);
 }
 
 export const updateYaxis = (dataSetId, title, isOpposite, isEnabled) => {

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Modal from 'react-bootstrap/Modal';
-import { fetchCharts, deleteChart } from './actions';
+import { fetchCharts, deleteChart } from './actions/chart';
 import AddChart from './builder_components/AddChart';
 import { Link } from "react-router-dom";
 
