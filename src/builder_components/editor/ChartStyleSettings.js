@@ -1,12 +1,9 @@
 import React, { Component } from 'react';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import { updateChartInstance } from '../../builder_components/editor/Graph';
-import { pathOr } from 'ramda';
+import { updateChart } from '../../actions/chart';
 import { ChromePicker } from 'react-color';
 import { connect } from 'react-redux';
-
-const chartTitleRef = React.createRef();
 
 const mapStateToProps = (state) => {
   return {
@@ -15,7 +12,18 @@ const mapStateToProps = (state) => {
   };
 };
 
-const mapDispatchToProps = (dispatch) => {};
+const mapDispatchToProps = (dispatch) => {
+  return {
+    updateChart: (apiKey, user, chartId, updates) => {
+      dispatch(updateChart(
+        apiKey,
+        user,
+        chartId,
+        updates,
+      ));
+    }
+  };
+};
 
 class ChartStyleSettings extends Component {
 
@@ -23,14 +31,8 @@ class ChartStyleSettings extends Component {
     super(props)
     this.state = {
       displayColorPicker: false,
-      backgroundColour: '#FFFFFF',
+      backgroundColour: props.charts.find(chart => chart.id === parseInt(props.chartId)).background_color,
     }
-  }
-
-  save = () => {
-    const title = pathOr(null, ['value'], chartTitleRef.current);
-    const { api_key, username } = this.props.user;
-    updateChartInstance([{backgroundColor: this.state.backgroundColour}]);
   }
 
   handleClick = () => {
@@ -43,7 +45,8 @@ class ChartStyleSettings extends Component {
 
   handleChange = (color, event) => {
     this.setState({ backgroundColour: color.hex });
-    updateChartInstance({chart: { backgroundColor: this.state.backgroundColour}});
+    const { api_key, username } = this.props.user;
+    this.props.updateChart(api_key, username, this.props.chartId, [{background_color: this.state.backgroundColour}]);
   }
 
   render() {

@@ -77,7 +77,8 @@ export const updateChart = (
   apiKey,
   username,
   chartId,
-  updates
+  updates,
+  graphUpdate = null,
 ) => {
 
   return (dispatch) => {
@@ -96,7 +97,7 @@ export const updateChart = (
         return response.json();
       })
       .then(response => {
-        updateChartInstance(payload);
+        graphUpdate ? graphUpdate(payload) : updateChartInstance(payload);
         dispatch({
           type: 'UPDATE_CHART',
           chartId,

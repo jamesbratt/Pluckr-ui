@@ -1,37 +1,49 @@
 import React from 'react';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import { setYaxisToDataSet } from '../editor/Graph';
+import { pathOr } from 'ramda';
+import { updateDataSet } from '../../actions/dataset';
 import { connect } from 'react-redux';
 
-const axisRef = React.createRef();
+const datasetTitleRef = React.createRef();
 
 const mapStateToProps = (state) => {
   return {
     user: state.user[0],
-    axis: state.axis,
+    datasets: state.datasets,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    updateDataSet: (apiKey, user, datasetId, updates) => {
+      dispatch(updateDataSet(
+        apiKey,
+        user,
+        datasetId,
+        updates,
+      ));
+    }
   };
 };
 
 const DataSetSettings = (props) => {
 
-  const save = () => {
-    setYaxisToDataSet(axisRef.current.value, props.dataSetId);
+  const onChange = () => {
+    const title = pathOr(null, ['value'], datasetTitleRef.current);
+    const { api_key, username } = props.user;
+    props.updateDataSet(api_key, username, props.dataSetId, [{name: title}]);
   }
+
+  const dataset = props.datasets.find(dataset => dataset.id === parseInt(props.dataSetId))
 
   return (
     <Row>
       <Col md={4}>
         <div className="form-group">
-          <label>Y-axis</label>
-          <select ref={axisRef} className="form-control">
-            <option value="">-- Select a Y-axis --</option>
-            {props.axis.map(axi => {
-              return <option key={axi.id} value={axi.id}>{axi.title.text}</option>
-            })}
-          </select>            
+          <label>Dataset Title</label>
+          <input onChange={onChange} defaultValue={dataset.name} ref={datasetTitleRef} className="form-control" type="text" placeholder="Chart title" />
         </div>
-        <button className="btn btn-primary my-2 my-sm-0" onClick={save}>Save</button>
       </Col>
     </Row>
   );
@@ -39,4 +51,5 @@ const DataSetSettings = (props) => {
 
 export default connect(
   mapStateToProps,
+  mapDispatchToProps,
 )(DataSetSettings);

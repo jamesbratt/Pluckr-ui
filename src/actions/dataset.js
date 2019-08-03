@@ -1,5 +1,5 @@
 import { assocPath, clone } from 'ramda';
-import { updateYaxis } from '../builder_components/editor/Graph';
+import { updateYaxis, updateDataSeries } from '../builder_components/editor/Graph';
 import { executeOperations } from '../data_parsing/parse';
 
 export const receiveDatasets = (data) => {
@@ -23,19 +23,51 @@ export const removeDataset = (datasetId) => {
   }
 };
 
-export const updateDataset = (datasetId, rawData) => {
-  return {
-    type: 'UPDATE_DATASET',
-    datasetId,
-    rawData
-  }
-}
-
 export const patchDataset = (datasetId, payload) => {
   return {
     type: 'UPDATE_DATASET_YAXIS',
     datasetId,
     payload
+  }
+}
+
+export const updateDataSet = (
+  apiKey,
+  username,
+  dataSetId,
+  updates
+) => {
+
+  return (dispatch, getState) => {
+
+    const { datasets } = getState();
+    const currentDataSet = datasets.find(dataset => dataset.id === dataSetId);
+
+    const payload = Object.assign({}, ...updates);
+    payload['chart'] = {pk: currentDataSet.chart};
+    payload['data_source'] = {pk: currentDataSet.data_source};
+    
+    return fetch(`${process.env.REACT_APP_PLUCKR_API_URI}/api/v1/dataset/${dataSetId}/`, {
+      method: 'PATCH',
+      headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `ApiKey ${username}:${apiKey}`
+      },
+      body: JSON.stringify(payload)
+    })
+      .then((response) => {
+        return response.json();
+      })
+      .then(response => {
+        response['data'] = JSON.parse(response.data);
+        updateDataSeries(dataSetId, Object.assign({}, ...updates));
+        dispatch({
+          type: 'UPDATE_DATASET',
+          dataSetId,
+          data: response
+        });
+      })
+      .catch(error => alert(error));
   }
 }
 
@@ -214,12 +246,11 @@ export const runDataSet = (
       })
       .then(json => {
         json['data'] = JSON.parse(json.data);
-        dispatch(
-          updateDataset(
-            dataSetId,
-            json.data,
-          )
-        )
+        dispatch({
+          type: 'RUN_DATASET',
+          datasetId: dataSetId,
+          rawData: json.data
+        })
 
         callback(
           currentDataSet.id,

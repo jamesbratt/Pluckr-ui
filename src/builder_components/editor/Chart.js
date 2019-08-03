@@ -52,12 +52,21 @@ class Chart extends Component {
       title: {
         text: chart.name
       },
+      chart: {
+        backgroundColor: chart.background_color ? chart.background_color : null
+      },
       xAxis: {
         type: chart.chart_type,
-        id: 'master-x-axis'
+        id: 'master-x-axis',
+        visible: chart.x_axis_enabled,
+        title: {
+          text: chart.x_axis_title,
+        }
       },
       yAxis: {
-        title: false
+        title: false,
+        gridLineWidth: 0,
+        minorGridLineWidth: 0,
       },    
       legend: {
         align: 'left',

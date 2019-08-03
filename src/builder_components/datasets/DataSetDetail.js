@@ -4,6 +4,8 @@ import Tab from 'react-bootstrap/Tab';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import DataSetYaxisSettings from './DataSetYaxisSettings';
+import DataSetStyleSettings from './DataSetStyleSettings';
+import DataSetSettings from './DataSetSettings';
 import Operations from '../operations/Operations';
 import JSONTree from 'react-json-tree';
 import { connect } from 'react-redux';
@@ -44,13 +46,13 @@ class DataSetDetail extends Component {
           </Row>
         </Tab>
         <Tab eventKey="settings" title="Settings">
-          Settings
+          <DataSetSettings dataSetId={dataset.id} />
         </Tab>
         <Tab eventKey="yaxis-settings" title="Y-axis Settings">
           <DataSetYaxisSettings dataset={dataset} />
         </Tab>
         <Tab eventKey="styling" title="Styling">
-          Styling
+          <DataSetStyleSettings dataSetId={dataset.id} />
         </Tab>
       </Tabs>
     </div>

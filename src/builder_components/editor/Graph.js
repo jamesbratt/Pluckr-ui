@@ -18,14 +18,14 @@ export const addYaxis = (axis) => {
   chartInstance.addAxis(axis);
 };
 
-export const updateXaxis = (title, type, isEnabled) => {
+export const updateXaxis = (updates) => {
   const xAxis = chartInstance.get('master-x-axis');
   xAxis.update({
     title: {
-      text: title
+      text: updates.x_axis_title,
     },
-    type: type,
-    visible: isEnabled,
+    type: updates.chart_type,
+    visible: updates.x_axis_enabled,
   });
 }
 
@@ -36,7 +36,25 @@ export const updateChartInstance = (updates) => {
     delete chartUpdates.name;
     chartUpdates = assocPath(['title'], { text: title }, updates);
   }
+
+  if (updates.background_color) {
+    const backgroundColor = updates.background_color;
+    delete chartUpdates.background_color;
+    chartUpdates = assocPath(['chart'], { backgroundColor: backgroundColor }, updates);
+  }
+
   chartInstance.update(chartUpdates);
+}
+
+export const updateDataSeries = (dataSetId, updates) => {
+  let seriesUpdates = updates;
+  if (updates.name) {
+    const title = updates.name;
+    delete seriesUpdates.name;
+    seriesUpdates = assocPath(['title'], { text: title }, updates);
+  }
+  const existingSeries = chartInstance.get(dataSetId);
+  existingSeries.update(updates);
 }
 
 export const updateYaxis = (dataSetId, title, isOpposite, isEnabled) => {
@@ -96,8 +114,8 @@ export const addDataSeries = (datasetId, title, data, chartType, dataset) => {
         },
         opposite: y_axis_is_opposite,
         id: yAxisId,
-        // gridLineWidth: 0,
-        // minorGridLineWidth: 0,
+        gridLineWidth: 0,
+        minorGridLineWidth: 0,
       };
     
       addYaxis(axis);
@@ -108,6 +126,7 @@ export const addDataSeries = (datasetId, title, data, chartType, dataset) => {
       name: title,
       type: chartType,
       data: clonedData,
+      color: dataset.color ? dataset.color : null,
       yAxis: yAxisId ? yAxisId : 0,
     };
 

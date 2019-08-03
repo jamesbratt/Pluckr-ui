@@ -23,7 +23,16 @@ const datasets = (state = [], action) => {
         return dataset;
       });
 
-    case 'UPDATE_DATASET':
+    case 'UPDATE_DATASET': {
+        return state.map(dataset => {
+          if (dataset.id === parseInt(action.dataSetId)) {
+            return merge(dataset, action.data)
+          }
+          return dataset;
+        })
+    }
+
+    case 'RUN_DATASET':
       return state.map(dataset => {
         if (dataset.id === action.datasetId) {
           const updatedData = merge(
