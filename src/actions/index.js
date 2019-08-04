@@ -1,4 +1,5 @@
 import { assocPath, merge } from 'ramda';
+import { executeOperations } from '../data_parsing/parse';
 
 // USERS
 export const setLoader = (isLoading) => {
@@ -119,12 +120,78 @@ export const fetchDataSources = (apiKey, username, chartId) => {
               dataSourcesToAddToState.push(merge(sourceConfig, source));
             });
 
-            dispatch(
-              receiveDataSources(
-                dataSourcesToAddToState
-              )
-            );
-            dispatch(setLoader(false));
+            console.log('fetching datasets');
+
+            fetch(`${process.env.REACT_APP_PLUCKR_API_URI}/api/v1/dataset/?chart=${chartId}`, {
+              headers: {
+                  'Content-Type': 'application/json',
+                  'Authorization': `ApiKey ${username}:${apiKey}`
+              },
+            })
+              .then(response => response.json())
+              .then(response => {
+                console.log('datasets received');
+                const datasetDataUpdates = response.objects.map(dataset => {
+                  const latestData = dataSourcesToAddToState.find(source => source.id === dataset.data_source);
+
+                  console.log('fetching operations for ' + dataset.name);
+
+                  return fetch(`${process.env.REACT_APP_PLUCKR_API_URI}/api/v1/operation/?dataset=${dataset.id}`, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `ApiKey ${username}:${apiKey}`
+                    },
+                  })
+                    .then(response => response.json())
+                    .then(response => {
+                      let data = latestData.rawData;
+                      const operations = response.objects.length > 0 ? response.objects.map(operation => {
+                        return assocPath(['ast'], JSON.parse(operation.ast), operation);
+                      }) : response.objects;
+          
+                      try {
+                        data = executeOperations(
+                          latestData.rawData,
+                          dataset,
+                          operations.reverse(),
+                        );
+
+                        const payload = {
+                          data: JSON.stringify(data),
+                          chart: {pk: dataset.chart},
+                          data_source: {pk: dataset.data_source},
+                        };
+      
+                        console.log('updating data reference for dataset ' + dataset.name);
+                        
+                        fetch(`${process.env.REACT_APP_PLUCKR_API_URI}/api/v1/dataset/${dataset.id}/`, {
+                          method: 'PATCH',
+                          headers: {
+                              'Content-Type': 'application/json',
+                              'Authorization': `ApiKey ${username}:${apiKey}`
+                          },
+                          body: JSON.stringify(payload)
+                        })
+                          .then((response) => response.json())
+                          .then(response => {
+                          })
+                          .catch(error => alert(error));
+                      } catch (error) {
+                        alert(error);
+                      }
+                    })
+                });
+
+                Promise.all(datasetDataUpdates).then(responses => {
+                  console.log('all datasets updated');
+                  dispatch(
+                    receiveDataSources(
+                      dataSourcesToAddToState
+                    )
+                  );
+                  dispatch(setLoader(false));
+                });
+              })
           });
 
         } else {

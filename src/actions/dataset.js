@@ -82,7 +82,10 @@ export const fetchDatasets = (apiKey, username, chartId) => {
       .then(response => response.json())
       .then(json => {
         const datasets = json.objects.map(dataset => {
-          return assocPath(['data'], JSON.parse(dataset.data), dataset);
+          if (dataset.data) {
+            return assocPath(['data'], JSON.parse(dataset.data), dataset);
+          }
+          return dataset;
         });
         dispatch(receiveDatasets(datasets))
       })
@@ -119,7 +122,7 @@ export const createDataSet = (
       return response.json();
     })
     .then(json => {
-      json['data'] = JSON.parse(json.data);
+      json['data'] = json.data ? JSON.parse(json.data) : json.data;
       dispatch(
         addDataset(
           json,

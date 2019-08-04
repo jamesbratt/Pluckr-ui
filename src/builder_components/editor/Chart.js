@@ -2,9 +2,11 @@ import React, { Component } from 'react';
 import ChartTabs from './ChartTabs';
 import DataSetDetail from '../datasets/DataSetDetail';
 import classNames from 'classnames';
+import { executeOperations } from '../../data_parsing/parse';
 import { addDataSeries, destroyChart, getChart, setChart } from './Graph';
 import { connect } from 'react-redux';
 import { Route } from "react-router-dom";
+import { assocPath, clone } from 'ramda';
 
 const Highcharts = require('highcharts');
 require('highcharts/modules/exporting')(Highcharts);
@@ -20,6 +22,7 @@ const mapStateToProps = (state) => {
     user: state.user[0],
     datasets: state.datasets,
     charts: state.charts,
+    sources: state.sources.data,
   };
 };
 
