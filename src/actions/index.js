@@ -145,15 +145,19 @@ export const fetchDataSources = (apiKey, username, chartId) => {
                     .then(response => response.json())
                     .then(response => {
                       let data = latestData.rawData;
-                      const operations = response.objects.length > 0 ? response.objects.map(operation => {
+                      let operations = response.objects.length > 0 ? response.objects.map(operation => {
                         return assocPath(['ast'], JSON.parse(operation.ast), operation);
                       }) : response.objects;
+
+                      operations.sort(function(a, b) {
+                        return a.sort_order - b.sort_order;
+                      });
           
                       try {
                         data = executeOperations(
                           latestData.rawData,
                           dataset,
-                          operations.reverse(),
+                          operations,
                         );
 
                         const payload = {

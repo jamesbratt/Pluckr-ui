@@ -52,10 +52,10 @@ class Operations extends Component {
 
   addOperation = () => {
     const { operations } = this.props;
-    const foo = operations.filter(operation => operation.dataset === this.props.dataSetId);
+    const datasetOperations = operations.filter(operation => operation.dataset === parseInt(this.props.dataSetId));
     const chart = this.props.charts.find(chart => chart.id === this.props.chartId);
     const { api_key, username } = this.props.user;
-    const sortOrder = foo.length > 0 ? foo[foo.length-1].sort_order + 1 : 0;
+    const sortOrder = datasetOperations.length > 0 ? datasetOperations[datasetOperations.length-1].sort_order + 1 : 0;
     this.props.dispatch(
       createOperation(
         api_key,

@@ -6,13 +6,11 @@ const operations = (state = [], action) => {
       return append(action.data, state);
 
     case 'RECEIVE_OPERATIONS':
-      // Might want to use this when api returns operations in sort order
-
-      /*action.data.sort(function(a, b) {
-        return b.sort_order - a.sort_order;
-      });*/
+      action.data.sort(function(a, b) {
+        return a.sort_order - b.sort_order;
+      });
   
-      return action.data.reverse();
+      return action.data;
 
     case 'REMOVE_OPERATION':
       return state.filter(operation => operation.id !== action.operationId);
