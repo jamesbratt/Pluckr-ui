@@ -3,8 +3,8 @@
 }
 
 .wrapper {
-  margin-top: 1em;
   margin-bottom: 0.5em;
+  margin-top: 1em;
   position: relative;
 }
 
@@ -104,7 +104,6 @@
   text-align: center;
   border: 0 none;
   cursor: pointer;
-  margin-top: 1.2em;
   -moz-box-shadow: 0 0 3px #888;
   -webkit-box-shadow: 0 0 3px#888;
   box-shadow: 0 0 3px #888;
@@ -136,7 +135,6 @@
 .add-chart-card {
   width: 100%;
   background: #fcfcfc;
-  margin-top: 1.2em;
   padding: 1em;
   -moz-box-shadow: 0 0 3px #888;
   -webkit-box-shadow: 0 0 3px#888;
@@ -221,7 +219,8 @@ body {
   margin-top: 1em;
 }
 .data-providers {
-  margin-bottom: 1em;
+  padding: 1em;
+  background: #ECECEC
 }
 .table {
   margin-top: 1em;
