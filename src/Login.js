@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Wrapper from './Wrapper';
+import { Route } from "react-router-dom";
 import { fetchUser } from './actions';
 import { connect } from 'react-redux';
 
@@ -32,18 +33,18 @@ class Login extends Component {
 
   render() {
     if(this.props.user.length > 0) {
-      return <Wrapper />
+      return <Route component={Wrapper} />
     } else {
         return (
           <div className="login-wrapper">
             <form onSubmit={this.login} className="form-signin">
-              <h1 className="h3 mb-3 font-weight-normal">Please sign in</h1>
-              <label className="sr-only">Email address</label>
+              <h1 style={{textAlign: "center"}} className="h3 mb-3 font-weight-normal">Sign-in to Pluckr</h1>
+              <label className="sr-only">Username</label>
               <input ref={this.usernameRef} type="text" name="username" className="form-control" placeholder="Username" required="" autofocus="" />
               <label className="sr-only">Password</label>
               <input ref={this.passwordRef} type="password" id="inputPassword" className="form-control" placeholder="Password" name="password" required="" />
               <button className="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
-              <p className="mt-5 mb-3 text-muted">© 2017-2018</p>
+              <p className="mt-5 mb-3 text-muted">© Pluckr {new Date().getFullYear()}</p>
             </form>
           </div>
         );
