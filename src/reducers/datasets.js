@@ -11,7 +11,28 @@ const datasets = (state = [], action) => {
     case 'REMOVE_DATASET':
       return state.filter(dataset => dataset.id !== action.datasetId);
 
-    case 'UPDATE_DATASET':
+    case 'UPDATE_DATASET_YAXIS':
+      return state.map(dataset => {
+        if (dataset.id === action.datasetId) {
+          const updatedData = merge(
+            dataset,
+            action.payload,
+          );
+          return updatedData;
+        }
+        return dataset;
+      });
+
+    case 'UPDATE_DATASET': {
+        return state.map(dataset => {
+          if (dataset.id === parseInt(action.dataSetId)) {
+            return merge(dataset, action.data)
+          }
+          return dataset;
+        })
+    }
+
+    case 'RUN_DATASET':
       return state.map(dataset => {
         if (dataset.id === action.datasetId) {
           const updatedData = merge(

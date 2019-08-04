@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Modal from 'react-bootstrap/Modal';
-import { fetchCharts, deleteChart } from './actions';
+import { fetchCharts, deleteChart } from './actions/chart';
 import AddChart from './builder_components/AddChart';
+import { Link } from "react-router-dom";
 
 const mapStateToProps = state => {
   return state
@@ -62,8 +63,8 @@ class Charts extends Component {
                       <div className="chart-card-inner">
                         <h3>{chart.name}</h3>
                         <div className="btn-group-fixed">
-                          <button onClick={() => this.props.switchView('CHART_DETAIL', chart.id)} type="button" className="btn btn-primary">Edit</button>
-                          <button onClick={() => this.removeChart(chart.id)} type="button" className="btn btn-danger">Delete</button>
+                          <Link className="btn btn-primary" to={`/${chart.id}/data-sources`}><i className="fa fa-edit" /></Link>
+                          <button onClick={() => this.removeChart(chart.id)} type="button" className="btn btn-danger"><i className="fa fa-trash" /></button>
                         </div>
                       </div>
                     </div>

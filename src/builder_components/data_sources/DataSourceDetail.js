@@ -1,0 +1,287 @@
+import React, { Component } from 'react';
+import Picker from '../Picker';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import JSONTree from 'react-json-tree';
+import { pathOr } from 'ramda';
+import { DATA_TYPES } from '../../Constants';
+import { connect } from 'react-redux';
+import { createDataSource } from '../../actions';
+
+const mapStateToProps = (state) => {
+  return {
+    user: state.user[0],
+    dataProviders: state.dataProviders,
+    sources: state.sources.data,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    createDataSource: (
+      apiKey,
+      username,
+      name,
+      chartId,
+      provider,
+      resource,
+      params,
+      rawData,
+      properties,
+    ) => {
+      dispatch(createDataSource(
+        apiKey,
+        username,
+        name,
+        chartId,
+        provider,
+        resource,
+        params,
+        rawData,
+        properties,
+      ));
+    }
+  };
+};
+
+class DataSourceDetail extends Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      show: false,
+      selectedProvider: null,
+      selectedResource: null,
+      sourceName: null,
+      parameterFields: [],
+      parameterValues: [],
+      data: null,
+    };
+  }
+
+  componentDidMount() {
+    const { sources, dataProviders } = this.props;
+
+    if(this.props.match.params.data_source_id) {
+      const dataSource = sources.find(source => source.id === parseInt(this.props.match.params.data_source_id));
+      const selectedProvider = dataProviders.find(
+        dataProvider => dataProvider.provider === dataSource.provider,
+      );
+      this.setState({
+        sourceName: dataSource.name,
+        data: dataSource.rawData,
+        selectedProvider,
+        selectedResource: dataSource.resource,
+        parameterFields: selectedProvider.resources[dataSource.resource].parameters,
+        parameterValues: typeof dataSource.params === 'string' ? JSON.parse(dataSource.params) : dataSource.params,
+      })
+    }
+  }
+
+  addDataSource = (event) => {
+    const { username, api_key } = this.props.user;
+
+    const selectedResource = this.state.selectedResource;
+    const selectedProvider = this.state.selectedProvider.provider;
+    const params = this.state.parameterValues;
+    const sourceName = this.state.sourceName;
+
+    event.preventDefault();
+    if(selectedResource && sourceName) {
+      this.state.selectedProvider.request(selectedResource, params, username, api_key)
+        .then(response => {
+          this.setState({
+            data: response.data,
+          }, () => {
+            this.props.createDataSource(
+              api_key,
+              username,
+              sourceName,
+              this.props.match.params.id,
+              selectedProvider,
+              selectedResource,
+              params,
+              response.data,
+              response.properties,
+            );
+          });
+        })
+    } else {
+      alert('Fill out all required data source fields');
+    }
+  };
+
+  onProviderChange = (event) => {
+    if (event.target.value) {
+      const selectedProvider = this.props.dataProviders.find(
+        dataProvider => dataProvider.provider === event.target.value
+      );
+
+      this.setState({
+        selectedProvider,
+        selectedResource: null,
+        parameterFields: [],
+        parameterValues: [],
+      });
+    } else {
+      this.setState({
+        selectedProvider: null,
+        selectedResource: null,
+        parameterFields: [],
+        parameterValues: [],
+      });
+    }
+  };
+
+  onResourceChange = (event) => {
+    if (this.state.selectedProvider && event.target.value) {
+      let availableFields = [];
+      const resourceName = event.target.value;
+      const resourceParams = this.state.selectedProvider.resources[resourceName].parameters;
+  
+      if (resourceParams) {
+        availableFields = resourceParams;
+      }
+  
+      this.setState({
+        selectedResource: resourceName,
+        parameterFields: availableFields,
+        parameterValues: [],
+      });
+    } else {
+      this.setState({
+        parameterFields: [],
+        parameterValues: [],
+      });
+    }
+  };
+
+  onParameterChange = (event) => {
+    const parameterName = event.target.name;
+    const parameterValue = event.target.value;
+    const constructedParams = this.state.parameterValues;
+    const newParams = [];
+
+    if (constructedParams.length > 0) {
+      constructedParams.forEach(parameter => {
+        if (parameter.name && parameter.name === parameterName) {
+          parameter.value = parameterValue;
+        } else {
+          newParams.push({ name: parameter.name, value: parameter.value });
+        }
+      });
+      newParams.push({ name: parameterName, value: parameterValue });
+    } else {
+      newParams.push({ name: parameterName, value: parameterValue });
+    }
+    this.setState({ parameterValues: newParams });
+  };
+
+  onSourceNameChange = (event) => {
+    this.setState({ sourceName: event.target.value });
+  };
+
+  render() {
+
+    let parameters = [];
+
+    if (this.state.parameterFields.length > 0) {
+      parameters = this.state.parameterFields.map(parameterField => {
+        const paramValue = this.state.parameterValues.find(parameterValue => parameterValue.name === parameterField.name);
+        const val = pathOr(null, ['value'], paramValue);
+        switch(parameterField.type) {
+          case DATA_TYPES.date:
+            return (
+              <React.Fragment>
+                <div class="form-group">
+                  <label>{parameterField.name}</label>
+                  <input defaultValue={val} name={parameterField.name} onChange={this.onParameterChange} type="date" className="form-control" placeholder={parameterField.name} />
+                </div>
+              </React.Fragment>
+            );
+          case DATA_TYPES.int:
+            return (
+              <React.Fragment>
+                <div class="form-group">
+                  <label>{parameterField.name}</label>
+                  <input defaultValue={val} name={parameterField.name} onKeyUp={this.onParameterChange} type="number" className="form-control" placeholder={parameterField.name} />
+                </div>
+              </React.Fragment>
+            );
+            case DATA_TYPES.list:
+              return (
+                <React.Fragment>
+                  <Picker pickedItems={this.state.parameterValues} callBack={this.onParameterChange} label={parameterField.name} items={this.state.selectedProvider.resources[this.state.selectedResource].fields} />
+                </React.Fragment>
+              );
+          default:
+            return (
+              <React.Fragment>
+                <div class="form-group">
+                  <label>{parameterField.name}</label>
+                  <input defaultValue={val} name={parameterField.name} onKeyUp={this.onParameterChange} type="text" className="form-control" placeholder={parameterField.name} />
+                </div>
+              </React.Fragment>
+            );          
+        }
+      })
+    }
+    return (
+      <React.Fragment>
+        <Row>
+          <Col md={4}>
+            <h2>{this.state.sourceName ? this.state.sourceName : 'Create a new data source'}</h2>
+            <div className="form-group">
+              <label>Title</label>
+              <input value={this.state.sourceName || ''} onChange={this.onSourceNameChange} type="text" className="form-control" placeholder="Enter a title" />
+            </div>
+            <div className="form-group">
+              <label>Data Provider</label>
+              <select value={pathOr(null, ['provider'], this.state.selectedProvider)} onChange={this.onProviderChange} className="form-control" id="dataProvider">
+                <option value="">-- Select a data provider --</option>;
+                {this.props.dataProviders.map((dataProvider) => {
+                  if (dataProvider.isActive) {
+                    return <option key={dataProvider.provider} value={dataProvider.provider}>{dataProvider.provider}</option>
+                  }
+                })}
+              </select>            
+            </div>
+            {this.state.selectedProvider ?
+              <div className="form-group">
+                <label>Resource</label>
+                <select value={this.state.selectedResource} onChange={this.onResourceChange} className="form-control" id="dataSourceResource">
+                  <option value="">-- Select a resource --</option>;
+                  {Object.keys(this.state.selectedProvider.resources).map(resourceKey => {
+                    return <option key={this.state.selectedProvider.resources[resourceKey].name} value={this.state.selectedProvider.resources[resourceKey].name}>{this.state.selectedProvider.resources[resourceKey].label}</option>
+                  })}
+                </select>            
+              </div>
+            : null
+            }
+            {parameters}
+            {!this.props.match.params.data_source_id ? <button onClick={this.addDataSource} type="submit" className="btn btn-primary mb-2">Add Data Source</button> : null}
+          </Col>
+          <Col md={8}>
+            {
+              this.state.data ?
+              <JSONTree
+                theme={{
+                  tree: ({ style }) => ({
+                    style: { ...style, padding: "1em" }, 
+                  }),
+                }}
+                data={this.state.data}
+               /> :
+              null
+            }
+          </Col>
+        </Row>
+      </React.Fragment>
+    )
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(DataSourceDetail);

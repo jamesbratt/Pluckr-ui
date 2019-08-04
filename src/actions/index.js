@@ -1,5 +1,13 @@
-import { assocPath, clone, merge } from 'ramda';
+import { assocPath, merge } from 'ramda';
 import { executeOperations } from '../data_parsing/parse';
+
+// USERS
+export const setLoader = (isLoading) => {
+  return {
+    type: 'SET_LOADER',
+    isLoading
+  }
+};
 
 // USERS
 export const receiveUser = (userData) => {
@@ -33,103 +41,14 @@ export const fetchUser = (username, password) => {
   }
 }
 
-// CHARTS
-export const addChart = (data) => {
-  return {
-    type: 'ADD_CHART',
-    data,
-  }
-};
-
-export const removeChart = (chartId) => {
-  return {
-    type: 'REMOVE_CHART',
-    chartId,
-  }
-};
-
-export const receiveCharts = (data) => {
-  return {
-    type: 'RECEIVE_CHARTS',
-    data
-  }
-};
-
-export const fetchCharts = (apiKey, username) => {
-  return dispatch => {
-    return fetch(`${process.env.REACT_APP_PLUCKR_API_URI}/api/v1/chart/`, {
-      headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `ApiKey ${username}:${apiKey}`
-      },
-    })
-      .then(response => response.json())
-      .then(json => dispatch(receiveCharts(json.objects)))
-  }
-}
-
-export const createChart = (apiKey, username, name, chart_type) => {
-
-  let series_type;
-  if (chart_type === 'linear') {
-    series_type = 'line';
-  }
-
-  if (chart_type === 'datetime') {
-    series_type = 'line';
-  }
-
-  if (chart_type === 'category') {
-    series_type = 'bar';
-  }
-
-  const payload = {
-    name,
-    chart_type,
-    series_type,
-  };
-
-  return dispatch => {
-    return fetch(`${process.env.REACT_APP_PLUCKR_API_URI}/api/v1/chart/`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `ApiKey ${username}:${apiKey}`
-        },
-        body: JSON.stringify(payload)
-    })
-    .then((response) => {
-      return response.json();
-    })
-    .then(json => {
-      dispatch(addChart(json))
-    })
-  }
-}
-
-export const deleteChart = (apiKey, username, chartId) => {
-
-  return dispatch => {
-    return fetch(`${process.env.REACT_APP_PLUCKR_API_URI}/api/v1/chart/${chartId}/`, {
-        method: 'DELETE',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `ApiKey ${username}:${apiKey}`
-        },
-    })
-    .then(() => {
-      dispatch(removeChart(chartId))
-    })
-  }
-}
-
 // DATA SOURCES
-export const addSource = (id, sourceName, chartId, resource, params, data, properties) => {
+export const addSource = (id, sourceName, chartId, provider, resource, params, data, properties) => {
   return {
     type: 'ADD_SOURCE',
     id,
     sourceName,
     chartId,
+    provider,
     resource,
     params,
     data,
@@ -144,8 +63,28 @@ export const receiveDataSources = (data) => {
   }
 };
 
+export const deleteDataSource = (apiKey, username, datasourceId) => {
+
+  return dispatch => {
+    return fetch(`${process.env.REACT_APP_PLUCKR_API_URI}/api/v1/datasource/${datasourceId}/`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `ApiKey ${username}:${apiKey}`
+        },
+    })
+    .then(() => {
+      dispatch({
+        type: 'DELETE_DATA_SOURCE',
+        datasourceId,
+      })
+    })
+  }
+}
+
 export const fetchDataSources = (apiKey, username, chartId) => {
   return (dispatch, getState) => {
+    dispatch(setLoader(true));
     const { dataProviders } = getState();
   
     return fetch(`${process.env.REACT_APP_PLUCKR_API_URI}/api/v1/datasource/?chart=${chartId}`, {
@@ -181,11 +120,82 @@ export const fetchDataSources = (apiKey, username, chartId) => {
               dataSourcesToAddToState.push(merge(sourceConfig, source));
             });
 
-            dispatch(
-              receiveDataSources(
-                dataSourcesToAddToState
-              )
-            );
+            console.log('fetching datasets');
+
+            fetch(`${process.env.REACT_APP_PLUCKR_API_URI}/api/v1/dataset/?chart=${chartId}`, {
+              headers: {
+                  'Content-Type': 'application/json',
+                  'Authorization': `ApiKey ${username}:${apiKey}`
+              },
+            })
+              .then(response => response.json())
+              .then(response => {
+                console.log('datasets received');
+                const datasetDataUpdates = response.objects.map(dataset => {
+                  const latestData = dataSourcesToAddToState.find(source => source.id === dataset.data_source);
+
+                  console.log('fetching operations for ' + dataset.name);
+
+                  return fetch(`${process.env.REACT_APP_PLUCKR_API_URI}/api/v1/operation/?dataset=${dataset.id}`, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `ApiKey ${username}:${apiKey}`
+                    },
+                  })
+                    .then(response => response.json())
+                    .then(response => {
+                      let data = latestData.rawData;
+                      let operations = response.objects.length > 0 ? response.objects.map(operation => {
+                        return assocPath(['ast'], JSON.parse(operation.ast), operation);
+                      }) : response.objects;
+
+                      operations.sort(function(a, b) {
+                        return a.sort_order - b.sort_order;
+                      });
+          
+                      try {
+                        data = executeOperations(
+                          latestData.rawData,
+                          dataset,
+                          operations,
+                        );
+
+                        const payload = {
+                          data: JSON.stringify(data),
+                          chart: {pk: dataset.chart},
+                          data_source: {pk: dataset.data_source},
+                        };
+      
+                        console.log('updating data reference for dataset ' + dataset.name);
+                        
+                        fetch(`${process.env.REACT_APP_PLUCKR_API_URI}/api/v1/dataset/${dataset.id}/`, {
+                          method: 'PATCH',
+                          headers: {
+                              'Content-Type': 'application/json',
+                              'Authorization': `ApiKey ${username}:${apiKey}`
+                          },
+                          body: JSON.stringify(payload)
+                        })
+                          .then((response) => response.json())
+                          .then(response => {
+                          })
+                          .catch(error => alert(error));
+                      } catch (error) {
+                        alert(error);
+                      }
+                    })
+                });
+
+                Promise.all(datasetDataUpdates).then(responses => {
+                  console.log('all datasets updated');
+                  dispatch(
+                    receiveDataSources(
+                      dataSourcesToAddToState
+                    )
+                  );
+                  dispatch(setLoader(false));
+                });
+              })
           });
 
         } else {
@@ -194,6 +204,7 @@ export const fetchDataSources = (apiKey, username, chartId) => {
               dataSources
             )
           );
+          dispatch(setLoader(false));
         }
       })
       .catch(error => alert(error));
@@ -221,6 +232,7 @@ export const createDataSource = (
   };
 
   return dispatch => {
+    dispatch(setLoader(true));
     return fetch(`${process.env.REACT_APP_PLUCKR_API_URI}/api/v1/datasource/`, {
         method: 'POST',
         headers: {
@@ -238,193 +250,16 @@ export const createDataSource = (
           json.id,
           json.name,
           json.chart,
+          json.provider,
           json.resource,
           JSON.parse(json.params),
           rawData,
           properties,
         )
-      )
-    })
-    .catch(error => alert(error));
-  }
-}
-
-// DATASETS
-export const receiveDatasets = (data) => {
-  return {
-    type: 'RECEIVE_DATASETS',
-    data
-  }
-};
-
-export const addDataset = (data) => {
-  return {
-    type: 'ADD_DATASET',
-    data,
-  }
-};
-
-export const removeDataset = (datasetId) => {
-  return {
-    type: 'REMOVE_DATASET',
-    datasetId,
-  }
-};
-
-export const updateDataset = (datasetId, rawData) => {
-  return {
-    type: 'UPDATE_DATASET',
-    datasetId,
-    rawData
-  }
-}
-
-export const fetchDatasets = (apiKey, username, chartId) => {
-  return dispatch => {
-    return fetch(`${process.env.REACT_APP_PLUCKR_API_URI}/api/v1/dataset/?chart=${chartId}`, {
-      headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `ApiKey ${username}:${apiKey}`
-      },
-    })
-      .then(response => response.json())
-      .then(json => {
-        const datasets = json.objects.map(dataset => {
-          return assocPath(['data'], JSON.parse(dataset.data), dataset);
-        });
-        dispatch(receiveDatasets(datasets))
-      })
-  }
-}
-
-export const createDataSet = (
-  apiKey,
-  username,
-  name,
-  chartId,
-  sourceId,
-  data,
-) => {
-
-  const payload = {
-    name,
-    chart: { pk: chartId },
-    data_source: { pk: sourceId },
-    y_axis_id: null,
-    data: JSON.stringify(data),
-  };
-
-  return dispatch => {
-    return fetch(`${process.env.REACT_APP_PLUCKR_API_URI}/api/v1/dataset/`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `ApiKey ${username}:${apiKey}`
-        },
-        body: JSON.stringify(payload)
-    })
-    .then((response) => {
-      return response.json();
-    })
-    .then(json => {
-      json['data'] = JSON.parse(json.data);
-      dispatch(
-        addDataset(
-          json,
-        )
-      )
-    })
-    .catch(error => alert(error));
-  }
-}
-
-export const deleteDataset = (apiKey, username, datasetId) => {
-
-  return dispatch => {
-    return fetch(`${process.env.REACT_APP_PLUCKR_API_URI}/api/v1/dataset/${datasetId}/`, {
-        method: 'DELETE',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `ApiKey ${username}:${apiKey}`
-        },
-    })
-    .then(() => {
-      dispatch(removeDataset(datasetId))
-    })
-  }
-}
-
-export const runDataSet = (
-  apiKey,
-  username,
-  dataSetId,
-  callback,
-  seriesType,
-) => {
-
-  return (dispatch, getState) => {
-
-    const { datasets, operations, sources } = getState();
-
-    let data = [];
-    const currentDataSet = datasets.find(dataset => dataset.id === dataSetId);
-    const currentOperations = operations.filter(operation => operation.dataset === dataSetId);
-
-    const currentDataSource = sources.find(
-      source => source.id === parseInt(currentDataSet.data_source),
-    );
-
-    // Having to clone the source data here as for some reason
-    // the highcharts api is mutating the raw data in the sources store
-    const clonedData = clone(currentDataSource.rawData);
-
-    try {
-      data = executeOperations(
-        clonedData,
-        currentDataSet,
-        currentOperations,
       );
-    } catch (error) {
-      alert(error);
-    }
-
-    // Because the api is dehydrating these fields
-    // we need to add them into a PATCH payload
-    // TODO find solution for this on the api
-    const payload = {
-      chart: {pk: currentDataSet.chart},
-      data_source: {pk: currentDataSet.data_source},
-      data: JSON.stringify(data),
-    };
-    
-    return fetch(`${process.env.REACT_APP_PLUCKR_API_URI}/api/v1/dataset/${dataSetId}/`, {
-      method: 'PATCH',
-      headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `ApiKey ${username}:${apiKey}`
-      },
-      body: JSON.stringify(payload)
+      dispatch(setLoader(false));
     })
-      .then((response) => {
-        return response.json();
-      })
-      .then(json => {
-        json['data'] = JSON.parse(json.data);
-        dispatch(
-          updateDataset(
-            dataSetId,
-            json.data,
-          )
-        )
-
-        callback(
-          currentDataSet.id,
-          currentDataSet.name,
-          data,
-          seriesType,
-        );
-      })
-      .catch(error => alert(error));
+    .catch(error => alert(error));
   }
 }
 
@@ -488,7 +323,8 @@ export const deleteOperation = (apiKey, username, operationId) => {
         },
     })
     .then(() => {
-      dispatch(removeOperation(operationId))
+      dispatch(removeOperation(operationId));
+      return Promise.resolve();
     })
   }
 }
@@ -529,6 +365,7 @@ export const createOperation = (
           json,
         )
       )
+      return Promise.resolve();
     })
     .catch(error => alert(error));
   }
@@ -576,7 +413,8 @@ export const updateOperationAst = (
             json.root_function,
             json.ast,
           )
-        )
+        );
+        return Promise.resolve();
       })
       .catch(error => alert(error));
   }

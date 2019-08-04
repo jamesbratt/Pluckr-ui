@@ -6,6 +6,7 @@ import datasets from './datasets';
 import operations from './operations';
 import dataProviders from './dataProviders';
 import user from './user';
+import loader from './loader';
 
 const chartConfigReducers = combineReducers({
   charts,
@@ -14,6 +15,7 @@ const chartConfigReducers = combineReducers({
   operations,
   dataProviders,
   user,
+  loader,
 });
  
 export default chartConfigReducers;

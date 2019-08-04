@@ -1,4 +1,4 @@
-import { prepend } from 'ramda';
+import { merge, prepend } from 'ramda';
 
 const charts = (state = [], action) => {
   switch (action.type) {
@@ -8,6 +8,14 @@ const charts = (state = [], action) => {
       return state.filter(chart => chart.id !== action.chartId);
     case 'ADD_CHART':
       return prepend(action.data, state);
+    case 'UPDATE_CHART': {
+      return state.map(chart => {
+        if (chart.id === parseInt(action.chartId)) {
+          return merge(chart, action.data)
+        }
+        return chart;
+      })
+    }
     default:
       return state;
   }

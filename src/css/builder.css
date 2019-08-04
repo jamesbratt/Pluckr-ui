@@ -155,7 +155,7 @@
   width: 100%;
 }
 
-.btn-group-fixed button {
+.btn-group-fixed button, a {
   margin-right: 0.5em;
 }
 
@@ -219,4 +219,14 @@ body {
 }
 #chart-config {
   margin-top: 1em;
+}
+.data-providers {
+  margin-bottom: 1em;
+}
+.table {
+  margin-top: 1em;
+}
+.list-group {
+  margin-top: 1em;
+  margin-bottom: 1em !important;
 }

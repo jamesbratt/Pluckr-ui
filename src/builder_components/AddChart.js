@@ -1,5 +1,5 @@
 import React from 'react';
-import { createChart } from '../actions';
+import { createChart } from '../actions/chart';
 import { connect } from 'react-redux';
 
 const chartNameRef = React.createRef();
