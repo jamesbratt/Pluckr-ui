@@ -22,7 +22,13 @@ export const ConvertToIso = (dateString) => {
 export const getToken = (dataProvider) => {
   const tokens = localStorage.getItem('token');
   const parsedTokens = tokens ? JSON.parse(tokens) : {};
-  return pathOr('', [dataProvider], parsedTokens);
+  return pathOr('', [dataProvider, 'key'], parsedTokens);
+}
+
+export const getTokenId = (dataProvider) => {
+  const tokens = localStorage.getItem('token');
+  const parsedTokens = tokens ? JSON.parse(tokens) : {};
+  return pathOr('', [dataProvider, 'id'], parsedTokens);
 }
 
 export const generateQueryString = (params, resource, paramConfigs) => {
@@ -55,12 +61,26 @@ export const injectParametersIntoEndpoint = (resourcEndpoint, params) => {
   return { endPoint, parameters };
 }
 
-export const proxyRequest = (url, key, integration_type, username, apiKey) => {
-  const payload = {
-    url,
-    key,
-    integration_type,
+export const proxyRequest = (url, key, integration_type, username, apiKey, source_id) => {
+
+  let payload = {};
+
+  if(key) {
+    payload = {
+      url,
+      key,
+      integration_type,
+    }
   }
+
+  if(!key && source_id) {
+    payload = {
+      url,
+      source_id,
+      integration_type,
+    }
+  }
+
   return fetch(`${process.env.REACT_APP_PLUCKR_API_URI}/api/v1/integration-request/`, {
     method: 'POST',
     headers: {

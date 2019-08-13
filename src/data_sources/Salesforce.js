@@ -349,11 +349,11 @@ const constructSFQLQuery = (params, resource) => {
   return `${query}+FROM+${resource}`; 
 }
 
-const doSalesforceQuery = (params, resource, username, apiKey) => {
+const doSalesforceQuery = (params, resource, username, apiKey, sourceId) => {
   const query = constructSFQLQuery(params.find(params => params.name === 'fields'), resource);
   const key = getToken(INTEGRATION_TYPE);
   const url = `${SALESFORCE_URI}/services/data/v40.0/query?q=${query}`;
-  return proxyRequest(url, key, INTEGRATION_TYPE, username, apiKey);
+  return proxyRequest(url, key, INTEGRATION_TYPE, username, apiKey, sourceId);
 };
 
 export const getSalesforceData = (resource, params, username, apiKey, sourceId = null) => {
@@ -371,7 +371,7 @@ export const getSalesforceData = (resource, params, username, apiKey, sourceId =
     console.error('Invalid');
     break;
   }
-  return call(params, resource, username, apiKey)
+  return call(params, resource, username, apiKey, sourceId)
   .then(response => {
     return {
       sourceId,

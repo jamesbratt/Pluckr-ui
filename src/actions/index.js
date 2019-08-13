@@ -1,5 +1,6 @@
 import { assocPath, merge } from 'ramda';
 import { executeOperations } from '../data_parsing/parse';
+import { getTokenId } from '../utils/Helpers';
 
 // USERS
 export const setLoader = (isLoading) => {
@@ -223,12 +224,15 @@ export const createDataSource = (
   properties,
 ) => {
 
+  const integration_id = getTokenId(provider);
+
   const payload = {
     name,
     chart: { pk: chartId },
     provider,
     resource,
     params: JSON.stringify(params),
+    integration_auth: { pk: integration_id },
   };
 
   return dispatch => {
