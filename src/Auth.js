@@ -46,7 +46,7 @@ class Auth extends Component {
           if (!response.errors) {
             const tokenObj = localStorage.getItem('token');
             const parsedTokens = tokenObj ? JSON.parse(tokenObj) : {}; 
-            const newTokeObj = assocPath([providerName], response.key, parsedTokens);
+            const newTokeObj = assocPath([providerName], response, parsedTokens);
             localStorage.setItem('token', JSON.stringify(newTokeObj));
             this.setState({isAuthenticated: true});
           } else {

@@ -91,7 +91,7 @@ const RESOURCE_PROPERTIES = {
   ],
 }
 
-const getRepoCommits = (params, resource, username, apiKey) => {
+const getRepoCommits = (params, resource, username, apiKey, sourceId) => {
   const urlComponents = injectParametersIntoEndpoint(
     GITHUB_RESOURCES.repo_commits.endpoint,
     params,
@@ -108,10 +108,10 @@ const getRepoCommits = (params, resource, username, apiKey) => {
       GITHUB_RESOURCES['repo_commits'].parameters,
     ) : '';
   const url = `${GITHUB_URI}${endPoint}${queryString}`;
-  return proxyRequest(url, key, INTEGRATION_TYPE, username, apiKey);
+  return proxyRequest(url, key, INTEGRATION_TYPE, username, apiKey, sourceId);
 };
 
-const getRepos = (params, resource, username, apiKey) => {
+const getRepos = (params, resource, username, apiKey, sourceId) => {
   const urlComponents = injectParametersIntoEndpoint(
     GITHUB_RESOURCES.repos.endpoint,
     params,
@@ -128,10 +128,10 @@ const getRepos = (params, resource, username, apiKey) => {
       GITHUB_RESOURCES['repos'].parameters,
     ) : '';
   const url = `${GITHUB_URI}${endPoint}${queryString}`;
-  return proxyRequest(url, key, INTEGRATION_TYPE, username, apiKey);
+  return proxyRequest(url, key, INTEGRATION_TYPE, username, apiKey, sourceId);
 };
 
-const getRepoContributors = (params, resource, username, apiKey) => {
+const getRepoContributors = (params, resource, username, apiKey, sourceId) => {
   const urlComponents = injectParametersIntoEndpoint(
     GITHUB_RESOURCES.repo_contributors.endpoint,
     params,
@@ -148,10 +148,10 @@ const getRepoContributors = (params, resource, username, apiKey) => {
       GITHUB_RESOURCES['repo_contributors'].parameters,
     ) : '';
   const url = `${GITHUB_URI}${endPoint}${queryString}`;
-  return proxyRequest(url, key, INTEGRATION_TYPE, username, apiKey);
+  return proxyRequest(url, key, INTEGRATION_TYPE, username, apiKey, sourceId);
 };
 
-const getRepoIssues = (params, resource, username, apiKey) => {
+const getRepoIssues = (params, resource, username, apiKey, sourceId) => {
   const urlComponents = injectParametersIntoEndpoint(
     GITHUB_RESOURCES.repo_issues.endpoint,
     params,
@@ -168,10 +168,10 @@ const getRepoIssues = (params, resource, username, apiKey) => {
       GITHUB_RESOURCES['repo_issues'].parameters,
     ) : '';
   const url = `${GITHUB_URI}${endPoint}${queryString}`;
-  return proxyRequest(url, key, INTEGRATION_TYPE, username, apiKey);
+  return proxyRequest(url, key, INTEGRATION_TYPE, username, apiKey, sourceId);
 };
 
-const getRepoReleases = (params, resource, username, apiKey) => {
+const getRepoReleases = (params, resource, username, apiKey, sourceId) => {
   const urlComponents = injectParametersIntoEndpoint(
     GITHUB_RESOURCES.repo_releases.endpoint,
     params,
@@ -188,10 +188,10 @@ const getRepoReleases = (params, resource, username, apiKey) => {
       GITHUB_RESOURCES['repo_releases'].parameters,
     ) : '';
   const url = `${GITHUB_URI}${endPoint}${queryString}`;
-  return proxyRequest(url, key, INTEGRATION_TYPE, username, apiKey);
+  return proxyRequest(url, key, INTEGRATION_TYPE, username, apiKey, sourceId);
 };
 
-const getRepoPulls = (params, resource, username, apiKey) => {
+const getRepoPulls = (params, resource, username, apiKey, sourceId) => {
   const urlComponents = injectParametersIntoEndpoint(
     GITHUB_RESOURCES.repo_pull_requests.endpoint,
     params,
@@ -208,7 +208,7 @@ const getRepoPulls = (params, resource, username, apiKey) => {
       GITHUB_RESOURCES['repo_pull_requests'].parameters,
     ) : '';
   const url = `${GITHUB_URI}${endPoint}${queryString}`;
-  return proxyRequest(url, key, INTEGRATION_TYPE, username, apiKey);
+  return proxyRequest(url, key, INTEGRATION_TYPE, username, apiKey, sourceId);
 };
 
 export const getGitHubData = (resource, params, username, apiKey, sourceId = null) => {
@@ -236,7 +236,7 @@ export const getGitHubData = (resource, params, username, apiKey, sourceId = nul
     console.error('Invalid');
     break;
   }
-  return call(params, resource, username, apiKey)
+  return call(params, resource, username, apiKey, sourceId)
   .then(response => {
     return {
       sourceId,
