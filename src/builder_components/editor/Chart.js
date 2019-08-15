@@ -34,7 +34,11 @@ class Chart extends Component {
   }
 
   setUpChartData = (chart) => {
-    this.props.datasets.forEach((dataset) => {
+    const datasets = this.props.datasets.sort(function(a, b) {
+      return b.data.length - a.data.length;
+    });
+  
+    datasets.forEach((dataset) => {
       if(dataset.chart === chart.id) {
         addDataSeries(
           dataset.id,
