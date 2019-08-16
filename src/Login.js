@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Wrapper from './Wrapper';
-import { Route } from "react-router-dom";
+import { Redirect } from "react-router-dom";
 import { fetchUser } from './actions';
 import { connect } from 'react-redux';
 
@@ -33,7 +33,7 @@ class Login extends Component {
 
   render() {
     if(this.props.user.length > 0) {
-      return <Route component={Wrapper} />
+      return <Redirect to='/charts' />
     } else {
         return (
           <div className="login-wrapper">

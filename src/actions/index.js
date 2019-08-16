@@ -1,6 +1,7 @@
 import { assocPath, merge } from 'ramda';
 import { executeOperations } from '../data_parsing/parse';
 import { getTokenId } from '../utils/Helpers';
+import { diff } from 'deep-object-diff';
 
 // USERS
 export const setLoader = (isLoading) => {
@@ -161,26 +162,33 @@ export const fetchDataSources = (apiKey, username, chartId) => {
                           operations,
                         );
 
-                        const payload = {
-                          data: JSON.stringify(data),
-                          chart: {pk: dataset.chart},
-                          data_source: {pk: dataset.data_source},
-                        };
-      
-                        console.log('updating data reference for dataset ' + dataset.name);
-                        
-                        fetch(`${process.env.REACT_APP_PLUCKR_API_URI}/api/v1/dataset/${dataset.id}/`, {
-                          method: 'PATCH',
-                          headers: {
-                              'Content-Type': 'application/json',
-                              'Authorization': `ApiKey ${username}:${apiKey}`
-                          },
-                          body: JSON.stringify(payload)
-                        })
-                          .then((response) => response.json())
-                          .then(response => {
+                        const isDataDiff = diff(data, JSON.parse(dataset.data));
+
+                        if(Object.entries(isDataDiff).length > 0 && isDataDiff.constructor === Object) {
+                          const payload = {
+                            data: JSON.stringify(data),
+                            chart: {pk: dataset.chart},
+                            data_source: {pk: dataset.data_source},
+                          };
+        
+                          console.log('updating data reference for dataset ' + dataset.name);
+                          
+                          fetch(`${process.env.REACT_APP_PLUCKR_API_URI}/api/v1/dataset/${dataset.id}/`, {
+                            method: 'PATCH',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': `ApiKey ${username}:${apiKey}`
+                            },
+                            body: JSON.stringify(payload)
                           })
-                          .catch(error => alert(error));
+                            .then((response) => response.json())
+                            .then(response => {
+                            })
+                            .catch(error => alert(error));
+                        } else {
+                          Promise.resolve();
+                        }
+                      
                       } catch (error) {
                         alert(error);
                       }

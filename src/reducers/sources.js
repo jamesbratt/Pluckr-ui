@@ -17,7 +17,7 @@ const sources = (state = { data: [] }, action) => {
         rawData: action.data,
         properties: action.properties,
       };
-      return { data: prepend(newSource, state) };
+      return { data: prepend(newSource, state.data) };
 
     default:
       return state;
