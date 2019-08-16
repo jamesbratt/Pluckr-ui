@@ -10,7 +10,7 @@ import ChartConfigHoc from './ChartConfigHoc';
 import Chart from './builder_components/editor/Chart';
 import DataSourceList from './builder_components/data_sources/DataSourceList';
 import DataSourceDetail from './builder_components/data_sources/DataSourceDetail';
-import { Link, Route } from "react-router-dom";
+import { Link, Route, Redirect } from "react-router-dom";
 import { connect } from 'react-redux';
 import { setDataProviders } from './actions';
 import { getToken } from './utils/Helpers';
@@ -55,6 +55,11 @@ class Wrapper extends Component {
     }
 
     render() {
+      const tokenObj = localStorage.getItem('pluckr_token');
+      if (!tokenObj) {
+        return <Redirect to='/' />;
+      }
+
       return (
         <React.Fragment>
           <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
@@ -97,13 +102,13 @@ class Wrapper extends Component {
           <div className='container-fluid wrapper'>
             <Route
               exact
-              path={'/'}
+              path={'/charts'}
               render={() => <Charts />}
             />
-            <Route path={`/:id/chart`} component={ChartEditorWrapped} />
-            <Route path={`/:id/data-sources`} component={DataSourceListWrapped} />
-            <Route path={`/:id/create-data-source`} component={DataSourceDetailWrapped} />
-            <Route path={`/:id/edit-data-source/:data_source_id`} component={DataSourceDetailWrapped} />
+            <Route path={`/charts/:id/chart`} component={ChartEditorWrapped} />
+            <Route path={`/charts/:id/data-sources`} component={DataSourceListWrapped} />
+            <Route path={`/charts/:id/create-data-source`} component={DataSourceDetailWrapped} />
+            <Route path={`/charts/:id/edit-data-source/:data_source_id`} component={DataSourceDetailWrapped} />
             <Modal show={this.state.providerModalShow} onHide={this.closeProviderModal}>
               <Modal.Header closeButton>
                 <Modal.Title>Connect to a data provider</Modal.Title>
