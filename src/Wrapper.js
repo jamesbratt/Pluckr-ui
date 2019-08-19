@@ -12,7 +12,7 @@ import DataSourceList from './builder_components/data_sources/DataSourceList';
 import DataSourceDetail from './builder_components/data_sources/DataSourceDetail';
 import { Link, Route, Redirect } from "react-router-dom";
 import { connect } from 'react-redux';
-import { setDataProviders } from './actions';
+import { setDataProviders, setLoader } from './actions';
 import { getToken } from './utils/Helpers';
 
 const DataSourceListWrapped = ChartConfigHoc(DataSourceList);
@@ -37,6 +37,12 @@ class Wrapper extends Component {
     }
 
     componentDidMount() {
+      this.props.dispatch(
+        setLoader(
+        true
+        )
+      );
+
       const cachedProviders = this.props.dataProviders.filter(dataProvider => {
           if (getToken(dataProvider.provider)) {
               return dataProvider;
@@ -55,6 +61,7 @@ class Wrapper extends Component {
     }
 
     render() {
+      const activeProviders = this.props.dataProviders.filter(provider => provider.isActive);
       const tokenObj = localStorage.getItem('pluckr_token');
       if (!tokenObj) {
         return <Redirect to='/' />;
@@ -74,6 +81,7 @@ class Wrapper extends Component {
             </Nav>
           </Navbar.Collapse>
         </Navbar>
+        {activeProviders.length === 0 ? null :
         <div className="data-providers clearfix">
           <div className="float-right">
             {
@@ -97,7 +105,7 @@ class Wrapper extends Component {
             }
             <button onClick={() => this.setState({providerModalShow: true})} className="btn btn-outline-secondary my-2 my-sm-0">Connect Data Providers</button>
           </div>
-        </div>
+        </div>}
         <div id='chart-canvas'>
           <div className='container-fluid wrapper'>
             <Route

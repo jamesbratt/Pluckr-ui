@@ -236,6 +236,9 @@ body {
 }
 .provider-grid-item {
   text-align: center;
+  -moz-box-shadow: 0 0 3px #888;
+  -webkit-box-shadow: 0 0 3px#888;
+  box-shadow: 0 0 3px #888;
 }
 .provider-grid-item a {
   display: block;
@@ -251,4 +254,7 @@ body {
   margin-bottom: 0;
   color: #212529;
   text-decoration: none;
+}
+.get-started {
+  text-align: center;
 }
