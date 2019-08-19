@@ -81,7 +81,7 @@ class Wrapper extends Component {
             </Nav>
           </Navbar.Collapse>
         </Navbar>
-        {activeProviders.length === 0 ? null :
+        {activeProviders.length === 0 && this.props.charts.length === 0 ? null :
         <div className="data-providers clearfix">
           <div className="float-right">
             {
