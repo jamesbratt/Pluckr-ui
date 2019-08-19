@@ -1,4 +1,5 @@
 import { updateChartInstance } from '../builder_components/editor/Graph';
+import { setLoader } from './index';
 
 export const addChart = (data) => {
   return {
@@ -30,7 +31,10 @@ export const fetchCharts = (apiKey, username) => {
       },
     })
       .then(response => response.json())
-      .then(json => dispatch(receiveCharts(json.objects)))
+      .then(json => {
+        dispatch(receiveCharts(json.objects));
+        dispatch(setLoader(false));
+      })
   }
 }
 

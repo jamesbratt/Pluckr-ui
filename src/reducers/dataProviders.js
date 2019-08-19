@@ -1,23 +1,12 @@
 
-import { getStravaData, getProfile, STRAVA_RESOURCES } from '../data_sources/Strava';
 import { getGitHubData, GITHUB_RESOURCES } from '../data_sources/Github';
 import { getSalesforceData, SALESFORCE_RESOURCES } from '../data_sources/Salesforce';
 import { assocPath } from 'ramda';
 import { GITHUB_REDIRECT, SALESFORCE_REDIRECT } from '../Constants';
 import salesforceLogo from '../img/salesforce-logo.png';
-import stravaLogo from '../img/strava-logo.png';
 import githubLogo from '../img/github-logo.png';
 
 const initialState = [
-  {
-    provider: 'strava',
-    ping: getProfile,
-    redirectUrl: '',
-    request: getStravaData,
-    resources: STRAVA_RESOURCES,
-    isActive: false,
-    icon: stravaLogo,
-  },
   {
     provider: 'github',
     redirectUrl: GITHUB_REDIRECT,
