@@ -7,6 +7,7 @@ import chartConfigReducers from './reducers'
 import Auth from './Auth';
 import Wrapper from './Wrapper';
 import Login from './Login';
+import Register from './Register';
 import './css/builder.css';
 import 'font-awesome/css/font-awesome.min.css'
 
@@ -34,6 +35,7 @@ class App extends Component {
         <Router>
           <Switch>
             <Route exact path="/" component={Login} />
+            <Route exact path="/register" component={Register} />
             <Route path="/charts" component={Wrapper} />
             <Route path="/authenticate" component={Auth} />
           </Switch>

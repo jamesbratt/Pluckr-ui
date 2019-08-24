@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import Wrapper from './Wrapper';
 import { Redirect } from "react-router-dom";
 import { fetchUser } from './actions';
 import { connect } from 'react-redux';
