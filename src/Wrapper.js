@@ -33,6 +33,7 @@ class Wrapper extends Component {
 
     logout = () => {
       localStorage.removeItem('pluckr_token');
+      localStorage.removeItem('token');
       window.location.href = "/";
     }
 
