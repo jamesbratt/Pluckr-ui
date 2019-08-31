@@ -8,6 +8,7 @@ import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
 import ChartConfigHoc from './ChartConfigHoc';
 import Chart from './builder_components/editor/Chart';
+import TemplateList from './builder_components/templates/TemplateList';
 import DataSourceList from './builder_components/data_sources/DataSourceList';
 import DataSourceDetail from './builder_components/data_sources/DataSourceDetail';
 import { Link, Route, Redirect } from "react-router-dom";
@@ -76,6 +77,7 @@ class Wrapper extends Component {
           <Navbar.Collapse id="responsive-navbar-nav">
             <Nav className="mr-auto">
               <Link className="nav-link" to="/">Charts</Link>
+              <Link className="nav-link" to="/charts/templates">Templates</Link>
             </Nav>
             <Nav>
               <Nav.Link onClick={this.logout}>Log Out</Nav.Link>
@@ -104,7 +106,7 @@ class Wrapper extends Component {
                 null;
               })
             }
-            <button onClick={() => this.setState({providerModalShow: true})} className="btn btn-outline-secondary my-2 my-sm-0">Connect Data Providers</button>
+            <button onClick={() => this.setState({providerModalShow: true})} className="btn btn-link my-2 my-sm-0">Connect Data Providers</button>
           </div>
         </div>}
         <div id='chart-canvas'>
@@ -113,6 +115,11 @@ class Wrapper extends Component {
               exact
               path={'/charts'}
               render={() => <Charts />}
+            />
+            <Route
+              exact
+              path={'/charts/templates'}
+              component={TemplateList}
             />
             <Route path={`/charts/:id/chart`} component={ChartEditorWrapped} />
             <Route path={`/charts/:id/data-sources`} component={DataSourceListWrapped} />

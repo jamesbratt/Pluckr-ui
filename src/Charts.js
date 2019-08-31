@@ -7,6 +7,11 @@ import { Link } from "react-router-dom";
 import GetStarted from './builder_components/charts/GetStarted';
 import Loader from './Loader';
 
+const ICON_MAPPER = {
+  line: 'fa fa-line-chart',
+  bar: 'fa fa-bar-chart',
+};
+
 const mapStateToProps = (state) => {
   return {
     charts: state.charts,
@@ -63,7 +68,6 @@ class Charts extends Component {
             <div className='row'>
               <div className='col-md-3'>
                 <button onClick={() => this.setState({createChartModalShow: true})} className="add-chart-placeholder">
-                  <p>Create Chart</p>
                 </button>
               </div>
               {
@@ -71,11 +75,12 @@ class Charts extends Component {
                   return (
                     <div key={chart.name} className='col-md-3'>
                       <div className='add-chart-card'>
+                        <div className="chart-icon"><i style={{fontSize: '5em', textAlign: 'center'}} className={ICON_MAPPER[chart.series_type]} /></div>
                         <div className="chart-card-inner">
                           <h3>{chart.name}</h3>
-                          <div className="btn-group-fixed">
-                            <Link className="btn btn-primary" to={`/charts/${chart.id}/data-sources`}><i className="fa fa-edit" /></Link>
-                            <button onClick={() => this.removeChart(chart.id)} type="button" className="btn btn-danger"><i className="fa fa-trash" /></button>
+                          <div className="btn-group-fixe">
+                            <Link style={{paddingLeft: '0'}} className="btn btn-link" to={`/charts/${chart.id}/data-sources`}>Edit</Link>
+                            <button style={{paddingLeft: '0'}} className="btn btn-link" onClick={() => this.removeChart(chart.id)}>Delete</button>
                           </div>
                         </div>
                       </div>

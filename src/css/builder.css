@@ -98,7 +98,7 @@
 
 .add-chart-placeholder {
   width: 100%;
-  min-height: 300px;
+  min-height: 223px;
   background: #efefef;
   position: relative;
   text-align: center;
@@ -107,6 +107,7 @@
   -moz-box-shadow: 0 0 3px #888;
   -webkit-box-shadow: 0 0 3px#888;
   box-shadow: 0 0 3px #888;
+  margin-bottom: 1.8em;
 }
 
 .add-chart-placeholder:hover {
@@ -115,7 +116,7 @@
 
 .add-chart-placeholder:before {
   content: ' \002B';
-  top: 15%;
+  top: 7%;
   font-size: 8em;
   position: absolute;
   left: 0;
@@ -135,16 +136,25 @@
 .add-chart-card {
   width: 100%;
   background: #fcfcfc;
-  padding: 1em;
   -moz-box-shadow: 0 0 3px #888;
   -webkit-box-shadow: 0 0 3px#888;
   box-shadow: 0 0 3px #888;
+  background: #FFFFFF;
+}
+
+.chart-icon {
+  text-align: center;
+  padding: 1em;
+  background: #cccccc;
+}
+
+.chart-icon i {
+  color: #FFFFFF;
 }
 
 .chart-card-inner {
   position: relative;
-  min-height: 270px;
-  height: 100%;
+  padding: 1em;
 }
 
 .btn-group-fixed {
