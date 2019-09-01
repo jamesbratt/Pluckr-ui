@@ -2,11 +2,9 @@ import React, { Component } from 'react';
 import ChartTabs from './ChartTabs';
 import DataSetDetail from '../datasets/DataSetDetail';
 import classNames from 'classnames';
-import { executeOperations } from '../../data_parsing/parse';
 import { addDataSeries, destroyChart, getChart, setChart } from './Graph';
 import { connect } from 'react-redux';
 import { Route } from "react-router-dom";
-import { assocPath, clone } from 'ramda';
 
 const Highcharts = require('highcharts');
 require('highcharts/modules/exporting')(Highcharts);
@@ -48,6 +46,30 @@ class Chart extends Component {
           dataset,
         );
       }
+    })
+  }
+
+  publish = (chart_id) => {
+    const user = this.props.user.username;
+    const apiKey = this.props.user.api_key;
+
+    const payload = {
+      chart_id,
+    };
+
+    fetch(`${process.env.REACT_APP_PLUCKR_API_URI}/api/v1/library/publish/`, {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `ApiKey ${user}:${apiKey}`
+      },
+      body: JSON.stringify(payload)
+    })
+    .then((response) => {
+      return response.json();
+    })
+    .then(() => {
+      alert('Chart has been successfully published to the template library');
     })
   }
 
@@ -109,8 +131,9 @@ class Chart extends Component {
     });
 
     return (
-      <div>
-        <h2>Chart Editor</h2>
+      <div className="clearfix">
+        <h2 style={{ display: 'inline-block' }}>Chart Editor</h2>
+        <button onClick={() => this.publish(id)} className="btn btn-success float-right">Publish as Template</button>
         <div style={{position: 'relative', marginBottom: '1em'}}>
           <div className={overlayClasses}>
             <div className="overlay-text">

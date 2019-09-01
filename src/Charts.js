@@ -59,19 +59,24 @@ class Charts extends Component {
     }
 
     render() {
+      const charts = this.props.charts.filter(chart => !chart.is_published);
       const activeProviders = this.props.dataProviders.filter(provider => provider.isActive);
       return (
         <React.Fragment>
           {this.props.loader ? <Loader /> :
             <React.Fragment>
-            {activeProviders.length === 0 && this.props.charts.length === 0 ? <GetStarted providers={this.props.dataProviders} /> :
+            {activeProviders.length === 0 && charts.length === 0 ? <GetStarted providers={this.props.dataProviders} /> :
             <div className='row'>
               <div className='col-md-3'>
                 <button onClick={() => this.setState({createChartModalShow: true})} className="add-chart-placeholder">
                 </button>
               </div>
+              <div className='col-md-3'>
+                <Link to={`/charts/templates`} className="add-template-placeholder">
+                </Link>
+              </div>
               {
-                this.props.charts.map((chart) => {
+                charts.map((chart) => {
                   return (
                     <div key={chart.name} className='col-md-3'>
                       <div className='add-chart-card'>

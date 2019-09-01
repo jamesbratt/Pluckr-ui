@@ -3,12 +3,16 @@ import { connect } from 'react-redux';
 import { fetchCharts } from '../../actions/chart';
 import Loader from '../../Loader';
 
+const ICON_MAPPER = {
+  line: 'fa fa-line-chart',
+  bar: 'fa fa-bar-chart',
+};
+
 const mapStateToProps = (state) => {
   return {
     charts: state.charts,
     user: state.user[0],
     loader: state.loader,
-    dataProviders: state.dataProviders,
   };
 };
 
@@ -16,7 +20,7 @@ class TemplateList extends Component {
     constructor(props) {
       super(props);
       this.state = {
-        createChartModalShow: false
+        hasInstalled: null,
       }
     }
 
@@ -31,22 +35,52 @@ class TemplateList extends Component {
       );
     }
 
+    install = (chart_id) => {
+      const user = this.props.user.username;
+      const apiKey = this.props.user.api_key;
+
+      const tokens = localStorage.getItem('token');
+      const parsedTokens = tokens ? JSON.parse(tokens) : {};
+
+      const payload = {
+        chart_id,
+        tokens: parsedTokens,
+      };
+
+      fetch(`${process.env.REACT_APP_PLUCKR_API_URI}/api/v1/library/install/`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `ApiKey ${user}:${apiKey}`
+        },
+        body: JSON.stringify(payload)
+      })
+      .then((response) => {
+        return response.json();
+      })
+      .then(response => {
+        this.setState({ hasInstalled: response.chart_id })
+      })
+    }
+
     render() {
+      const templates = this.props.charts.filter(chart => chart.is_published);
       return (
         <React.Fragment>
           {this.props.loader ? <Loader /> :
             <React.Fragment>
-            {this.props.charts.length === 0 ? <p>There are no templates available</p> :
+            {templates.length === 0 ? <p>There are no templates available</p> :
             <div className='row'>
               {
-                this.props.charts.map((chart) => {
+                templates.map((template) => {
                   return (
-                    <div key={chart.name} className='col-md-3'>
+                    <div key={template.name} className='col-md-3'>
                       <div className='add-chart-card'>
+                        <div className="chart-icon"><i style={{fontSize: '5em', textAlign: 'center'}} className={ICON_MAPPER[template.series_type]} /></div>
                         <div className="chart-card-inner">
-                          <h3>{chart.name}</h3>
-                          <div className="btn-group-fixed">
-                            <button onClick={() => this.removeChart(chart.id)} type="button" className="btn btn-success">Install</button>
+                          <h3>{template.name}</h3>
+                          <div className="btn-group-fixe">
+                            <button onClick={() => this.install(template.id)} style={{paddingLeft: '0'}} className="btn btn-link">Install Template</button>
                           </div>
                         </div>
                       </div>

@@ -124,6 +124,35 @@
   color: #d6d6d6;
 }
 
+.add-template-placeholder {
+  width: 100%;
+  min-height: 223px;
+  background: #efefef;
+  position: relative;
+  text-align: center;
+  border: 0 none;
+  cursor: pointer;
+  -moz-box-shadow: 0 0 3px #888;
+  -webkit-box-shadow: 0 0 3px#888;
+  box-shadow: 0 0 3px #888;
+  margin-bottom: 1.8em;
+  display: block;
+}
+
+.add-template-placeholder:hover {
+  opacity: 0.8;
+}
+
+.add-template-placeholder:before {
+  content: ' \29C9';
+  top: 7%;
+  font-size: 8em;
+  position: absolute;
+  left: 0;
+  right: 0;
+  color: #d6d6d6;
+}
+
 .add-chart-placeholder p {
   position: absolute;
   top: 70%;
