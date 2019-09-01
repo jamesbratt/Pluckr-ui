@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { fetchCharts } from '../../actions/chart';
-import Loader from '../../Loader';
+import { Redirect } from "react-router-dom";
+import { addChart } from '../../actions/chart';
 
 const ICON_MAPPER = {
   line: 'fa fa-line-chart',
@@ -59,7 +60,10 @@ class TemplateList extends Component {
         return response.json();
       })
       .then(response => {
-        this.setState({ hasInstalled: response.chart_id })
+        this.props.dispatch(
+          addChart(response.chart)
+        );
+        this.setState({ hasInstalled: response.chart })
       })
     }
 
@@ -67,29 +71,32 @@ class TemplateList extends Component {
       const templates = this.props.charts.filter(chart => chart.is_published);
       return (
         <React.Fragment>
-          {this.props.loader ? <Loader /> :
-            <React.Fragment>
-            {templates.length === 0 ? <p>There are no templates available</p> :
-            <div className='row'>
-              {
-                templates.map((template) => {
-                  return (
-                    <div key={template.name} className='col-md-3'>
-                      <div className='add-chart-card'>
-                        <div className="chart-icon"><i style={{fontSize: '5em', textAlign: 'center'}} className={ICON_MAPPER[template.series_type]} /></div>
-                        <div className="chart-card-inner">
-                          <h3>{template.name}</h3>
-                          <div className="btn-group-fixe">
-                            <button onClick={() => this.install(template.id)} style={{paddingLeft: '0'}} className="btn btn-link">Install Template</button>
+          {
+            this.state.hasInstalled ? <Redirect to={`/charts/${this.state.hasInstalled.id}/data-sources`} /> :
+              <React.Fragment>
+              {templates.length === 0 ? <p>There are no templates available</p> :
+              <div className='row'>
+                {
+                  templates.map((template) => {
+                    return (
+                      <div key={template.name} className='col-md-3'>
+                        <div className='add-chart-card'>
+                          <div className="chart-icon"><i style={{fontSize: '5em', textAlign: 'center'}} className={ICON_MAPPER[template.series_type]} /></div>
+                          <div className="chart-card-inner">
+                            <h3>{template.name}</h3>
+                            <div className="btn-group-fixe">
+                              <button onClick={() => this.install(template.id)} style={{paddingLeft: '0'}} className="btn btn-link">Install Template</button>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    </div>                
-                  )
-                })
-              }
-            </div>}
-          </React.Fragment>}
+                      </div>                
+                    )
+                  })
+                }
+              </div>}
+            </React.Fragment>
+          }
+
         </React.Fragment>
       )
     }
