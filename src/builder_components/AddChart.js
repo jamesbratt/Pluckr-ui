@@ -1,5 +1,6 @@
 import React from 'react';
 import { createChart } from '../actions/chart';
+import { addNotification } from '../actions/notification';
 import { connect } from 'react-redux';
 
 const chartNameRef = React.createRef();
@@ -27,7 +28,7 @@ const AddChart = (props) => {
         )
       );
     } else {
-      alert('Fill out all required chart fields');
+      props.dispatch(addNotification({ message: 'Fill out all required chart fields', type: 'error' }));
     }
   } 
 

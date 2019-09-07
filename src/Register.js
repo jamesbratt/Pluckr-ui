@@ -1,5 +1,7 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { Redirect } from "react-router-dom";
+import { addNotification } from './actions/notification';
 
 const emailRef = React.createRef();
 const passwordRef = React.createRef();
@@ -16,7 +18,7 @@ class Register extends React.Component {
     const confirm = passwordConfirmRef.current.value;
 
     if (password !== confirm) {
-      alert('Password and password confirmation must match');
+      this.props.dispatch(addNotification({ message: 'Password and password confirmation must match', type: 'error' }));
     } else {
       return fetch(`${process.env.REACT_APP_PLUCKR_API_URI}/api/v1/signup/`, {
         method: 'POST',
@@ -32,10 +34,10 @@ class Register extends React.Component {
         if(!response.error) {
           this.setState({ hasRegisted: true });
         } else {
-          alert(response.error.message)
+          this.props.dispatch(addNotification({ message: response.error.message, type: 'error' }));
         }
       })
-      .catch(error => alert(error));
+      .catch(error => this.props.dispatch(addNotification({ message: error.message, type: 'error' })));
     }
 
   }
@@ -73,4 +75,4 @@ class Register extends React.Component {
   }
 }
 
-export default Register;
+export default connect()(Register);

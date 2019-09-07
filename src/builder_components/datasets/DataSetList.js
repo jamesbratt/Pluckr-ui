@@ -77,7 +77,7 @@ class DataSetList extends Component {
               <tbody>
                 {this.props.datasets.map(dataset => {
                   return (
-                    <tr>
+                    <tr key={dataset.id}>
                       <td>{dataset.name}</td>
                       <td></td>
                       <td width="10%">

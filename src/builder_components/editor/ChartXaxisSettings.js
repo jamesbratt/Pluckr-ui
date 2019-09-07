@@ -52,15 +52,15 @@ const ChartXaxisSettings = (props) => {
   return (
     <Row>
       <Col md={4}>
-        <div class="form-group form-check">
-          <input defaultChecked={chart.x_axis_enabled} onChange={onChange} ref={axisIsEnabledRef} type="checkbox" class="form-check-input" name="axis-display" />
-          <label class="form-check-label">Enable X-axis</label>
+        <div className="form-group form-check">
+          <input defaultChecked={chart.x_axis_enabled} onChange={onChange} ref={axisIsEnabledRef} type="checkbox" className="form-check-input" name="axis-display" />
+          <label className="form-check-label">Enable X-axis</label>
         </div>
         <div className="form-group">
           <label>Axis Title</label>
           <input defaultValue={chart.x_axis_title} onChange={onChange} ref={axisTitleRef} className="form-control" type="text" placeholder="X-axis title" />
         </div>
-        <div class="form-group">
+        <div className="form-group">
           <label>Chart Type</label>
           <select defaultValue={chart.chart_type} onChange={onChange} ref={chartTypeRef} className="form-control">
             <option value={null}>-- Select a Chart --</option>

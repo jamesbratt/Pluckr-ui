@@ -1,6 +1,7 @@
 import { assocPath, clone } from 'ramda';
 import { updateYaxis, updateDataSeries } from '../builder_components/editor/Graph';
 import { executeOperations } from '../data_parsing/parse';
+import { addNotification } from './notification';
 
 export const receiveDatasets = (data) => {
   return {
@@ -67,7 +68,7 @@ export const updateDataSet = (
           data: response
         });
       })
-      .catch(error => alert(error));
+      .catch(error => dispatch(addNotification({ message: error.message, type: 'error' })));
   }
 }
 
@@ -87,8 +88,9 @@ export const fetchDatasets = (apiKey, username, chartId) => {
           }
           return dataset;
         });
-        dispatch(receiveDatasets(datasets))
+        dispatch(receiveDatasets(datasets));
       })
+      .catch(error => dispatch(addNotification({ message: error.message, type: 'error' })));
   }
 }
 
@@ -129,7 +131,7 @@ export const createDataSet = (
         )
       )
     })
-    .catch(error => alert(error));
+    .catch(error => dispatch(addNotification({ message: error.message, type: 'error' })));
   }
 }
 
@@ -146,6 +148,7 @@ export const deleteDataset = (apiKey, username, datasetId) => {
     .then(() => {
       dispatch(removeDataset(datasetId))
     })
+    .catch(error => dispatch(addNotification({ message: error.message, type: 'error' })));
   }
 }
 
@@ -189,7 +192,7 @@ export const updateDatasetYaxis = (
           response,
         ))
       })
-      .catch(error => alert(error));
+      .catch(error => dispatch(addNotification({ message: error.message, type: 'error' })));
   }
 };
 
@@ -224,7 +227,7 @@ export const runDataSet = (
         currentOperations,
       );
     } catch (error) {
-      alert(error);
+      dispatch(addNotification({ message: error.message, type: 'error' }));
     }
 
     // Because the api is dehydrating these fields
@@ -263,6 +266,6 @@ export const runDataSet = (
           currentDataSet,
         );
       })
-      .catch(error => alert(error));
+      .catch(error => dispatch(addNotification({ message: error.message, type: 'error' })));
   }
 }

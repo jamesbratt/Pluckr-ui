@@ -7,6 +7,7 @@ import { pathOr } from 'ramda';
 import { DATA_TYPES } from '../../Constants';
 import { connect } from 'react-redux';
 import { createDataSource } from '../../actions';
+import { addNotification } from '../../actions/notification';
 
 const mapStateToProps = (state) => {
   return {
@@ -40,6 +41,9 @@ const mapDispatchToProps = (dispatch) => {
         rawData,
         properties,
       ));
+    },
+    addNotification: (data) => {
+      dispatch(addNotification(data))
     }
   };
 };
@@ -50,8 +54,8 @@ class DataSourceDetail extends Component {
     super(props);
     this.state = {
       show: false,
-      selectedProvider: null,
-      selectedResource: null,
+      selectedProvider: '',
+      selectedResource: '',
       sourceName: null,
       parameterFields: [],
       parameterValues: [],
@@ -82,32 +86,36 @@ class DataSourceDetail extends Component {
     const { username, api_key } = this.props.user;
 
     const selectedResource = this.state.selectedResource;
-    const selectedProvider = this.state.selectedProvider.provider;
+    const selectedProvider = pathOr(null, ['provider'], this.state.selectedProvider);
     const params = this.state.parameterValues;
     const sourceName = this.state.sourceName;
 
     event.preventDefault();
-    if(selectedResource && sourceName) {
-      this.state.selectedProvider.request(selectedResource, params, username, api_key)
-        .then(response => {
-          this.setState({
-            data: response.data,
-          }, () => {
-            this.props.createDataSource(
-              api_key,
-              username,
-              sourceName,
-              this.props.match.params.id,
-              selectedProvider,
-              selectedResource,
-              params,
-              response.data,
-              response.properties,
-            );
-          });
-        })
+    if(selectedResource && sourceName && selectedProvider) {
+      try {
+        this.state.selectedProvider.request(selectedResource, params, username, api_key)
+          .then(response => {
+            this.setState({
+              data: response.data,
+            }, () => {
+              this.props.createDataSource(
+                api_key,
+                username,
+                sourceName,
+                this.props.match.params.id,
+                selectedProvider,
+                selectedResource,
+                params,
+                response.data,
+                response.properties,
+              );
+            });
+          })
+      } catch(error) {
+        this.props.addNotification({ message: error.message, type: 'error' });
+      }
     } else {
-      alert('Fill out all required data source fields');
+      this.props.addNotification({ message: 'Fill out all required data source fields', type: 'error' });
     }
   };
 
@@ -119,14 +127,14 @@ class DataSourceDetail extends Component {
 
       this.setState({
         selectedProvider,
-        selectedResource: null,
+        selectedResource: '',
         parameterFields: [],
         parameterValues: [],
       });
     } else {
       this.setState({
         selectedProvider: null,
-        selectedResource: null,
+        selectedResource: '',
         parameterFields: [],
         parameterValues: [],
       });
@@ -192,7 +200,7 @@ class DataSourceDetail extends Component {
         switch(parameterField.type) {
           case DATA_TYPES.date:
             return (
-              <React.Fragment>
+              <React.Fragment key={parameterField.name}>
                 <div class="form-group">
                   <label>{parameterField.name}</label>
                   <input defaultValue={val} name={parameterField.name} onChange={this.onParameterChange} type="date" className="form-control" placeholder={parameterField.name} />
@@ -201,7 +209,7 @@ class DataSourceDetail extends Component {
             );
           case DATA_TYPES.int:
             return (
-              <React.Fragment>
+              <React.Fragment key={parameterField.name}>
                 <div class="form-group">
                   <label>{parameterField.name}</label>
                   <input defaultValue={val} name={parameterField.name} onKeyUp={this.onParameterChange} type="number" className="form-control" placeholder={parameterField.name} />
@@ -210,13 +218,13 @@ class DataSourceDetail extends Component {
             );
             case DATA_TYPES.list:
               return (
-                <React.Fragment>
+                <React.Fragment key={parameterField.name}>
                   <Picker pickedItems={this.state.parameterValues} callBack={this.onParameterChange} label={parameterField.name} items={this.state.selectedProvider.resources[this.state.selectedResource].fields} />
                 </React.Fragment>
               );
           default:
             return (
-              <React.Fragment>
+              <React.Fragment key={parameterField.name}>
                 <div class="form-group">
                   <label>{parameterField.name}</label>
                   <input defaultValue={val} name={parameterField.name} onKeyUp={this.onParameterChange} type="text" className="form-control" placeholder={parameterField.name} />
@@ -237,7 +245,7 @@ class DataSourceDetail extends Component {
             </div>
             <div className="form-group">
               <label>Data Provider</label>
-              <select value={pathOr(null, ['provider'], this.state.selectedProvider)} onChange={this.onProviderChange} className="form-control" id="dataProvider">
+              <select value={pathOr('', ['provider'], this.state.selectedProvider)} onChange={this.onProviderChange} className="form-control" id="dataProvider">
                 <option value="">-- Select a data provider --</option>;
                 {this.props.dataProviders.map((dataProvider) => {
                   if (dataProvider.isActive) {

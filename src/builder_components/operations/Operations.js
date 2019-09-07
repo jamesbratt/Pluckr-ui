@@ -272,7 +272,7 @@ class Operations extends Component {
 
     const operations = this.props.operations.map(operation => {
       if (operation.dataset === parseInt(this.props.dataSetId)) {
-        return <li class="list-group-item">
+        return <li key={operation.id} className="list-group-item">
           {operation.root_function}
           <div key={operation.id} className="operation-actions float-right">
             <button className="btn btn-primary btn-sm" onClick={() => this.onOperationEdit(operation)}><i className="fa fa-edit" /></button>
@@ -287,26 +287,26 @@ class Operations extends Component {
         switch(syntaxNode.name) {
           case 'FUNCTION':
             return (
-              <select defaultValue={syntaxNode.value} id={syntaxNode.id} className="form-control mb-2 mr-sm-2" onChange={this.onChildFunctionSet}>
+              <select key={syntaxNode.id} defaultValue={syntaxNode.value} id={syntaxNode.id} className="form-control mb-2 mr-sm-2" onChange={this.onChildFunctionSet}>
                 <option value={null} hidden>-- Select a function --</option>
                 {OPERATION_FUNCTIONS.map(opFunc => {
-                  return <option value={opFunc.name}>{opFunc.name}</option>;
+                  return <option key={opFunc.name} value={opFunc.name}>{opFunc.name}</option>;
                 })}
               </select>
             );
           case 'PROPERTY':
             return (
-              <select defaultValue={syntaxNode.value} id={syntaxNode.id} onChange={this.onAstNodeValueSelected} className="form-control mb-2 mr-sm-2">
+              <select key={syntaxNode.id} defaultValue={syntaxNode.value} id={syntaxNode.id} onChange={this.onAstNodeValueSelected} className="form-control mb-2 mr-sm-2">
                 <option value={null} hidden>-- Select a {syntaxNode.name} --</option>
                 {selectedSource.properties.map(property => {
-                  return <option value={property}>{property}</option>;
+                  return <option key={property} value={property}>{property}</option>;
                 })}
               </select>
             );
           case 'INTEGER':
           case "DATA_INDEX":
             return (
-              <React.Fragment>
+              <React.Fragment key={syntaxNode.id}>
                 <label className="sr-only">{syntaxNode.name}</label>
                 <input defaultValue={syntaxNode.value} id={syntaxNode.id} onKeyUp={this.onAstNodeValueSelected} name={syntaxNode.name} type="number" className="form-control mb-2 mr-sm-2" placeholder={syntaxNode.name} />
               </React.Fragment>
@@ -316,7 +316,7 @@ class Operations extends Component {
           case 'XAXIS':
           case 'YAXIS':
             return (
-              <React.Fragment>
+              <React.Fragment key={syntaxNode.id}>
                 <label className="sr-only">{syntaxNode.name}</label>
                 <input defaultValue={syntaxNode.value} id={syntaxNode.id} onKeyUp={this.onAstNodeValueSelected} name={syntaxNode.name} type="text" className="form-control mb-2 mr-sm-2" placeholder={syntaxNode.name} />
               </React.Fragment>
@@ -327,7 +327,7 @@ class Operations extends Component {
 
     return (
       <div className="operations">
-        <button style={{marginRight: '1em'}} onClick={this.handleShow} type="button" class="btn btn-primary btn-sm">Add Operation</button>
+        <button style={{marginRight: '1em'}} onClick={this.handleShow} type="button" className="btn btn-primary btn-sm">Add Operation</button>
         <Modal size="lg" show={this.state.show} onHide={this.handleClose}>
           {
             this.state.preview ?
@@ -348,7 +348,7 @@ class Operations extends Component {
             />
           }
         </Modal>
-        <ul class="list-group operations">
+        <ul className="list-group operations">
           {operations}
         </ul>
       </div>

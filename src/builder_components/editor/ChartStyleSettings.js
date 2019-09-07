@@ -64,12 +64,12 @@ class ChartStyleSettings extends Component {
     return (
       <Row>
         <Col md={4}>
-        <div class="form-group">
+        <div className="form-group">
           <label>Background Colour</label>
-          <div class="input-group mb-3">
-            <input value={this.state.backgroundColour} type="text" class="form-control" placeholder="Background colour" aria-label="Background colour" />
-            <div class="input-group-append">
-              <button onClick={ this.handleClick } class="btn btn-outline-secondary" type="button">Pick a Colour</button>
+          <div className="input-group mb-3">
+            <input defaultValue={this.state.backgroundColour} type="text" className="form-control" placeholder="Background colour" aria-label="Background colour" />
+            <div className="input-group-append">
+              <button onClick={ this.handleClick } className="btn btn-outline-secondary" type="button">Pick a Colour</button>
             </div>
           </div>
         </div>

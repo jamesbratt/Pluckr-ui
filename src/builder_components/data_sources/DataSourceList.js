@@ -90,7 +90,7 @@ class DataSourceList extends Component {
                 <tbody>
                   {this.props.sources.data.map(source => {
                     return (
-                      <tr>
+                      <tr key={source.id}>
                         <td>{source.name}</td>
                         <td>{source.provider}</td>
                         <td>{source.resource}</td>

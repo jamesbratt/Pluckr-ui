@@ -1,7 +1,3 @@
-#root {
-  height:100%;
-}
-
 .wrapper {
   margin-bottom: 0.5em;
   margin-top: 1em;
@@ -98,7 +94,7 @@
 
 .add-chart-placeholder {
   width: 100%;
-  min-height: 300px;
+  min-height: 223px;
   background: #efefef;
   position: relative;
   text-align: center;
@@ -107,6 +103,7 @@
   -moz-box-shadow: 0 0 3px #888;
   -webkit-box-shadow: 0 0 3px#888;
   box-shadow: 0 0 3px #888;
+  margin-bottom: 1.8em;
 }
 
 .add-chart-placeholder:hover {
@@ -115,7 +112,36 @@
 
 .add-chart-placeholder:before {
   content: ' \002B';
-  top: 15%;
+  top: 7%;
+  font-size: 8em;
+  position: absolute;
+  left: 0;
+  right: 0;
+  color: #d6d6d6;
+}
+
+.add-template-placeholder {
+  width: 100%;
+  min-height: 223px;
+  background: #efefef;
+  position: relative;
+  text-align: center;
+  border: 0 none;
+  cursor: pointer;
+  -moz-box-shadow: 0 0 3px #888;
+  -webkit-box-shadow: 0 0 3px#888;
+  box-shadow: 0 0 3px #888;
+  margin-bottom: 1.8em;
+  display: block;
+}
+
+.add-template-placeholder:hover {
+  opacity: 0.8;
+}
+
+.add-template-placeholder:before {
+  content: ' \29C9';
+  top: 7%;
   font-size: 8em;
   position: absolute;
   left: 0;
@@ -135,16 +161,25 @@
 .add-chart-card {
   width: 100%;
   background: #fcfcfc;
-  padding: 1em;
   -moz-box-shadow: 0 0 3px #888;
   -webkit-box-shadow: 0 0 3px#888;
   box-shadow: 0 0 3px #888;
+  background: #FFFFFF;
+}
+
+.chart-icon {
+  text-align: center;
+  padding: 1em;
+  background: #cccccc;
+}
+
+.chart-icon i {
+  color: #FFFFFF;
 }
 
 .chart-card-inner {
   position: relative;
-  min-height: 270px;
-  height: 100%;
+  padding: 1em;
 }
 
 .btn-group-fixed {
@@ -164,22 +199,9 @@ body {
 
 .login-wrapper {
   height: 100%;
-}
-
-.login-wrapper {
-  height: 100%;
-  display: -ms-flexbox;
-  display: -webkit-box;
-  display: flex;
-  -ms-flex-align: center;
-  -ms-flex-pack: center;
-  -webkit-box-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
   justify-content: center;
   padding-top: 40px;
   padding-bottom: 40px;
-  background-color: #f5f5f5;
 }
 .form-register {
   width: 100%;
@@ -262,4 +284,7 @@ body {
 }
 .get-started {
   text-align: center;
+}
+.page-header {
+  margin-bottom: 1em;
 }
