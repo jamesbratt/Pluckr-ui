@@ -1,5 +1,6 @@
 import { updateChartInstance } from '../builder_components/editor/Graph';
 import { setLoader } from './index';
+import { addNotification } from './notification';
 
 export const addChart = (data) => {
   return {
@@ -34,6 +35,7 @@ export const fetchCharts = (apiKey, username) => {
       .then(json => {
         dispatch(receiveCharts(json.objects));
         dispatch(setLoader(false));
+        dispatch(addNotification({ message: 'Charts received', type: 'info' }));
       })
   }
 }

@@ -1,6 +1,7 @@
 import { assocPath, clone } from 'ramda';
 import { updateYaxis, updateDataSeries } from '../builder_components/editor/Graph';
 import { executeOperations } from '../data_parsing/parse';
+import { addNotification } from './notification';
 
 export const receiveDatasets = (data) => {
   return {
@@ -87,7 +88,8 @@ export const fetchDatasets = (apiKey, username, chartId) => {
           }
           return dataset;
         });
-        dispatch(receiveDatasets(datasets))
+        dispatch(receiveDatasets(datasets));
+        dispatch(addNotification({ message: 'Datasets received', type: 'info' }));
       })
   }
 }

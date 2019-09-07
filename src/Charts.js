@@ -65,35 +65,37 @@ class Charts extends Component {
         <React.Fragment>
           {this.props.loader ? <Loader /> :
             <React.Fragment>
-            {activeProviders.length === 0 && charts.length === 0 ? <GetStarted providers={this.props.dataProviders} /> :
-            <div className='row'>
-              <div className='col-md-3'>
-                <button onClick={() => this.setState({createChartModalShow: true})} className="add-chart-placeholder">
-                </button>
-              </div>
-              <div className='col-md-3'>
-                <Link to={`/charts/templates`} className="add-template-placeholder">
-                </Link>
-              </div>
-              {
-                charts.map((chart) => {
-                  return (
-                    <div key={chart.name} className='col-md-3'>
-                      <div className='add-chart-card'>
-                        <div className="chart-icon"><i style={{fontSize: '5em', textAlign: 'center'}} className={ICON_MAPPER[chart.series_type]} /></div>
-                        <div className="chart-card-inner">
-                          <h3>{chart.name}</h3>
-                          <div className="btn-group-fixe">
-                            <Link style={{paddingLeft: '0'}} className="btn btn-link" to={`/charts/${chart.id}/data-sources`}>Edit</Link>
-                            <button style={{paddingLeft: '0'}} className="btn btn-link" onClick={() => this.removeChart(chart.id)}>Delete</button>
+              {activeProviders.length === 0 && charts.length === 0 ? <GetStarted providers={this.props.dataProviders} /> :
+              <React.Fragment>
+              <h2 className="page-header">Your Charts</h2>
+              <div className='row'>
+                <div className='col-md-3'>
+                  <button onClick={() => this.setState({createChartModalShow: true})} className="add-chart-placeholder">
+                  </button>
+                </div>
+                <div className='col-md-3'>
+                  <Link to={`/charts/templates`} className="add-template-placeholder">
+                  </Link>
+                </div>
+                {
+                  charts.map((chart) => {
+                    return (
+                      <div key={chart.name} className='col-md-3'>
+                        <div className='add-chart-card'>
+                          <div className="chart-icon"><i style={{fontSize: '5em', textAlign: 'center'}} className={ICON_MAPPER[chart.series_type]} /></div>
+                          <div className="chart-card-inner">
+                            <h3>{chart.name}</h3>
+                            <div className="btn-group-fixe">
+                              <Link style={{paddingLeft: '0'}} className="btn btn-link" to={`/charts/${chart.id}/data-sources`}>Edit</Link>
+                              <button style={{paddingLeft: '0'}} className="btn btn-link" onClick={() => this.removeChart(chart.id)}>Delete</button>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    </div>                
-                  )
-                })
-              }
-            </div>}
+                      </div>                
+                    )
+                  })
+                }
+            </div></React.Fragment>}
           </React.Fragment>}
           <Modal show={this.state.createChartModalShow} onHide={() => this.setState({createChartModalShow: false})}>
             <Modal.Header closeButton>

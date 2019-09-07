@@ -2,6 +2,7 @@ import { assocPath, merge } from 'ramda';
 import { executeOperations } from '../data_parsing/parse';
 import { getTokenId } from '../utils/Helpers';
 import { diff } from 'deep-object-diff';
+import { addNotification } from './notification';
 
 // USERS
 export const setLoader = (isLoading) => {
@@ -203,6 +204,7 @@ export const fetchDataSources = (apiKey, username, chartId) => {
                     )
                   );
                   dispatch(setLoader(false));
+                  dispatch(addNotification({ message: 'Datasources received', type: 'info' }));
                 });
               })
           });

@@ -74,26 +74,27 @@ class TemplateList extends Component {
           {
             this.state.hasInstalled ? <Redirect to={`/charts/${this.state.hasInstalled.id}/data-sources`} /> :
               <React.Fragment>
-              {templates.length === 0 ? <p>There are no templates available</p> :
-              <div className='row'>
-                {
-                  templates.map((template) => {
-                    return (
-                      <div key={template.name} className='col-md-3'>
-                        <div className='add-chart-card'>
-                          <div className="chart-icon"><i style={{fontSize: '5em', textAlign: 'center'}} className={ICON_MAPPER[template.series_type]} /></div>
-                          <div className="chart-card-inner">
-                            <h3>{template.name}</h3>
-                            <div className="btn-group-fixe">
-                              <button onClick={() => this.install(template.id)} style={{paddingLeft: '0'}} className="btn btn-link">Install Template</button>
+                <h2 className="page-header">Chart Templates</h2>
+                {templates.length === 0 ? <p>There are no templates available</p> :
+                <div className='row'>
+                  {
+                    templates.map((template) => {
+                      return (
+                        <div key={template.name} className='col-md-3'>
+                          <div className='add-chart-card'>
+                            <div className="chart-icon"><i style={{fontSize: '5em', textAlign: 'center'}} className={ICON_MAPPER[template.series_type]} /></div>
+                            <div className="chart-card-inner">
+                              <h3>{template.name}</h3>
+                              <div className="btn-group-fixe">
+                                <button onClick={() => this.install(template.id)} style={{paddingLeft: '0'}} className="btn btn-link">Install Template</button>
+                              </div>
                             </div>
                           </div>
-                        </div>
-                      </div>                
-                    )
-                  })
-                }
-              </div>}
+                        </div>                
+                      )
+                    })
+                  }
+                </div>}
             </React.Fragment>
           }
 
