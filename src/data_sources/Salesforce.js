@@ -338,7 +338,7 @@ export const SALESFORCE_RESOURCES = {
 
 const constructSFQLQuery = (params, resource) => {
   if (!params) {
-    throw Error('You must select some fields');
+    throw Error('You must select some Salesforce resource fields');
   }
 
   let query = 'SELECT';

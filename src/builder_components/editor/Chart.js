@@ -5,6 +5,7 @@ import classNames from 'classnames';
 import { addDataSeries, destroyChart, getChart, setChart } from './Graph';
 import { connect } from 'react-redux';
 import { Route } from "react-router-dom";
+import { addNotification } from '../../actions/notification';
 
 const Highcharts = require('highcharts');
 require('highcharts/modules/exporting')(Highcharts);
@@ -69,8 +70,11 @@ class Chart extends Component {
       return response.json();
     })
     .then(() => {
-      alert('Chart has been successfully published to the template library');
+      this.props.dispatch(addNotification(
+        { message: 'Chart has been successfully published to the template library', type: 'success' }
+      ));
     })
+    .catch(error => this.props.dispatch(addNotification({ message: error.message, type: 'error' })));
   }
 
   componentDidMount() {

@@ -1,4 +1,4 @@
-const notification = (notifications = { message: 'test', type: 'info' }, action) => {
+const notification = (notifications = null, action) => {
   switch (action.type) {
     case 'ADD_NOTIFICATION': {
       const { message, type } = action.data

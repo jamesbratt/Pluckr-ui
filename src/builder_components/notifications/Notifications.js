@@ -4,7 +4,10 @@ import 'react-toastify/dist/ReactToastify.css';
 
 const NOTIFICATION_TYPE = {
   info: toast.TYPE.INFO,
-}
+  error: toast.TYPE.ERROR,
+  warn: toast.TYPE.WARN,
+  success: toast.TYPE.SUCCESS,
+};
 
 const mapStateToProps = (state) => {
   return {
@@ -19,7 +22,9 @@ const Notifications = (props) => {
       type: NOTIFICATION_TYPE[type],
     }
   );
-  notify(props.notification);
+  if (props.notification) {
+    notify(props.notification);
+  }
   return null;
 }
 

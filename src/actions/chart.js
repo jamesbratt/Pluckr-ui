@@ -35,8 +35,8 @@ export const fetchCharts = (apiKey, username) => {
       .then(json => {
         dispatch(receiveCharts(json.objects));
         dispatch(setLoader(false));
-        dispatch(addNotification({ message: 'Charts received', type: 'info' }));
       })
+      .catch(error => dispatch(addNotification({ message: error.message, type: 'error' })));
   }
 }
 
@@ -76,6 +76,7 @@ export const createChart = (apiKey, username, name, chart_type) => {
     .then(json => {
       dispatch(addChart(json))
     })
+    .catch(error => dispatch(addNotification({ message: error.message, type: 'error' })));
   }
 }
 
@@ -110,7 +111,7 @@ export const updateChart = (
           data: response
         });
       })
-      .catch(error => alert(error));
+      .catch(error => dispatch(addNotification({ message: error.message, type: 'error' })));
   }
 }
 
@@ -127,5 +128,6 @@ export const deleteChart = (apiKey, username, chartId) => {
     .then(() => {
       dispatch(removeChart(chartId))
     })
+    .catch(error => dispatch(addNotification({ message: error.message, type: 'error' })));
   }
 }

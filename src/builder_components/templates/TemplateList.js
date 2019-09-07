@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { fetchCharts } from '../../actions/chart';
 import { Redirect } from "react-router-dom";
 import { addChart } from '../../actions/chart';
+import { addNotification } from '../../actions/notification';
 
 const ICON_MAPPER = {
   line: 'fa fa-line-chart',
@@ -60,11 +61,20 @@ class TemplateList extends Component {
         return response.json();
       })
       .then(response => {
-        this.props.dispatch(
-          addChart(response.chart)
-        );
-        this.setState({ hasInstalled: response.chart })
+        if(!response.error) {
+          this.props.dispatch(
+            addChart(response.chart)
+          );
+          this.setState({ hasInstalled: response.chart })
+          this.props.dispatch(addNotification({ message: 'Template has successfully been installed', type: 'success' }))
+          this.setState({
+            hasInstalled: response.chart,
+          });
+        } else {
+          this.props.dispatch(addNotification({ message: response.error.message, type: 'error' }));
+        }
       })
+      .catch(error => this.props.dispatch(addNotification({ message: error.message, type: 'error' })));
     }
 
     render() {
@@ -80,7 +90,7 @@ class TemplateList extends Component {
                   {
                     templates.map((template) => {
                       return (
-                        <div key={template.name} className='col-md-3'>
+                        <div key={template.id} className='col-md-3'>
                           <div className='add-chart-card'>
                             <div className="chart-icon"><i style={{fontSize: '5em', textAlign: 'center'}} className={ICON_MAPPER[template.series_type]} /></div>
                             <div className="chart-card-inner">

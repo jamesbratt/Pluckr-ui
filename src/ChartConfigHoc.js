@@ -33,8 +33,8 @@ const ChartConfigHoc = WrappedComponent => {
         <Row>
           <Col md={2}>
             <Nav defaultActiveKey="/home" className="flex-column">
-              <Nav.Link><Link to={`/charts/${this.props.match.params.id}/data-sources`}>Data Sources</Link></Nav.Link>
-              <Nav.Link><Link to={`/charts/${this.props.match.params.id}/chart`}>Chart Editor</Link></Nav.Link>
+              <Link to={`/charts/${this.props.match.params.id}/data-sources`}>Data Sources</Link>
+              <Link to={`/charts/${this.props.match.params.id}/chart`}>Chart Editor</Link>
             </Nav>
           </Col>
           <Col md={10}>

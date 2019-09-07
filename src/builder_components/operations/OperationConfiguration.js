@@ -13,7 +13,7 @@ const OperationConfiguration = (props) => {
             <select defaultValue={props.rootFunction} className="form-control mb-2 mr-sm-2" onChange={props.setRootFunction}>
               <option value={null} hidden>-- Select a function --</option>
               {OPERATION_FUNCTIONS.map(opFunc => {
-                return <option value={opFunc.name}>{opFunc.name}</option>;
+                return <option key={opFunc.name} value={opFunc.name}>{opFunc.name}</option>;
               })}
             </select>
             {props.form}

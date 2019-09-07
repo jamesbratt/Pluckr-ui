@@ -1,5 +1,6 @@
 import React from 'react';
 import { createDataSet } from '../../actions/dataset';
+import { addNotification } from '../../actions/notification';
 import { connect } from 'react-redux';
 
 const dataSetNameRef = React.createRef();
@@ -23,6 +24,9 @@ const mapDispatchToProps = (dispatch) => {
         sourceId,
         data,
       ));
+    },
+    addNotification: (data) => {
+      dispatch(addNotification(data))
     }
   };
 };
@@ -49,7 +53,7 @@ const AddDataSet = (props) => {
       props.close();
 
     } else {
-      alert('Fill out all required dataset fields');
+      props.addNotification({ message: 'Fill out all required dataset fields', type: 'error' });
     }
   } 
 

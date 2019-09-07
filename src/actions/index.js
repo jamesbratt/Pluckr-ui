@@ -40,7 +40,7 @@ export const fetchUser = (username, password) => {
       localStorage.setItem('pluckr_token', JSON.stringify(json));
       dispatch(receiveUser(json))
     })
-    .catch(error => alert(error));
+    .catch(error => dispatch(addNotification({ message: error.message, type: 'error' })));
   }
 }
 
@@ -82,6 +82,7 @@ export const deleteDataSource = (apiKey, username, datasourceId) => {
         datasourceId,
       })
     })
+    .catch(error => dispatch(addNotification({ message: error.message, type: 'error' })));
   }
 }
 
@@ -185,15 +186,16 @@ export const fetchDataSources = (apiKey, username, chartId) => {
                             .then((response) => response.json())
                             .then(response => {
                             })
-                            .catch(error => alert(error));
+                            .catch(error => dispatch(addNotification({ message: error.message, type: 'error' })));
                         } else {
                           Promise.resolve();
                         }
                       
                       } catch (error) {
-                        alert(error);
+                        dispatch(addNotification({ message: error.message, type: 'error' }));
                       }
                     })
+                    .catch(error => dispatch(addNotification({ message: error.message, type: 'error' })));
                 });
 
                 Promise.all(datasetDataUpdates).then(responses => {
@@ -204,7 +206,6 @@ export const fetchDataSources = (apiKey, username, chartId) => {
                     )
                   );
                   dispatch(setLoader(false));
-                  dispatch(addNotification({ message: 'Datasources received', type: 'info' }));
                 });
               })
           });
@@ -218,7 +219,7 @@ export const fetchDataSources = (apiKey, username, chartId) => {
           dispatch(setLoader(false));
         }
       })
-      .catch(error => alert(error));
+      .catch(error => dispatch(addNotification({ message: error.message, type: 'error' })));
   }
 }
 
@@ -273,7 +274,7 @@ export const createDataSource = (
       );
       dispatch(setLoader(false));
     })
-    .catch(error => alert(error));
+    .catch(error => dispatch(addNotification({ message: error.message, type: 'error' })));
   }
 }
 
@@ -323,6 +324,7 @@ export const fetchOperations = (apiKey, username) => {
         }) : json.objects;
         dispatch(receiveOperations(operations))
       })
+      .catch(error => dispatch(addNotification({ message: error.message, type: 'error' })));
   }
 }
 
@@ -340,6 +342,7 @@ export const deleteOperation = (apiKey, username, operationId) => {
       dispatch(removeOperation(operationId));
       return Promise.resolve();
     })
+    .catch(error => dispatch(addNotification({ message: error.message, type: 'error' })));
   }
 }
 
@@ -381,7 +384,7 @@ export const createOperation = (
       )
       return Promise.resolve();
     })
-    .catch(error => alert(error));
+    .catch(error => dispatch(addNotification({ message: error.message, type: 'error' })));
   }
 }
 
@@ -430,7 +433,7 @@ export const updateOperationAst = (
         );
         return Promise.resolve();
       })
-      .catch(error => alert(error));
+      .catch(error => dispatch(addNotification({ message: error.message, type: 'error' })));
   }
 }
 
