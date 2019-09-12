@@ -92,7 +92,7 @@ class TemplateList extends Component {
                       return (
                         <div key={template.id} className='col-md-3'>
                           <div className='add-chart-card'>
-                            <div className="chart-icon"><i style={{fontSize: '5em', textAlign: 'center'}} className={ICON_MAPPER[template.series_type]} /></div>
+                            <div className="chart-icon"><i style={{fontSize: '3em', textAlign: 'center'}} className={ICON_MAPPER[template.series_type]} /></div>
                             <div className="chart-card-inner">
                               <h3>{template.name}</h3>
                               <div className="btn-group-fixe">

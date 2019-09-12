@@ -94,7 +94,8 @@
 
 .add-chart-placeholder {
   width: 100%;
-  min-height: 223px;
+  max-height: 180px;
+  min-height: 180px;
   background: #efefef;
   position: relative;
   text-align: center;
@@ -112,17 +113,20 @@
 
 .add-chart-placeholder:before {
   content: ' \002B';
-  top: 7%;
-  font-size: 8em;
+  font-size: 5em;
   position: absolute;
-  left: 0;
+  transform: translate(-50%, -50%);
   right: 0;
   color: #d6d6d6;
+  top: 50%;
+  left: 50%;
+  margin-right: -50%;
 }
 
 .add-template-placeholder {
   width: 100%;
-  min-height: 223px;
+  max-height: 180px;
+  min-height: 180px;
   background: #efefef;
   position: relative;
   text-align: center;
@@ -141,12 +145,14 @@
 
 .add-template-placeholder:before {
   content: ' \29C9';
-  top: 7%;
-  font-size: 8em;
+  font-size: 5em;
   position: absolute;
-  left: 0;
+  transform: translate(-50%, -50%);
   right: 0;
   color: #d6d6d6;
+  top: 50%;
+  left: 50%;
+  margin-right: -50%;
 }
 
 .add-chart-placeholder p {
@@ -160,11 +166,22 @@
 
 .add-chart-card {
   width: 100%;
+  max-height: 180px;
+  min-height: 180px;
   background: #fcfcfc;
   -moz-box-shadow: 0 0 3px #888;
   -webkit-box-shadow: 0 0 3px#888;
   box-shadow: 0 0 3px #888;
   background: #FFFFFF;
+  margin-bottom: 1em;
+}
+
+.add-chart-card h3 {
+  font-size: 1.1em;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+
 }
 
 .chart-icon {
@@ -190,11 +207,6 @@
 
 .btn-group-fixed button, a {
   margin-right: 0.5em;
-}
-
-html,
-body {
-  height: 100%;
 }
 
 .login-wrapper {
@@ -287,4 +299,15 @@ body {
 }
 .page-header {
   margin-bottom: 1em;
+}
+.side-nav-item {
+  border: 0;
+  background: none;
+  padding:0.8em;
+  text-align: left;
+  color: #007bff;
+}
+.side-nav-item:hover {
+  color: #0056b3;
+  text-decoration: underline;
 }
