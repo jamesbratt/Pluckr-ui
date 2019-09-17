@@ -110,10 +110,11 @@ class DataSourceDetail extends Component {
                 response.properties,
               );
             });
-          })
+          }).catch(error => this.props.addNotification({ message: error.message, type: 'error' }));
       } catch(error) {
         this.props.addNotification({ message: error.message, type: 'error' });
       }
+
     } else {
       this.props.addNotification({ message: 'Fill out all required data source fields', type: 'error' });
     }

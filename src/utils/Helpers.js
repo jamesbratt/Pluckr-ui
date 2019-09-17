@@ -1,5 +1,6 @@
 
 import { pathOr } from 'ramda';
+import axios from "axios";
 
 export const GenerateGuid = () => {
   const s4 = () => {
@@ -81,16 +82,18 @@ export const proxyRequest = (url, key, integration_type, username, apiKey, sourc
     }
   }
 
-  return fetch(`${process.env.REACT_APP_PLUCKR_API_URI}/api/v1/integration-request/`, {
-    method: 'POST',
-    headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `ApiKey ${username}:${apiKey}`
-    },
-    body: JSON.stringify(payload)
-  }).then(response => {
-    return response.json();
-  }).then(response => {
-    return response;
+  return axios.post(`${process.env.REACT_APP_PLUCKR_API_URI}/api/v1/integration-request/`,
+    JSON.stringify(payload),
+    {
+      headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `ApiKey ${username}:${apiKey}`
+      },
+    }
+  ).then(response => {
+    return response.data;
   })
+  .catch(error => {
+    throw Error(error.response.data.error.message);
+  });
 }

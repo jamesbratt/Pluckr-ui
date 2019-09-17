@@ -3,6 +3,7 @@ import { executeOperations } from '../data_parsing/parse';
 import { getTokenId } from '../utils/Helpers';
 import { diff } from 'deep-object-diff';
 import { addNotification } from './notification';
+import axios from "axios";
 
 // USERS
 export const setLoader = (isLoading) => {
@@ -101,19 +102,31 @@ export const fetchDataSources = (apiKey, username, chartId) => {
       .then(json => {
         const dataSources = json.objects;
         if (dataSources.length > 0) {
+          const dataSourcesToAddToState = [];
           const dataSourceRequests = dataSources.map(dataSource => {
             const provider = dataProviders.find(dataProvider => dataProvider.provider === dataSource.provider);
-              return provider.request(
-                dataSource.resource,
-                JSON.parse(dataSource.params),
-                username,
-                apiKey,
-                dataSource.id
+              
+            return provider.request(
+              dataSource.resource,
+              JSON.parse(dataSource.params),
+              username,
+              apiKey,
+              dataSource.id
+            ).catch((error) => {
+              dataSourcesToAddToState.push(dataSource);
+              dispatch(
+                receiveDataSources(
+                  dataSourcesToAddToState
+                )
               );
+              dispatch(setLoader(false));
+              dispatch(addNotification({ message: `Error from data provider: ${error.message}`, type: 'error' }));
+            });
+            
           });
 
           Promise.all(dataSourceRequests).then(responses => {
-            const dataSourcesToAddToState = [];
+            
             responses.forEach(response => {
               const sourceConfig = dataSources.find(dataSource => dataSource.id === response.sourceId);
               const source = {
@@ -208,7 +221,7 @@ export const fetchDataSources = (apiKey, username, chartId) => {
                   dispatch(setLoader(false));
                 });
               })
-          });
+          })
 
         } else {
           dispatch(
@@ -248,33 +261,34 @@ export const createDataSource = (
 
   return dispatch => {
     dispatch(setLoader(true));
-    return fetch(`${process.env.REACT_APP_PLUCKR_API_URI}/api/v1/datasource/`, {
-        method: 'POST',
+    return axios.post(
+      `${process.env.REACT_APP_PLUCKR_API_URI}/api/v1/datasource/`,
+      JSON.stringify(payload),
+      {
         headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `ApiKey ${username}:${apiKey}`
-        },
-        body: JSON.stringify(payload)
-    })
-    .then((response) => {
-      return response.json();
-    })
-    .then(json => {
+          'Content-Type': 'application/json',
+          'Authorization': `ApiKey ${username}:${apiKey}`
+        }
+      }
+    )
+    .then(response => {
       dispatch(
         addSource(
-          json.id,
-          json.name,
-          json.chart,
-          json.provider,
-          json.resource,
-          JSON.parse(json.params),
+          response.id,
+          response.name,
+          response.chart,
+          response.provider,
+          response.resource,
+          JSON.parse(response.params),
           rawData,
           properties,
         )
       );
       dispatch(setLoader(false));
     })
-    .catch(error => dispatch(addNotification({ message: error.message, type: 'error' })));
+    .catch(error => {
+      dispatch(addNotification({ message: error.error.message, type: 'error' }));
+    });
   }
 }
 
