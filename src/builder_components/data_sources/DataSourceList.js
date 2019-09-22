@@ -78,25 +78,24 @@ class DataSourceList extends Component {
             <React.Fragment>
               <h2>Available Data Sources</h2>
               <Link className="btn btn-primary" to="create-data-source">Create a Data Source</Link>
-              <Table striped bordered hover>
+              <Table bordered hover>
                 <thead>
                   <tr>
                     <th>Name</th>
                     <th>Provider</th>
                     <th>Resource</th>
-                    <th>Edit/Delete</th>
+                    <th></th>
                   </tr>
                 </thead>
                 <tbody>
                   {this.props.sources.data.map(source => {
                     return (
                       <tr key={source.id}>
-                        <td>{source.name}</td>
+                        <td><Link to={`edit-data-source/${source.id}`}>{source.name}</Link></td>
                         <td>{source.provider}</td>
                         <td>{source.resource}</td>
-                        <td width="10%">
-                          <Link className="btn btn-primary" to={`edit-data-source/${source.id}`}><i className="fa fa-edit" /></Link>
-                          <button onClick={() => this.delete(source.id)} className="btn btn-danger"><i className="fa fa-trash" /></button>
+                        <td width="40">
+                          <button onClick={() => this.delete(source.id)} className="btn btn-link table-btn float-right"><i className="fa fa-trash" /></button>
                         </td>
                       </tr>
                     )

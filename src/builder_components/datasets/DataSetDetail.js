@@ -9,6 +9,7 @@ import DataSetSettings from './DataSetSettings';
 import Operations from '../operations/Operations';
 import JSONTree from 'react-json-tree';
 import { connect } from 'react-redux';
+import { Link } from "react-router-dom";
 
 const mapStateToProps = (state) => {
   return {
@@ -21,8 +22,8 @@ class DataSetDetail extends Component {
   render() {
     const dataset = this.props.datasets.find(dataset => dataset.id === parseInt(this.props.match.params.dataset_id));
     return (
-      <div>
-        <h3>Configure Dataset</h3>
+      <div className="dataset-detail">
+        <h3>{dataset.name}</h3><Link className="back" to={`/charts/${this.props.match.params.id}/chart`}>Back to Dataset List</Link>
         <Tabs defaultActiveKey="operations" id="dataset-tabs">
         <Tab eventKey="operations" title="Operations">
           <Row>

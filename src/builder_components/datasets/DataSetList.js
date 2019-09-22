@@ -66,23 +66,24 @@ class DataSetList extends Component {
           this.props.datasets.length > 0 ?
           <React.Fragment>
             <button className="btn btn-primary" onClick={() =>this.setState({ createChartModalShow: true })}>Create a Dataset</button>
-            <Table striped bordered hover>
+            <Table bordered hover>
               <thead>
                 <tr>
                   <th>Name</th>
                   <th>Data Source</th>
-                  <th>Edit/Delete</th>
+                  <th>Data Provider</th>
+                  <th></th>
                 </tr>
               </thead>
               <tbody>
                 {this.props.datasets.map(dataset => {
                   return (
                     <tr key={dataset.id}>
-                      <td>{dataset.name}</td>
-                      <td></td>
-                      <td width="10%">
-                        <Link className="btn btn-primary" to={`${this.props.url}/edit-dataset/${dataset.id}`}><i className="fa fa-edit" /></Link>
-                        <button onClick={() => this.delete(dataset.id)} className="btn btn-danger"><i className="fa fa-trash" /></button>
+                      <td><Link to={`${this.props.url}/edit-dataset/${dataset.id}`}>{dataset.name}</Link></td>
+                      <td>{dataset.data_source_name}</td>
+                      <td>{dataset.provider}</td>
+                      <td width="40">
+                        <button onClick={() => this.delete(dataset.id)} className="btn btn-link table-btn"><i className="fa fa-trash" /></button>
                       </td>
                     </tr>
                   )

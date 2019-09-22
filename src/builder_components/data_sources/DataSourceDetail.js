@@ -238,7 +238,7 @@ class DataSourceDetail extends Component {
     return (
       <React.Fragment>
         <Row>
-          <Col md={4}>
+          <Col md={5}>
             <h2>{this.state.sourceName ? this.state.sourceName : 'Create a new data source'}</h2>
             <div className="form-group">
               <label>Title</label>
