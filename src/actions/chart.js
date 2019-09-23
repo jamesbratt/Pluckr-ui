@@ -74,7 +74,8 @@ export const createChart = (apiKey, username, name, chart_type) => {
       return response.json();
     })
     .then(json => {
-      dispatch(addChart(json))
+      dispatch(addChart(json));
+      return Promise.resolve(json);
     })
     .catch(error => dispatch(addNotification({ message: error.message, type: 'error' })));
   }

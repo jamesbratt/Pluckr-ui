@@ -1,5 +1,4 @@
 import React from 'react';
-import { createChart } from '../actions/chart';
 import { addNotification } from '../actions/notification';
 import { connect } from 'react-redux';
 
@@ -15,18 +14,7 @@ const AddChart = (props) => {
   const addNewChart = (event) => {
     event.preventDefault();
     if(chartNameRef.current.value && chartTypeRef.current.value) {
-
-      const user = props.user[0].username;
-      const apiKey = props.user[0].api_key;
-
-      props.dispatch(
-        createChart(
-          apiKey,
-          user,
-          chartNameRef.current.value,
-          chartTypeRef.current.value,
-        )
-      );
+      props.add(chartNameRef.current.value, chartTypeRef.current.value);
     } else {
       props.dispatch(addNotification({ message: 'Fill out all required chart fields', type: 'error' }));
     }

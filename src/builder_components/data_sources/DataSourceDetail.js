@@ -270,7 +270,7 @@ class DataSourceDetail extends Component {
             {parameters}
             {!this.props.match.params.data_source_id ? <button onClick={this.addDataSource} type="submit" className="btn btn-primary mb-2">Add Data Source</button> : null}
           </Col>
-          <Col md={8}>
+          <Col md={7}>
             {
               this.state.data ?
               <JSONTree
