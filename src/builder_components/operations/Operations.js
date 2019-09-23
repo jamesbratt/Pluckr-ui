@@ -273,10 +273,9 @@ class Operations extends Component {
     const operations = this.props.operations.map(operation => {
       if (operation.dataset === parseInt(this.props.dataSetId)) {
         return <li key={operation.id} className="list-group-item">
-          {operation.root_function}
+          <button className="btn btn-link btn-sm table-btn" onClick={() => this.onOperationEdit(operation)}>{operation.root_function}</button>
           <div key={operation.id} className="operation-actions float-right">
-            <button className="btn btn-primary btn-sm" onClick={() => this.onOperationEdit(operation)}><i className="fa fa-edit" /></button>
-            <button style={{ marginLeft: '1em' }} className="btn btn-danger btn-sm" onClick={() => this.deleteOperation(operation.id)}><i className="fa fa-trash" /></button>
+            <button style={{ marginLeft: '1em' }} className="btn btn-sm btn-link table-btn" onClick={() => this.deleteOperation(operation.id)}><i className="fa fa-trash" /></button>
           </div>
         </li>
       }

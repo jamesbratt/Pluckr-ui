@@ -311,3 +311,17 @@
   color: #0056b3;
   text-decoration: underline;
 }
+.btn.table-btn {
+  padding: 0;
+}
+.dataset-detail h3 {
+  display: inline-block;
+}
+.dataset-detail .nav-tabs {
+  margin-top: 1em;
+}
+.back {
+  float: right;
+  margin-left: 1em;
+  padding: 0.5em;
+}

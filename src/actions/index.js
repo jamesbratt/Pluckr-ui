@@ -274,12 +274,12 @@ export const createDataSource = (
     .then(response => {
       dispatch(
         addSource(
-          response.id,
-          response.name,
-          response.chart,
-          response.provider,
-          response.resource,
-          JSON.parse(response.params),
+          response.data.id,
+          response.data.name,
+          response.data.chart,
+          response.data.provider,
+          response.data.resource,
+          JSON.parse(response.data.params),
           rawData,
           properties,
         )

@@ -238,7 +238,7 @@ class DataSourceDetail extends Component {
     return (
       <React.Fragment>
         <Row>
-          <Col md={4}>
+          <Col md={5}>
             <h2>{this.state.sourceName ? this.state.sourceName : 'Create a new data source'}</h2>
             <div className="form-group">
               <label>Title</label>
@@ -270,7 +270,7 @@ class DataSourceDetail extends Component {
             {parameters}
             {!this.props.match.params.data_source_id ? <button onClick={this.addDataSource} type="submit" className="btn btn-primary mb-2">Add Data Source</button> : null}
           </Col>
-          <Col md={8}>
+          <Col md={7}>
             {
               this.state.data ?
               <JSONTree
