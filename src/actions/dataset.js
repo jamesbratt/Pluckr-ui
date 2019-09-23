@@ -129,7 +129,8 @@ export const createDataSet = (
         addDataset(
           json,
         )
-      )
+      );
+      return Promise.resolve(json);
     })
     .catch(error => dispatch(addNotification({ message: error.message, type: 'error' })));
   }

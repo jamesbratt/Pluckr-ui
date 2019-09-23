@@ -39,18 +39,13 @@ const AddDataSet = (props) => {
       const dataSource = props.sources.find(
         source => source.id === parseInt(sourceId),
       );
-      const { api_key, username } = props.user;
   
-      props.createDataSet(
-        api_key,
-        username,
+      props.add(
         dataSetNameRef.current.value,
         props.chartId,
         sourceId,
         dataSource.rawData,
       );
-
-      props.close();
 
     } else {
       props.addNotification({ message: 'Fill out all required dataset fields', type: 'error' });
