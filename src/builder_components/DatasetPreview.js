@@ -16,7 +16,7 @@ const DatasetPreview = (props) => {
     const dataSet = props.datasets.find(dataset => dataset.id === props.dataSetId);
     const operations = props.operations.filter(operation => operation.dataSetId === props.dataSetId);
   
-    const dataSource = props.sources.find(
+    const dataSource = props.sources.data.find(
       source => source.id === props.dataSourceId,
     );
   
