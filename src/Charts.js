@@ -88,10 +88,12 @@ class Charts extends Component {
           <div className='row'>
             <div className='col-md-3'>
               <button onClick={() => this.setState({createChartModalShow: true})} className="add-chart-placeholder">
+                Create from Scratch
               </button>
             </div>
             <div className='col-md-3'>
               <Link to={`/charts/templates`} className="add-template-placeholder">
+                Create from Template
               </Link>
             </div>
             {

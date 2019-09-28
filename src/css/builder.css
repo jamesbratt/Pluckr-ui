@@ -105,10 +105,13 @@
   -webkit-box-shadow: 0 0 3px#888;
   box-shadow: 0 0 3px #888;
   margin-bottom: 1.8em;
+  padding-top: 140px;
+  color: #CBCBCB;
 }
 
 .add-chart-placeholder:hover {
   opacity: 0.8;
+  color: #757575;
 }
 
 .add-chart-placeholder:before {
@@ -137,10 +140,15 @@
   box-shadow: 0 0 3px #888;
   margin-bottom: 1.8em;
   display: block;
+  padding-top: 149px;
+  text-decoration: none;
+  color: #CBCBCB;
 }
 
 .add-template-placeholder:hover {
   opacity: 0.8;
+  text-decoration: none;
+  color: #757575;
 }
 
 .add-template-placeholder:before {
