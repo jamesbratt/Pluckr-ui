@@ -26,66 +26,82 @@ export const DATA_TYPES = {
 export const OPERATION_FUNCTIONS = [
   {
     name: 'CONSTRUCT_SERIES',
+    label: 'Construct Chart Series',
     accepts: ['XAXIS', 'YAXIS']
   },
   {
     name: 'FOR_EVERY_ITEM',
+    label: 'For Every Item',
     accepts: ['FUNCTION']
   },
   {
     name: 'TARGET',
+    label: 'Target',
     accepts: ['DATA_KEY', 'FUNCTION']
   },
   {
     name: 'TARGET_BY_INDEX',
+    label: 'Target by Index',
     accepts: ['DATA_INDEX', 'FUNCTION']
   },
   {
     name: 'ADD_KEY',
+    label: 'Add Key',
     accepts: ['NEW_DATA_KEY', 'FUNCTION']
   },
   {
     name: 'GROUP_BY',
+    label: 'Group By',
     accepts: ['DATA_KEY']
   },
   {
     name: 'PLUCK',
+    label: 'Pluck',
     accepts: ['DATA_KEY']
   },
   {
     name: 'MULTIPLY_BY',
+    label: 'Multiply By',
     accepts: ['INTEGER']
   },
   {
     name: 'DIVIDE_BY',
+    label: 'Divide By',
     accepts: ['INTEGER']
   },
   {
     name: 'ADD',
+    label: 'Add',
     accepts: ['INTEGER']
   },
   {
     name: 'SUBTRACT',
+    label: 'Subtract',
     accepts: ['INTEGER']
   },
   {
     name: 'CONVERT_TO_TIMESTAMP',
+    label: 'Convert to Timestamp',
     accepts: []
   },
   {
     name: 'COUNT',
+    label: 'Count',
     accepts: []
   },
   {
     name: 'LIST_REVERSE',
+    label: 'Reverse List',
     accepts: []
   },
   {
     name: 'SORT_NUMERICAL_XAXIS',
+    label: 'Sort Numerical X-axis',
     accepts: []
   },
   {
     name: 'GET_MONTH',
+    label: 'Get Month',
     accepts: ['DATA_KEY']
   }
 ];

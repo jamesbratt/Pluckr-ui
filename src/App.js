@@ -11,7 +11,6 @@ import Register from './Register';
 import { toast } from 'react-toastify';
 import Notifications from './builder_components/notifications/Notifications';
 import 'react-toastify/dist/ReactToastify.css';
-import './css/builder.css';
 import 'font-awesome/css/font-awesome.min.css'
 
 const composeEnhancer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
