@@ -284,6 +284,9 @@
   padding: 1em;
   margin: 0;
 }
+.provider-grid-item h5 {
+  text-transform: capitalize;
+}
 .provider-grid-item a:hover {
   background:#EBEBEB;
   text-decoration: none;

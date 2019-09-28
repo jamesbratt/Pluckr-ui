@@ -9,6 +9,7 @@
 
 export const SALESFORCE_REDIRECT = 'https://login.salesforce.com/services/oauth2/authorize?response_type=code&client_id=3MVG9tzQRhEbH_K3xwzvYEwgSPo59l0Wo1d55C46uZyF0V3jd7PrgQ1DKfbV7xhV8I4.zxOvHJMY.qQXKfFz6&redirect_uri='+ process.env.REACT_APP_REDIRECT_URI +'/authenticate/salesforce&scope=full%20refresh_token';
 export const GITHUB_REDIRECT = 'https://github.com/login/oauth/authorize?client_id=5e1960289e1bb322b2c6&redirect_uri=' + process.env.REACT_APP_REDIRECT_URI + '/authenticate/github&scope=read,repo';
+export const FACEBOOK_REDIRECT = 'https://www.facebook.com/v4.0/dialog/oauth?client_id=383901508907652&redirect_uri=' + process.env.REACT_APP_REDIRECT_URI + '/authenticate/facebook&state=test'
 
 export const CHART_TYPES = [
   { value: 'line', label: 'Line Chart' },
