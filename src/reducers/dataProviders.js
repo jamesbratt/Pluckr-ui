@@ -1,10 +1,12 @@
 
 import { getGitHubData, GITHUB_RESOURCES } from '../data_sources/Github';
 import { getSalesforceData, SALESFORCE_RESOURCES } from '../data_sources/Salesforce';
+import { getFacebookData, FACEBOOK_RESOURCES } from '../data_sources/Facebook';
 import { assocPath } from 'ramda';
-import { GITHUB_REDIRECT, SALESFORCE_REDIRECT } from '../Constants';
+import { GITHUB_REDIRECT, SALESFORCE_REDIRECT, FACEBOOK_REDIRECT } from '../Constants';
 import salesforceLogo from '../img/salesforce-logo.png';
 import githubLogo from '../img/github-logo.png';
+import facebookLogo from '../img/facebook-logo.png';
 
 const initialState = [
   {
@@ -22,6 +24,14 @@ const initialState = [
     resources: SALESFORCE_RESOURCES,
     isActive: false,
     icon: salesforceLogo,
+  },
+  {
+    provider: 'facebook',
+    redirectUrl: FACEBOOK_REDIRECT,
+    request: getFacebookData,
+    resources: FACEBOOK_RESOURCES,
+    isActive: false,
+    icon: facebookLogo,
   },
 ];
 
