@@ -18,7 +18,7 @@ const OperationConfiguration = (props) => {
                   return <option key={opFunc.name} value={opFunc.name}>{opFunc.label}</option>;
                 })}
               </select>
-              <InfoButton title='test' content='test' />
+              {props.rootFunction ? <InfoButton title={OPERATION_FUNCTIONS.find(func => props.rootFunction === func.name).label} content={OPERATION_FUNCTIONS.find(func => props.rootFunction === func.name).help} /> : null}
             </div>
             {props.form}
           </form>

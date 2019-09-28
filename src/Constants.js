@@ -27,81 +27,97 @@ export const OPERATION_FUNCTIONS = [
   {
     name: 'CONSTRUCT_SERIES',
     label: 'Construct Chart Series',
+    help: 'Pick keys that will represent the X and Y axis in your chart.', 
     accepts: ['XAXIS', 'YAXIS']
   },
   {
     name: 'FOR_EVERY_ITEM',
     label: 'For Every Item',
+    help: 'Iterate over every item in the dataset and perform an operation.', 
     accepts: ['FUNCTION']
   },
   {
     name: 'TARGET',
     label: 'Target',
+    help: 'Specify a key and perform an operation on it. This will return only the result of the operation performed.', 
     accepts: ['DATA_KEY', 'FUNCTION']
   },
   {
     name: 'TARGET_BY_INDEX',
     label: 'Target by Index',
+    help: 'Specify an index in a list and perform an operation on it. This will modify the specified index based on the result of the operation.', 
     accepts: ['DATA_INDEX', 'FUNCTION']
   },
   {
     name: 'ADD_KEY',
     label: 'Add Key',
+    help: 'Injects a new key into an object the value of which will be what ever the specified operation returns.', 
     accepts: ['NEW_DATA_KEY', 'FUNCTION']
   },
   {
     name: 'GROUP_BY',
     label: 'Group By',
+    help: 'Group a list of objects by a specific key.', 
     accepts: ['DATA_KEY']
   },
   {
     name: 'PLUCK',
     label: 'Pluck',
+    help: 'Will return the value of the specified key.', 
     accepts: ['DATA_KEY']
   },
   {
     name: 'MULTIPLY_BY',
     label: 'Multiply By',
+    help: 'Performs multiplication on a target.', 
     accepts: ['INTEGER']
   },
   {
     name: 'DIVIDE_BY',
     label: 'Divide By',
+    help: 'Performs division on a target.',
     accepts: ['INTEGER']
   },
   {
     name: 'ADD',
     label: 'Add',
+    help: 'Performs addition on a target.',
     accepts: ['INTEGER']
   },
   {
     name: 'SUBTRACT',
     label: 'Subtract',
+    help: 'Performs subtraction on a target.',
     accepts: ['INTEGER']
   },
   {
     name: 'CONVERT_TO_TIMESTAMP',
     label: 'Convert to Timestamp',
+    help: 'Convert a human-readable date to an epoch timestamp. Charts with a time-based x-axis will expect dates to be an epoch timestamp.',
     accepts: []
   },
   {
     name: 'COUNT',
     label: 'Count',
+    help: 'Performs a count on a list and returns the result',
     accepts: []
   },
   {
     name: 'LIST_REVERSE',
     label: 'Reverse List',
+    help: 'Reverse orders a list of data.',
     accepts: []
   },
   {
     name: 'SORT_NUMERICAL_XAXIS',
     label: 'Sort Numerical X-axis',
+    help: 'Sorts a series of [X, Y] data based on ascending order of the X value.',
     accepts: []
   },
   {
     name: 'GET_MONTH',
     label: 'Get Month',
+    help: 'Takes a human-readable date and returns the month only.',
     accepts: ['DATA_KEY']
   }
 ];

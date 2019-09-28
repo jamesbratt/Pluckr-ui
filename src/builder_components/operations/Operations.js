@@ -294,7 +294,7 @@ class Operations extends Component {
                     return <option key={opFunc.name} value={opFunc.name}>{opFunc.label}</option>;
                   })}
                 </select>
-                <InfoButton title='test' content='test' />
+                {syntaxNode.value ? <InfoButton title={OPERATION_FUNCTIONS.find(func => syntaxNode.value === func.name).label} content={OPERATION_FUNCTIONS.find(func => syntaxNode.value === func.name).help} /> : null}
               </div>
             );
           case 'PROPERTY':
