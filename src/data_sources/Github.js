@@ -15,6 +15,7 @@ export const GITHUB_RESOURCES = {
       { name: 'type', type: DATA_TYPES.string },
       { name: 'sort', type: DATA_TYPES.string },
       { name: 'direction', type: DATA_TYPES.string },
+      { name: 'per_page', type: DATA_TYPES.int },
     ]
   },
   repo_contributors: {
@@ -24,6 +25,7 @@ export const GITHUB_RESOURCES = {
     parameters: [
       { name: 'owner', type: DATA_TYPES.string },
       { name: 'repo', type: DATA_TYPES.string },
+      { name: 'per_page', type: DATA_TYPES.int },
     ]
   },
   repo_commits: {
@@ -36,6 +38,7 @@ export const GITHUB_RESOURCES = {
       { name: 'author', type: DATA_TYPES.string },
       { name: 'since', type: DATA_TYPES.date, transform: ConvertToIso },
       { name: 'until', type: DATA_TYPES.date, transform: ConvertToIso },
+      { name: 'per_page', type: DATA_TYPES.int },
     ]
   },
   repo_issues: {
@@ -53,6 +56,7 @@ export const GITHUB_RESOURCES = {
       { name: 'sort', type: DATA_TYPES.string },
       { name: 'direction', type: DATA_TYPES.string },
       { name: 'since', type: DATA_TYPES.date, transform: ConvertToIso },
+      { name: 'per_page', type: DATA_TYPES.int },
     ]
   },
   repo_releases: {
@@ -62,6 +66,7 @@ export const GITHUB_RESOURCES = {
     parameters: [
       { name: 'owner', type: DATA_TYPES.string },
       { name: 'repo', type: DATA_TYPES.string },
+      { name: 'per_page', type: DATA_TYPES.int },
     ]
   },
   repo_pull_requests: {
@@ -76,6 +81,7 @@ export const GITHUB_RESOURCES = {
       { name: 'base', type: DATA_TYPES.string },
       { name: 'sort', type: DATA_TYPES.string },
       { name: 'direction', type: DATA_TYPES.string },
+      { name: 'per_page', type: DATA_TYPES.int },
     ]
   },
 };

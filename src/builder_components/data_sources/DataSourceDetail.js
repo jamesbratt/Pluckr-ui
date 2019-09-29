@@ -17,37 +17,6 @@ const mapStateToProps = (state) => {
   };
 };
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    createDataSource: (
-      apiKey,
-      username,
-      name,
-      chartId,
-      provider,
-      resource,
-      params,
-      rawData,
-      properties,
-    ) => {
-      dispatch(createDataSource(
-        apiKey,
-        username,
-        name,
-        chartId,
-        provider,
-        resource,
-        params,
-        rawData,
-        properties,
-      ));
-    },
-    addNotification: (data) => {
-      dispatch(addNotification(data))
-    }
-  };
-};
-
 class DataSourceDetail extends Component {
 
   constructor(props) {
@@ -60,6 +29,7 @@ class DataSourceDetail extends Component {
       parameterFields: [],
       parameterValues: [],
       data: null,
+      newlySavedDataSoucerId: null,
     };
   }
 
@@ -98,7 +68,7 @@ class DataSourceDetail extends Component {
             this.setState({
               data: response.data,
             }, () => {
-              this.props.createDataSource(
+              this.props.dispatch(createDataSource(
                 api_key,
                 username,
                 sourceName,
@@ -108,15 +78,16 @@ class DataSourceDetail extends Component {
                 params,
                 response.data,
                 response.properties,
-              );
+                this.props.match.params.data_source_id || this.state.newlySavedDataSoucerId
+              )).then(response => this.setState({ newlySavedDataSoucerId: response }));
             });
-          }).catch(error => this.props.addNotification({ message: error.message, type: 'error' }));
+          }).catch(error => this.props.dispatch(addNotification({ message: error.message, type: 'error' })));
       } catch(error) {
-        this.props.addNotification({ message: error.message, type: 'error' });
+        this.props.dispatch(addNotification({ message: error.message, type: 'error' }));
       }
 
     } else {
-      this.props.addNotification({ message: 'Fill out all required data source fields', type: 'error' });
+      this.props.dispatch(addNotification({ message: 'Fill out all required data source fields', type: 'error' }));
     }
   };
 
@@ -268,7 +239,15 @@ class DataSourceDetail extends Component {
             : null
             }
             {parameters}
-            {!this.props.match.params.data_source_id ? <button onClick={this.addDataSource} type="submit" className="btn btn-primary mb-2">Add Data Source</button> : null}
+            <div className="form-group">
+              <label>Number of pages</label>
+              <input type="number" className="form-control" placeholder="Specify the number of pages to return" />
+            </div>
+            {
+              !this.props.match.params.data_source_id && !this.state.newlySavedDataSoucerId ?
+              <button onClick={this.addDataSource} type="submit" className="btn btn-primary mb-2">Add Data Source</button> :
+              <button onClick={this.addDataSource} type="submit" className="btn btn-primary mb-2">Update Data Source</button>
+            }
           </Col>
           <Col md={7}>
             {
@@ -292,5 +271,4 @@ class DataSourceDetail extends Component {
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps,
 )(DataSourceDetail);

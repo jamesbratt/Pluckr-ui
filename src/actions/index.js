@@ -246,6 +246,7 @@ export const createDataSource = (
   params,
   rawData,
   properties,
+  id,
 ) => {
 
   const integration_id = getTokenId(provider);
@@ -261,16 +262,16 @@ export const createDataSource = (
 
   return dispatch => {
     dispatch(setLoader(true));
-    return axios.post(
-      `${process.env.REACT_APP_PLUCKR_API_URI}/api/v1/datasource/`,
-      JSON.stringify(payload),
-      {
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `ApiKey ${username}:${apiKey}`
-        }
-      }
-    )
+    const options = {
+      method: id ? 'PUT' : 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `ApiKey ${username}:${apiKey}`
+      },
+      data: JSON.stringify(payload),
+      url: `${process.env.REACT_APP_PLUCKR_API_URI}/api/v1/datasource/${id ? id + '/' : ''}`,
+    };
+    return axios(options)
     .then(response => {
       dispatch(
         addSource(
@@ -285,6 +286,7 @@ export const createDataSource = (
         )
       );
       dispatch(setLoader(false));
+      return Promise.resolve(response.data.id);
     })
     .catch(error => {
       dispatch(addNotification({ message: error.error.message, type: 'error' }));
