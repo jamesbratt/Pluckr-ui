@@ -86,12 +86,12 @@ class Charts extends Component {
         <React.Fragment>
           <h2 className="page-header">Your Charts</h2>
           <div className='row'>
-            <div className='col-md-3'>
+            <div className='col-lg-3 col-xl-2'>
               <button onClick={() => this.setState({createChartModalShow: true})} className="add-chart-placeholder">
                 Create from Scratch
               </button>
             </div>
-            <div className='col-md-3'>
+            <div className='col-lg-3 col-xl-2'>
               <Link to={`/charts/templates`} className="add-template-placeholder">
                 Create from Template
               </Link>
@@ -99,7 +99,7 @@ class Charts extends Component {
             {
               charts.map((chart) => {
                 return (
-                  <div key={chart.name} className='col-md-3'>
+                  <div key={chart.name} className='col-lg-3 col-xl-2'>
                     <div className='add-chart-card'>
                       <div className="chart-icon"><i style={{fontSize: '3em', textAlign: 'center'}} className={ICON_MAPPER[chart.series_type]} /></div>
                       <div className="chart-card-inner">

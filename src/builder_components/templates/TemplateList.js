@@ -90,7 +90,7 @@ class TemplateList extends Component {
                   {
                     templates.map((template) => {
                       return (
-                        <div key={template.id} className='col-md-3'>
+                        <div key={template.id} className='col-lg-3 col-xl-2'>
                           <div className='add-chart-card'>
                             <div className="chart-icon"><i style={{fontSize: '3em', textAlign: 'center'}} className={ICON_MAPPER[template.series_type]} /></div>
                             <div className="chart-card-inner">
