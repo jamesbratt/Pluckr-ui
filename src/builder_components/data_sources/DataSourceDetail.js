@@ -140,20 +140,27 @@ class DataSourceDetail extends Component {
     const parameterName = event.target.name;
     const parameterValue = event.target.value;
     const constructedParams = this.state.parameterValues;
-    const newParams = [];
+    let newParams = [];
 
-    if (constructedParams.length > 0) {
-      constructedParams.forEach(parameter => {
-        if (parameter.name && parameter.name === parameterName) {
-          parameter.value = parameterValue;
-        } else {
-          newParams.push({ name: parameter.name, value: parameter.value });
-        }
-      });
-      newParams.push({ name: parameterName, value: parameterValue });
-    } else {
-      newParams.push({ name: parameterName, value: parameterValue });
+    if (parameterValue) {
+      if (constructedParams.length > 0) {
+        constructedParams.forEach(parameter => {
+          if (parameter.name && parameter.name === parameterName) {
+            parameter.value = parameterValue;
+          } else {
+            newParams.push({ name: parameter.name, value: parameter.value });
+          }
+        });
+        newParams.push({ name: parameterName, value: parameterValue });
+      } else {
+        newParams.push({ name: parameterName, value: parameterValue });
+      }
     }
+
+    if (!parameterValue && constructedParams.length > 0) {
+      newParams = constructedParams.filter(param => param.name !== parameterName)
+    }
+
     this.setState({ parameterValues: newParams });
   };
 
@@ -239,10 +246,6 @@ class DataSourceDetail extends Component {
             : null
             }
             {parameters}
-            <div className="form-group">
-              <label>Number of pages</label>
-              <input type="number" className="form-control" placeholder="Specify the number of pages to return" />
-            </div>
             {
               !this.props.match.params.data_source_id && !this.state.newlySavedDataSoucerId ?
               <button onClick={this.addDataSource} type="submit" className="btn btn-primary mb-2">Add Data Source</button> :
