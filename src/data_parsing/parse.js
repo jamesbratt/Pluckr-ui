@@ -107,15 +107,12 @@ const groupBy = (node, data, ast) => {
         const groupObj = {};
         groupObj[keyToGroupByName] = item[keyToGroupByName];
         groupObj['items'] = [item];
+        groupObj['item_count'] = 1;
         groupedData.push(groupObj);
       } else {
         const groupItems = existingGroup.items;
         groupItems.push(item);
-        groupedData.map(group => {
-          if (group[keyToGroupByName] === item[keyToGroupByName]) {
-            assocPath(['items'], groupItems, group);
-          }
-        })
+        existingGroup.item_count = groupItems.length;
       }
 
     });
