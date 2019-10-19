@@ -43,6 +43,12 @@ export const OPERATION_FUNCTIONS = [
     accepts: ['DATA_KEY', 'FUNCTION']
   },
   {
+    name: 'UPDATE_KEY',
+    label: 'Update Key',
+    help: 'Specify a key and perform an operation on it to change its value.', 
+    accepts: ['DATA_KEY', 'FUNCTION']
+  },
+  {
     name: 'TARGET_BY_INDEX',
     label: 'Target by Index',
     help: 'Specify an index in a list and perform an operation on it. This will modify the specified index based on the result of the operation.', 
@@ -91,9 +97,15 @@ export const OPERATION_FUNCTIONS = [
     accepts: ['INTEGER']
   },
   {
-    name: 'CONVERT_TO_TIMESTAMP',
-    label: 'Convert to Timestamp',
-    help: 'Convert a human-readable date to an epoch timestamp. Charts with a time-based x-axis will expect dates to be an epoch timestamp.',
+    name: 'CONVERT_ISO_TO_UTC_DATETIME',
+    label: 'Convert ISO to UTC datetime format',
+    help: 'Convert a human-readable ISO date (e.g. 2019-10-19T02:35:33Z) to a UTC timestamp representing the date and time. Charts with a time-based x-axis will expect dates to be in this format.',
+    accepts: []
+  },
+  {
+    name: 'CONVERT_ISO_TO_UTC_DATE',
+    label: 'Convert ISO to UTC date format',
+    help: 'Convert a human-readable ISO date (e.g. 2019-10-19T02:35:33Z) to a UTC timestamp representing just the date. Charts with a time-based x-axis will expect dates to be in this format.',
     accepts: []
   },
   {

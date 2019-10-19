@@ -51,6 +51,20 @@ const target = (node, data, ast) => {
   throw new Error('TARGET can only be executed on a data structure with keys');
 }
 
+const updateKey = (node, data, ast) => {
+  if ((typeof data === 'function' || (typeof data === 'object' && !!data)) && !Array.isArray(data)) {
+    const args = ast.filter(childNode => childNode.parent === node.id);
+    const target = args.find(arg => arg.name === 'DATA_KEY');
+    const func = args.find(arg => arg.name === 'FUNCTION');
+    const keyToTarget = target.value;
+
+    const newKeyValue = executeFunction(func, data[keyToTarget], ast);
+    data[keyToTarget] = newKeyValue;
+    return data;
+  }
+  throw new Error('TARGET can only be executed on a data structure with keys');
+}
+
 const targetByIndex = (node, data, ast) => {
   if (Array.isArray(data)) {
     const args = ast.filter(childNode => childNode.parent === node.id);
@@ -162,10 +176,22 @@ const subtract = (node, data, ast) => {
   throw new Error('SUBTRACT can only be executed on numbers');
 }
 
-const convertToUnixTimestamp = (node, data, ast) => {
+const convertIsoToUtcDateTime = (node, data, ast) => {
   if (!isNaN(Date.parse(data))) {
-    const timestamp = new Date(data).getTime();
+    const timestamp = Date.UTC(data).getTime();
     return timestamp;
+  }
+  throw new Error("Invalid date format");
+}
+
+const convertIsoToUtcDate = (node, data, ast) => {
+  if (!isNaN(Date.parse(data))) {
+    const dateObject = new Date(data);
+    const year = dateObject.getFullYear();
+    const month = dateObject.getMonth();
+    const day = dateObject.getDate();
+
+    return Date.UTC(year, month, day);
   }
   throw new Error("Invalid date format");
 }
@@ -238,6 +264,12 @@ const executeFunction = (node, data, ast) => {
         data,
         ast,
       );
+    case 'UPDATE_KEY':
+      return updateKey(
+        node,
+        data,
+        ast,
+      );
     case 'TARGET_BY_INDEX':
       return targetByIndex(
         node,
@@ -286,8 +318,14 @@ const executeFunction = (node, data, ast) => {
         data,
         ast,
       );
-    case 'CONVERT_TO_TIMESTAMP':
-      return convertToUnixTimestamp(
+    case 'CONVERT_ISO_TO_UTC_DATETIME':
+      return convertIsoToUtcDateTime(
+        node,
+        data,
+        ast,
+      );
+    case 'CONVERT_ISO_TO_UTC_DATE':
+      return convertIsoToUtcDate(
         node,
         data,
         ast,
