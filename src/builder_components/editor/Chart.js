@@ -55,29 +55,50 @@ class Chart extends Component {
 
     const chartConfig = {
       title: {
-        text: chart.name
+        text: chart.name,
+        type: chart.series_type
       },
       chart: {
         backgroundColor: chart.background_color ? chart.background_color : null
-      },
-      xAxis: {
+      },   
+      legend: {
+        align: 'left',
+        verticalAlign: 'top',
+      }
+    };
+
+    if (chart.chart_type !== 'pie') {
+      chartConfig['xAxis'] = {
         type: chart.chart_type,
         id: 'master-x-axis',
         visible: chart.x_axis_enabled,
         title: {
           text: chart.x_axis_title,
         }
-      },
-      yAxis: {
+      };
+
+      chartConfig['yAxis'] = {
         title: false,
         gridLineWidth: 0,
         minorGridLineWidth: 0,
-      },    
-      legend: {
-        align: 'left',
-        verticalAlign: 'top',
-      }
-    };
+      };
+    } else {
+      chartConfig['tooltip'] = {
+        pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+      };
+      
+      chartConfig['plotOptions'] = {
+        pie: {
+            allowPointSelect: true,
+            cursor: 'pointer',
+            dataLabels: {
+              enabled: true,
+              format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+            },
+            showInLegend: true
+        }
+      };
+    }
   
     const chartInstance = Highcharts.chart(
       `chart-${chart.id}`,

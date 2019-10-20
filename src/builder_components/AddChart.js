@@ -33,6 +33,7 @@ const AddChart = (props) => {
           <option value="linear">Linear Line Chart</option>
           <option value="datetime">Time-based Line Chart</option>
           <option value="category">Bar Chart</option>
+          <option value="pie">Pie Chart</option>
         </select>
       </div>
       <button onClick={addNewChart} className="btn btn-success" type="submit">Create Chart</button>

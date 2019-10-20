@@ -27,12 +27,12 @@ const constructPieSeries = (node, data, ast) => {
     const value = args.find(arg => arg.name === 'VALUE');
 
     const valueTotal = data.reduce((acc, current) => {
-      return acc + current[value];
+      return acc + current[value.value];
     }, 0);
 
     return data.map(dataPoint => {
-      const y = (dataPoint[value]/valueTotal) * 100;
-      return { name, y };
+      const y = (dataPoint[value.value]/valueTotal) * 100;
+      return { name: dataPoint[name.value], y };
     })
   }
   throw new Error('CONSTRUCT_PIE_SERIES can only be executed on a list of items');
