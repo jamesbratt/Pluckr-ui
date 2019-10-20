@@ -55,6 +55,10 @@ export const createChart = (apiKey, username, name, chart_type) => {
     series_type = 'bar';
   }
 
+  if (chart_type === 'pie') {
+    series_type = 'pie';
+  }
+
   const payload = {
     name,
     chart_type,

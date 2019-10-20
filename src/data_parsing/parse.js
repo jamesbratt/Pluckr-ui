@@ -20,6 +20,24 @@ const constructSeries = (node, data, ast) => {
   throw new Error('CONSTRUCT_SERIES can only be executed on a list of items');
 }
 
+const constructPieSeries = (node, data, ast) => {
+  if (Array.isArray(data)) {
+    const args = ast.filter(childNode => childNode.parent === node.id);
+    const name = args.find(arg => arg.name === 'NAME');
+    const value = args.find(arg => arg.name === 'VALUE');
+
+    const valueTotal = data.reduce((acc, current) => {
+      return acc + current[value.value];
+    }, 0);
+
+    return data.map(dataPoint => {
+      const y = (dataPoint[value.value]/valueTotal) * 100;
+      return { name: dataPoint[name.value], y };
+    })
+  }
+  throw new Error('CONSTRUCT_PIE_SERIES can only be executed on a list of items');
+}
+
 const sortNumericalXaxis = (node, data, ast) => {
   if (Array.isArray(data)) {
     return data.sort((a,b) => {
@@ -47,6 +65,20 @@ const target = (node, data, ast) => {
     const keyToTarget = target.value;
 
     return executeFunction(func, data[keyToTarget], ast);
+  }
+  throw new Error('TARGET can only be executed on a data structure with keys');
+}
+
+const updateKey = (node, data, ast) => {
+  if ((typeof data === 'function' || (typeof data === 'object' && !!data)) && !Array.isArray(data)) {
+    const args = ast.filter(childNode => childNode.parent === node.id);
+    const target = args.find(arg => arg.name === 'DATA_KEY');
+    const func = args.find(arg => arg.name === 'FUNCTION');
+    const keyToTarget = target.value;
+
+    const newKeyValue = executeFunction(func, data[keyToTarget], ast);
+    data[keyToTarget] = newKeyValue;
+    return data;
   }
   throw new Error('TARGET can only be executed on a data structure with keys');
 }
@@ -93,15 +125,12 @@ const groupBy = (node, data, ast) => {
         const groupObj = {};
         groupObj[keyToGroupByName] = item[keyToGroupByName];
         groupObj['items'] = [item];
+        groupObj['item_count'] = 1;
         groupedData.push(groupObj);
       } else {
         const groupItems = existingGroup.items;
         groupItems.push(item);
-        groupedData.map(group => {
-          if (group[keyToGroupByName] === item[keyToGroupByName]) {
-            assocPath(['items'], groupItems, group);
-          }
-        })
+        existingGroup.item_count = groupItems.length;
       }
 
     });
@@ -162,10 +191,22 @@ const subtract = (node, data, ast) => {
   throw new Error('SUBTRACT can only be executed on numbers');
 }
 
-const convertToUnixTimestamp = (node, data, ast) => {
+const convertIsoToUtcDateTime = (node, data, ast) => {
   if (!isNaN(Date.parse(data))) {
-    const timestamp = new Date(data).getTime();
+    const timestamp = Date.UTC(data).getTime();
     return timestamp;
+  }
+  throw new Error("Invalid date format");
+}
+
+const convertIsoToUtcDate = (node, data, ast) => {
+  if (!isNaN(Date.parse(data))) {
+    const dateObject = new Date(data);
+    const year = dateObject.getFullYear();
+    const month = dateObject.getMonth();
+    const day = dateObject.getDate();
+
+    return Date.UTC(year, month, day);
   }
   throw new Error("Invalid date format");
 }
@@ -220,6 +261,12 @@ const executeFunction = (node, data, ast) => {
         data,
         ast
       );
+    case 'CONSTRUCT_PIE_SERIES':
+      return constructPieSeries(
+        node,
+        data,
+        ast
+      );
     case 'SORT_NUMERICAL_XAXIS':
       return sortNumericalXaxis(
         node,
@@ -234,6 +281,12 @@ const executeFunction = (node, data, ast) => {
       );
     case 'TARGET':
       return target(
+        node,
+        data,
+        ast,
+      );
+    case 'UPDATE_KEY':
+      return updateKey(
         node,
         data,
         ast,
@@ -286,8 +339,14 @@ const executeFunction = (node, data, ast) => {
         data,
         ast,
       );
-    case 'CONVERT_TO_TIMESTAMP':
-      return convertToUnixTimestamp(
+    case 'CONVERT_ISO_TO_UTC_DATETIME':
+      return convertIsoToUtcDateTime(
+        node,
+        data,
+        ast,
+      );
+    case 'CONVERT_ISO_TO_UTC_DATE':
+      return convertIsoToUtcDate(
         node,
         data,
         ast,

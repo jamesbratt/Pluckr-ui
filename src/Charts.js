@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Modal from 'react-bootstrap/Modal';
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
+import Tooltip from 'react-bootstrap/Tooltip';
 import { createChart, fetchCharts, deleteChart } from './actions/chart';
 import AddChart from './builder_components/AddChart';
 import { Link, Redirect } from "react-router-dom";
@@ -10,6 +12,7 @@ import Loader from './Loader';
 const ICON_MAPPER = {
   line: 'fa fa-line-chart',
   bar: 'fa fa-bar-chart',
+  pie: 'fa fa-pie-chart',
 };
 
 const mapStateToProps = (state) => {
@@ -86,12 +89,12 @@ class Charts extends Component {
         <React.Fragment>
           <h2 className="page-header">Your Charts</h2>
           <div className='row'>
-            <div className='col-md-3'>
+            <div className='col-lg-3 col-xl-2'>
               <button onClick={() => this.setState({createChartModalShow: true})} className="add-chart-placeholder">
                 Create from Scratch
               </button>
             </div>
-            <div className='col-md-3'>
+            <div className='col-lg-3 col-xl-2'>
               <Link to={`/charts/templates`} className="add-template-placeholder">
                 Create from Template
               </Link>
@@ -99,11 +102,21 @@ class Charts extends Component {
             {
               charts.map((chart) => {
                 return (
-                  <div key={chart.name} className='col-md-3'>
+                  <div key={chart.name} className='col-lg-3 col-xl-2'>
                     <div className='add-chart-card'>
                       <div className="chart-icon"><i style={{fontSize: '3em', textAlign: 'center'}} className={ICON_MAPPER[chart.series_type]} /></div>
                       <div className="chart-card-inner">
-                        <h3>{chart.name}</h3>
+                        <OverlayTrigger
+                          key={chart.name}
+                          placement='bottom'
+                          overlay={
+                            <Tooltip id={`tooltip-bottom`}>
+                              {chart.name}
+                            </Tooltip>
+                          }
+                        >
+                          <h3>{chart.name}</h3>
+                        </OverlayTrigger>
                         <div className="btn-group-fixe">
                           <Link style={{paddingLeft: '0'}} className="btn btn-link" to={`/charts/${chart.id}/data-sources`}>Edit</Link>
                           <button style={{paddingLeft: '0'}} className="btn btn-link" onClick={() => this.removeChart(chart.id)}>Delete</button>

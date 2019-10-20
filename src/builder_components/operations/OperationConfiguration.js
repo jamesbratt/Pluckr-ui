@@ -1,6 +1,7 @@
 import React from 'react';
 import { OPERATION_FUNCTIONS } from '../../Constants';
 import Modal from 'react-bootstrap/Modal';
+import InfoButton from '../InfoButton';
 
 const OperationConfiguration = (props) => {
   return (
@@ -10,12 +11,15 @@ const OperationConfiguration = (props) => {
         </Modal.Header>
         <Modal.Body>
           <form className="form-inline my-2 my-lg-0">
-            <select defaultValue={props.rootFunction} className="form-control mb-2 mr-sm-2" onChange={props.setRootFunction}>
-              <option value={null} hidden>-- Select a function --</option>
-              {OPERATION_FUNCTIONS.map(opFunc => {
-                return <option key={opFunc.name} value={opFunc.name}>{opFunc.name}</option>;
-              })}
-            </select>
+            <div className="function-wrapper">
+              <select defaultValue={props.rootFunction} className="form-control mb-2 mr-sm-2" onChange={props.setRootFunction}>
+                <option value={null} hidden>-- Select a function --</option>
+                {OPERATION_FUNCTIONS.map(opFunc => {
+                  return <option key={opFunc.name} value={opFunc.name}>{opFunc.label}</option>;
+                })}
+              </select>
+              {props.rootFunction ? <InfoButton title={OPERATION_FUNCTIONS.find(func => props.rootFunction === func.name).label} content={OPERATION_FUNCTIONS.find(func => props.rootFunction === func.name).help} /> : null}
+            </div>
             {props.form}
           </form>
         </Modal.Body>

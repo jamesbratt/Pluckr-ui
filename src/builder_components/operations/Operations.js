@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import OperationConfiguration from './OperationConfiguration';
 import DatasetPreview from '../DatasetPreview';
+import InfoButton from '../InfoButton';
 import { GenerateGuid } from '../../utils/Helpers';
 import { createOperation, deleteOperation, updateOperationAst, fetchOperations } from '../../actions';
 import { runDataSet } from '../../actions/dataset';
@@ -273,7 +274,7 @@ class Operations extends Component {
     const operations = this.props.operations.map(operation => {
       if (operation.dataset === parseInt(this.props.dataSetId)) {
         return <li key={operation.id} className="list-group-item">
-          <button className="btn btn-link btn-sm table-btn" onClick={() => this.onOperationEdit(operation)}>{operation.root_function}</button>
+          <button className="btn btn-link btn-sm table-btn" onClick={() => this.onOperationEdit(operation)}>{OPERATION_FUNCTIONS.find(func => operation.root_function === func.name).label}</button>
           <div key={operation.id} className="operation-actions float-right">
             <button style={{ marginLeft: '1em' }} className="btn btn-sm btn-link table-btn" onClick={() => this.deleteOperation(operation.id)}><i className="fa fa-trash" /></button>
           </div>
@@ -286,12 +287,15 @@ class Operations extends Component {
         switch(syntaxNode.name) {
           case 'FUNCTION':
             return (
-              <select key={syntaxNode.id} defaultValue={syntaxNode.value} id={syntaxNode.id} className="form-control mb-2 mr-sm-2" onChange={this.onChildFunctionSet}>
-                <option value={null} hidden>-- Select a function --</option>
-                {OPERATION_FUNCTIONS.map(opFunc => {
-                  return <option key={opFunc.name} value={opFunc.name}>{opFunc.name}</option>;
-                })}
-              </select>
+              <div className="function-wrapper">
+                <select key={syntaxNode.id} defaultValue={syntaxNode.value} id={syntaxNode.id} className="form-control mb-2 mr-sm-2" onChange={this.onChildFunctionSet}>
+                  <option value={null} hidden>-- Select a function --</option>
+                  {OPERATION_FUNCTIONS.map(opFunc => {
+                    return <option key={opFunc.name} value={opFunc.name}>{opFunc.label}</option>;
+                  })}
+                </select>
+                {syntaxNode.value ? <InfoButton title={OPERATION_FUNCTIONS.find(func => syntaxNode.value === func.name).label} content={OPERATION_FUNCTIONS.find(func => syntaxNode.value === func.name).help} /> : null}
+              </div>
             );
           case 'PROPERTY':
             return (
@@ -314,6 +318,8 @@ class Operations extends Component {
           case "NEW_DATA_KEY":
           case 'XAXIS':
           case 'YAXIS':
+          case 'NAME':
+          case 'VALUE':
             return (
               <React.Fragment key={syntaxNode.id}>
                 <label className="sr-only">{syntaxNode.name}</label>
@@ -327,7 +333,7 @@ class Operations extends Component {
     return (
       <div className="operations">
         <button style={{marginRight: '1em'}} onClick={this.handleShow} type="button" className="btn btn-primary btn-sm">Add Operation</button>
-        <Modal size="lg" show={this.state.show} onHide={this.handleClose}>
+        <Modal dialogClassName="modal-80w" show={this.state.show} onHide={this.handleClose}>
           {
             this.state.preview ?
             <DatasetPreview

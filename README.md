@@ -1,10 +1,23 @@
-## Chart Builder
+## Pluckr UI
 
-A React/Redux app that models third party data on the client so that it can be transformed and visualised using charting libraries.
+A React/Redux app that models third party data on the client so that it can be transformed and visualised using JavaScript charting libraries.
 
-This app uses the [EasyOauth](http://easyoauth.com) service for third party API authentication.
+To run locally, start by creating an `.env.local` file in the project root,
+containing the following:
 
-In the project directory, you can run:
+```
+REACT_APP_PLUCKR_API_URI=https://app.pluckr.io
+REACT_APP_REDIRECT_URI=http://localhost:3000
+```
+
+If you have the Pluckr API running locally then instead use:
+
+```
+REACT_APP_PLUCKR_API_URI=http://localhost:3000
+REACT_APP_REDIRECT_URI=http://localhost:3000
+```
+
+In the project directory, you can then run:
 
 ### `npm start`
 

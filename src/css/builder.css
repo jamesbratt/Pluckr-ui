@@ -189,7 +189,8 @@
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
-
+  display: inline-block;
+  max-width: 100%;
 }
 
 .chart-icon {
@@ -335,4 +336,12 @@
   float: right;
   margin-left: 1em;
   padding: 0.5em;
+}
+.info-wrapper {
+  margin-right: 1em;
+  cursor: pointer;
+}
+.modal-80w {
+  width: 80%;
+  max-width: none!important;
 }

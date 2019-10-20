@@ -26,66 +26,116 @@ export const DATA_TYPES = {
 export const OPERATION_FUNCTIONS = [
   {
     name: 'CONSTRUCT_SERIES',
+    label: 'Construct axis-based Chart Series',
+    help: 'Pick keys that will represent the X and Y axis in your chart (applicable to line/bar charts).', 
     accepts: ['XAXIS', 'YAXIS']
   },
   {
+    name: 'CONSTRUCT_PIE_SERIES',
+    label: 'Construct Pie Chart Series',
+    help: 'Pick keys that will represent a pie chart segment, the value of which will be calculated as a percentage of the total numeration value (applicable to pie/donut charts only).', 
+    accepts: ['NAME', 'VALUE']
+  },
+  {
     name: 'FOR_EVERY_ITEM',
+    label: 'For Every Item',
+    help: 'Iterate over every item in the dataset and perform an operation.', 
     accepts: ['FUNCTION']
   },
   {
     name: 'TARGET',
+    label: 'Target',
+    help: 'Specify a key and perform an operation on it. This will return only the result of the operation performed.', 
+    accepts: ['DATA_KEY', 'FUNCTION']
+  },
+  {
+    name: 'UPDATE_KEY',
+    label: 'Update Key',
+    help: 'Specify a key and perform an operation on it to change its value.', 
     accepts: ['DATA_KEY', 'FUNCTION']
   },
   {
     name: 'TARGET_BY_INDEX',
+    label: 'Target by Index',
+    help: 'Specify an index in a list and perform an operation on it. This will modify the specified index based on the result of the operation.', 
     accepts: ['DATA_INDEX', 'FUNCTION']
   },
   {
     name: 'ADD_KEY',
+    label: 'Add Key',
+    help: 'Injects a new key into an object the value of which will be what ever the specified operation returns.', 
     accepts: ['NEW_DATA_KEY', 'FUNCTION']
   },
   {
     name: 'GROUP_BY',
+    label: 'Group By',
+    help: 'Group a list of objects by a specific key.', 
     accepts: ['DATA_KEY']
   },
   {
     name: 'PLUCK',
+    label: 'Pluck',
+    help: 'Will return the value of the specified key.', 
     accepts: ['DATA_KEY']
   },
   {
     name: 'MULTIPLY_BY',
+    label: 'Multiply By',
+    help: 'Performs multiplication on a target.', 
     accepts: ['INTEGER']
   },
   {
     name: 'DIVIDE_BY',
+    label: 'Divide By',
+    help: 'Performs division on a target.',
     accepts: ['INTEGER']
   },
   {
     name: 'ADD',
+    label: 'Add',
+    help: 'Performs addition on a target.',
     accepts: ['INTEGER']
   },
   {
     name: 'SUBTRACT',
+    label: 'Subtract',
+    help: 'Performs subtraction on a target.',
     accepts: ['INTEGER']
   },
   {
-    name: 'CONVERT_TO_TIMESTAMP',
+    name: 'CONVERT_ISO_TO_UTC_DATETIME',
+    label: 'Convert ISO to UTC datetime format',
+    help: 'Convert a human-readable ISO date (e.g. 2019-10-19T02:35:33Z) to a UTC timestamp representing the date and time. Charts with a time-based x-axis will expect dates to be in this format.',
+    accepts: []
+  },
+  {
+    name: 'CONVERT_ISO_TO_UTC_DATE',
+    label: 'Convert ISO to UTC date format',
+    help: 'Convert a human-readable ISO date (e.g. 2019-10-19T02:35:33Z) to a UTC timestamp representing just the date. Charts with a time-based x-axis will expect dates to be in this format.',
     accepts: []
   },
   {
     name: 'COUNT',
+    label: 'Count',
+    help: 'Performs a count on a list and returns the result',
     accepts: []
   },
   {
     name: 'LIST_REVERSE',
+    label: 'Reverse List',
+    help: 'Reverse orders a list of data.',
     accepts: []
   },
   {
     name: 'SORT_NUMERICAL_XAXIS',
+    label: 'Sort Numerical X-axis',
+    help: 'Sorts a series of [X, Y] data based on ascending order of the X value.',
     accepts: []
   },
   {
     name: 'GET_MONTH',
+    label: 'Get Month',
+    help: 'Takes a human-readable date and returns the month only.',
     accepts: ['DATA_KEY']
   }
 ];
