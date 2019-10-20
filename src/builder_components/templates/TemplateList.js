@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
+import Tooltip from 'react-bootstrap/Tooltip';
 import { connect } from 'react-redux';
 import { fetchCharts } from '../../actions/chart';
 import { Redirect } from "react-router-dom";
@@ -8,6 +10,7 @@ import { addNotification } from '../../actions/notification';
 const ICON_MAPPER = {
   line: 'fa fa-line-chart',
   bar: 'fa fa-bar-chart',
+  pie: 'fa fa-pie-chart',
 };
 
 const mapStateToProps = (state) => {
@@ -94,7 +97,17 @@ class TemplateList extends Component {
                           <div className='add-chart-card'>
                             <div className="chart-icon"><i style={{fontSize: '3em', textAlign: 'center'}} className={ICON_MAPPER[template.series_type]} /></div>
                             <div className="chart-card-inner">
-                              <h3>{template.name}</h3>
+                              <OverlayTrigger
+                                key={template.name}
+                                placement='bottom'
+                                overlay={
+                                  <Tooltip id={`tooltip-bottom`}>
+                                    {template.name}
+                                  </Tooltip>
+                                }
+                              >
+                                <h3>{template.name}</h3>
+                              </OverlayTrigger>
                               <div className="btn-group-fixe">
                                 <button onClick={() => this.install(template.id)} style={{paddingLeft: '0'}} className="btn btn-link">Install Template</button>
                               </div>

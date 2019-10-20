@@ -52,7 +52,7 @@ export const createChart = (apiKey, username, name, chart_type) => {
   }
 
   if (chart_type === 'category') {
-    series_type = 'column';
+    series_type = 'bar';
   }
 
   if (chart_type === 'pie') {
