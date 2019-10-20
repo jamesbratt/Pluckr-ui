@@ -26,9 +26,15 @@ export const DATA_TYPES = {
 export const OPERATION_FUNCTIONS = [
   {
     name: 'CONSTRUCT_SERIES',
-    label: 'Construct Chart Series',
-    help: 'Pick keys that will represent the X and Y axis in your chart.', 
+    label: 'Construct axis-based Chart Series',
+    help: 'Pick keys that will represent the X and Y axis in your chart (applicable to line/bar charts).', 
     accepts: ['XAXIS', 'YAXIS']
+  },
+  {
+    name: 'CONSTRUCT_PIE_SERIES',
+    label: 'Construct Pie Chart Series',
+    help: 'Pick keys that will represent a pie chart segment, the value of which will be calculated as a percentage of the total numeration value (applicable to pie/donut charts only).', 
+    accepts: ['NAME', 'VALUE']
   },
   {
     name: 'FOR_EVERY_ITEM',

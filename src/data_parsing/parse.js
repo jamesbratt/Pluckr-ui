@@ -20,6 +20,24 @@ const constructSeries = (node, data, ast) => {
   throw new Error('CONSTRUCT_SERIES can only be executed on a list of items');
 }
 
+const constructPieSeries = (node, data, ast) => {
+  if (Array.isArray(data)) {
+    const args = ast.filter(childNode => childNode.parent === node.id);
+    const name = args.find(arg => arg.name === 'NAME');
+    const value = args.find(arg => arg.name === 'VALUE');
+
+    const valueTotal = data.reduce((acc, current) => {
+      return acc + current[value];
+    }, 0);
+
+    return data.map(dataPoint => {
+      const y = (dataPoint[value]/valueTotal) * 100;
+      return { name, y };
+    })
+  }
+  throw new Error('CONSTRUCT_PIE_SERIES can only be executed on a list of items');
+}
+
 const sortNumericalXaxis = (node, data, ast) => {
   if (Array.isArray(data)) {
     return data.sort((a,b) => {
@@ -239,6 +257,12 @@ const executeFunction = (node, data, ast) => {
   switch (node.value) {
     case 'CONSTRUCT_SERIES':
       return constructSeries(
+        node,
+        data,
+        ast
+      );
+    case 'CONSTRUCT_PIE_SERIES':
+      return constructPieSeries(
         node,
         data,
         ast

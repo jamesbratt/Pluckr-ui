@@ -318,6 +318,8 @@ class Operations extends Component {
           case "NEW_DATA_KEY":
           case 'XAXIS':
           case 'YAXIS':
+          case 'NAME':
+          case 'VALUE':
             return (
               <React.Fragment key={syntaxNode.id}>
                 <label className="sr-only">{syntaxNode.name}</label>
