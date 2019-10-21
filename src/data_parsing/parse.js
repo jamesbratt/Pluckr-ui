@@ -151,6 +151,10 @@ const pluck = (node, data, ast) => {
   throw new Error('PLUCK can only be executed on a data structure with keys');
 }
 
+const filterWhere = (node, data, ast) => {
+  return data;
+}
+
 const multiplyBy = (node, data, ast) => {
   if (!isNaN(data)) {
     let dataPoint = data;
@@ -269,6 +273,12 @@ const executeFunction = (node, data, ast) => {
       );
     case 'SORT_NUMERICAL_XAXIS':
       return sortNumericalXaxis(
+        node,
+        data,
+        ast
+      );
+    case 'FILTER_WHERE':
+      return filterWhere(
         node,
         data,
         ast

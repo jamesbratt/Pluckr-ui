@@ -1,0 +1,59 @@
+import React, { Component } from 'react';
+import InputGroup from 'react-bootstrap/InputGroup';
+import DropdownButton from 'react-bootstrap/DropdownButton';
+import Dropdown from 'react-bootstrap/Dropdown';
+import FormControl from 'react-bootstrap/FormControl';
+
+const VALUE_TYPES = {
+  STRING: 'text',
+  INTEGER: 'number',
+  DATE: 'date',
+  VARIABLE: 'text',
+};
+
+class ValueSelector extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      type: 'STRING',
+      value: null,
+    }
+  }
+
+  componentDidMount() {
+    if (this.props.value) {
+      this.setState({ value: this.props.value.value, type: this.props.value.type });
+    }
+  }
+
+  onInputChange = (e) => {
+    this.setState({ value: e.target.value });
+    this.props.onChange(e, this.state.type);
+  }
+
+  onTypeChange = (e, type) => {
+    e.preventDefault();
+    this.setState({ type, value: null });
+  }
+
+  render() {
+    return (
+      <InputGroup className="mb-2">
+        <FormControl type={VALUE_TYPES[this.state.type]} id={this.props.id} onChange={this.onInputChange} value={this.state.value || ''} />
+        <DropdownButton
+          as={InputGroup.Prepend}
+          variant="outline-secondary"
+          title={this.state.type}
+        >
+          <Dropdown.Item onClick={(e) => this.onTypeChange(e, 'STRING')} href="#">String</Dropdown.Item>
+          <Dropdown.Item onClick={(e) => this.onTypeChange(e, 'INTEGER')} href="#">Integer</Dropdown.Item>
+          <Dropdown.Item onClick={(e) => this.onTypeChange(e, 'DATE')} href="#">Date</Dropdown.Item>
+          <Dropdown.Divider />
+          <Dropdown.Item onClick={(e) => this.onTypeChange(e, 'VARIABLE')} href="#">Variable</Dropdown.Item>
+        </DropdownButton>
+      </InputGroup>
+    )
+  }
+}
+
+export default ValueSelector;

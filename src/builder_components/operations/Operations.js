@@ -3,11 +3,12 @@ import Modal from 'react-bootstrap/Modal';
 import OperationConfiguration from './OperationConfiguration';
 import DatasetPreview from '../DatasetPreview';
 import InfoButton from '../InfoButton';
+import ValueSelector from './ValueSelector';
 import { GenerateGuid } from '../../utils/Helpers';
 import { createOperation, deleteOperation, updateOperationAst, fetchOperations } from '../../actions';
 import { runDataSet } from '../../actions/dataset';
 import { connect } from 'react-redux';
-import { OPERATION_FUNCTIONS } from '../../Constants';
+import { OPERATION_FUNCTIONS, OPERATORS } from '../../Constants';
 import { difference } from 'ramda';
 import { addDataSeries } from '../editor/Graph';
 
@@ -206,10 +207,10 @@ class Operations extends Component {
     });
   }
 
-  onAstNodeValueSelected = (event) => {
+  onAstNodeValueSelected = (event, type = null) => {
     const ast = this.state.operationAst;
     const selectedNodeId = event.target.id;
-    const selectedNodeValue = event.target.value;
+    const selectedNodeValue = type ? { value: event.target.value, type } : event.target.value;
 
     ast.find(currentFn => {
       if (currentFn.id === selectedNodeId) {
@@ -297,14 +298,18 @@ class Operations extends Component {
                 {syntaxNode.value ? <InfoButton title={OPERATION_FUNCTIONS.find(func => syntaxNode.value === func.name).label} content={OPERATION_FUNCTIONS.find(func => syntaxNode.value === func.name).help} /> : null}
               </div>
             );
-          case 'PROPERTY':
+          case 'OPERATOR':
             return (
               <select key={syntaxNode.id} defaultValue={syntaxNode.value} id={syntaxNode.id} onChange={this.onAstNodeValueSelected} className="form-control mb-2 mr-sm-2">
-                <option value={null} hidden>-- Select a {syntaxNode.name} --</option>
-                {selectedSource.properties.map(property => {
-                  return <option key={property} value={property}>{property}</option>;
+                <option value={null} hidden>-- Select an Operator --</option>
+                {OPERATORS.map(operator => {
+                  return <option key={operator.value} value={operator.value}>{operator.label}</option>;
                 })}
               </select>
+            );
+          case 'VALUE_SELECT':
+            return (
+              <ValueSelector value={syntaxNode.value} onChange={this.onAstNodeValueSelected} id={syntaxNode.id} />
             );
           case 'INTEGER':
           case "DATA_INDEX":
@@ -326,6 +331,8 @@ class Operations extends Component {
                 <input defaultValue={syntaxNode.value} id={syntaxNode.id} onKeyUp={this.onAstNodeValueSelected} name={syntaxNode.name} type="text" className="form-control mb-2 mr-sm-2" placeholder={syntaxNode.name} />
               </React.Fragment>
             );
+          default:
+            return <></>
         }
       })
     };

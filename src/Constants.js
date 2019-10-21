@@ -11,6 +11,15 @@ export const SALESFORCE_REDIRECT = 'https://login.salesforce.com/services/oauth2
 export const GITHUB_REDIRECT = 'https://github.com/login/oauth/authorize?client_id=5e1960289e1bb322b2c6&redirect_uri=' + process.env.REACT_APP_REDIRECT_URI + '/authenticate/github&scope=read,repo';
 export const FACEBOOK_REDIRECT = 'https://www.facebook.com/v4.0/dialog/oauth?client_id=383901508907652&redirect_uri=' + process.env.REACT_APP_REDIRECT_URI + '/authenticate/facebook&state=test'
 
+export const OPERATORS = [
+  { label: 'is equal to', value: 'EQUAL_TO' },
+  { label: 'is not equal to', value: 'NOT_EQUAL_TO' },
+  { label: 'is greater than', value: 'GREATER_THAN' },
+  { label: 'is less than', value: 'LESS_THAN' },
+  { label: 'is greater than or equal to', value: 'GREATER_THAN_OR_EQUAL_TO' },
+  { label: 'is less than or equal to', value: 'LESS_THAN_OR_EQUAL_TO' },
+];
+
 export const CHART_TYPES = [
   { value: 'line', label: 'Line Chart' },
   { value: 'area', label: 'Area Chart' }
@@ -41,6 +50,12 @@ export const OPERATION_FUNCTIONS = [
     label: 'For Every Item',
     help: 'Iterate over every item in the dataset and perform an operation.', 
     accepts: ['FUNCTION']
+  },
+  {
+    name: 'FILTER_WHERE',
+    label: 'Filter Where',
+    help: 'Filter based on a condition.', 
+    accepts: ['DATA_KEY', 'OPERATOR', 'VALUE_SELECT']
   },
   {
     name: 'TARGET',
