@@ -5,17 +5,17 @@ import Dropdown from 'react-bootstrap/Dropdown';
 import FormControl from 'react-bootstrap/FormControl';
 
 const VALUE_TYPES = {
-  STRING: 'text',
-  INTEGER: 'number',
-  DATE: 'date',
-  VARIABLE: 'text',
+  string: 'text',
+  number: 'number',
+  date: 'date',
+  variable: 'text',
 };
 
 class ValueSelector extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      type: 'STRING',
+      type: 'string',
       value: null,
     }
   }
@@ -45,11 +45,11 @@ class ValueSelector extends Component {
           variant="outline-secondary"
           title={this.state.type}
         >
-          <Dropdown.Item onClick={(e) => this.onTypeChange(e, 'STRING')} href="#">String</Dropdown.Item>
-          <Dropdown.Item onClick={(e) => this.onTypeChange(e, 'INTEGER')} href="#">Integer</Dropdown.Item>
-          <Dropdown.Item onClick={(e) => this.onTypeChange(e, 'DATE')} href="#">Date</Dropdown.Item>
+          <Dropdown.Item onClick={(e) => this.onTypeChange(e, 'string')} href="#">String</Dropdown.Item>
+          <Dropdown.Item onClick={(e) => this.onTypeChange(e, 'number')} href="#">Integer</Dropdown.Item>
+          <Dropdown.Item onClick={(e) => this.onTypeChange(e, 'date')} href="#">Date</Dropdown.Item>
           <Dropdown.Divider />
-          <Dropdown.Item onClick={(e) => this.onTypeChange(e, 'VARIABLE')} href="#">Variable</Dropdown.Item>
+          <Dropdown.Item onClick={(e) => this.onTypeChange(e, 'variable')} href="#">Variable</Dropdown.Item>
         </DropdownButton>
       </InputGroup>
     )
