@@ -20,6 +20,14 @@ export const OPERATOR_VALUES = {
   LESS_THAN_OR_EQUAL_TO: 'LESS_THAN_OR_EQUAL_TO',
 };
 
+export const VARIABLES = [
+  { label: 'Current Month Beginning', value: 'CURRENT_MONTH_BEGINNING' },
+  { label: 'Last 30 days', value: 'LAST_30_DAYS' },
+  { label: 'Last 7 days', value: 'LAST_7_DAYS' },
+  { label: 'Last 24 Hours', value: 'LAST_24_HOURS' },
+  { label: 'Current Day', value: 'CURRENT_DAY' },
+];
+
 export const OPERATORS = [
   { label: 'is equal to', value: OPERATOR_VALUES.EQUAL_TO },
   { label: 'is not equal to', value: OPERATOR_VALUES.NOT_EQUAL_TO  },

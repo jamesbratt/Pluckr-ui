@@ -3,6 +3,7 @@ import InputGroup from 'react-bootstrap/InputGroup';
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import Dropdown from 'react-bootstrap/Dropdown';
 import FormControl from 'react-bootstrap/FormControl';
+import { VARIABLES } from '../../Constants';
 
 const VALUE_TYPES = {
   string: 'text',
@@ -50,7 +51,16 @@ class ValueSelector extends Component {
           <Dropdown.Divider />
           <Dropdown.Item onClick={(e) => this.onTypeChange(e, 'variable')} href="#">Variable</Dropdown.Item>
         </DropdownButton>
-        <FormControl type={VALUE_TYPES[this.state.type]} id={this.props.id} onChange={this.onInputChange} value={this.state.value || ''} />
+        {
+          this.state.type === 'variable' ?
+            <select defaultValue={this.state.value || null} id={this.props.id} onChange={this.onInputChange} className="form-control">
+              <option value={null} hidden>-- Select a Variable --</option>
+              {VARIABLES.map(v => {
+                return <option key={v.label} value={v.value}>{v.label}</option>;
+              })}
+            </select> :
+            <FormControl type={VALUE_TYPES[this.state.type]} id={this.props.id} onChange={this.onInputChange} value={this.state.value || ''} />
+        }
       </InputGroup>
     )
   }
