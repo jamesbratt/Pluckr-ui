@@ -1,6 +1,7 @@
 
 import { pathOr } from 'ramda';
 import axios from "axios";
+import { VARIABLES } from '../Constants';
 
 export const GenerateGuid = () => {
   const s4 = () => {
@@ -35,10 +36,44 @@ export const getTokenId = (dataProvider) => {
 export const generateQueryString = (params, resource, paramConfigs) => {
   const resourceParameters = paramConfigs;
   return params.map(param => {
+    let value = param.value;
     const transformation = resourceParameters.find(
       resourceParameter => resourceParameter.name === param.name
     ).transform;
-    return param.name + '=' + (transformation ? transformation(param.value) : param.value);
+    if (transformation && VARIABLES.find(v => v.value === param.value)) {
+  
+      const variables = VARIABLES.reduce((acc, cur) => {
+        acc[cur.value] = cur.value;
+        return acc;
+      }, {});
+  
+      const today = new Date();
+      const year = today.getFullYear();
+      const month = today.getMonth();
+      const day = today.getDate();
+  
+      switch(param.value) {
+        case variables.CURRENT_MONTH_BEGINNING:
+          value = new Date(year, month, 1).getTime();
+          break;
+        case variables.LAST_30_DAYS:
+          value = new Date(year, month, day).getTime() - 30*24*60*60*1000;
+          break;
+        case variables.LAST_7_DAYS:
+          value = new Date(year, month, day).getTime() - 7*24*60*60*1000;
+          break;
+        case variables.LAST_24_HOURS:
+          value = new Date(year, month, day).getTime() - 24*60*60*1000;
+          break;
+        case variables.CURRENT_DAY:
+          value = new Date(year, month, day).getTime();
+          break;
+        default:
+          value = null;
+          break;
+      }
+    } 
+    return param.name + '=' + (transformation ? transformation(value) : value);
   }).join('&');
 };
 

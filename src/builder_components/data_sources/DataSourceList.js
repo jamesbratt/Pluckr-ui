@@ -43,14 +43,12 @@ class DataSourceList extends Component {
 
   componentDidMount() {
     const sourcesLoaded = this.props.sources.data.filter(source => source.chart === parseInt(this.props.match.params.id))
-    if (sourcesLoaded.length === 0) {
-      const { api_key, username } = this.props.user;
-      this.props.fetchDataSources(
-        api_key,
-        username,
-        this.props.match.params.id,
-      )
-    }
+    const { api_key, username } = this.props.user;
+    this.props.fetchDataSources(
+      api_key,
+      username,
+      this.props.match.params.id,
+    )
   };
 
   componentDidUpdate(prevProps) {
