@@ -39,7 +39,6 @@ class ValueSelector extends Component {
   render() {
     return (
       <InputGroup className="mb-2">
-        <FormControl type={VALUE_TYPES[this.state.type]} id={this.props.id} onChange={this.onInputChange} value={this.state.value || ''} />
         <DropdownButton
           as={InputGroup.Prepend}
           variant="outline-secondary"
@@ -51,6 +50,7 @@ class ValueSelector extends Component {
           <Dropdown.Divider />
           <Dropdown.Item onClick={(e) => this.onTypeChange(e, 'variable')} href="#">Variable</Dropdown.Item>
         </DropdownButton>
+        <FormControl type={VALUE_TYPES[this.state.type]} id={this.props.id} onChange={this.onInputChange} value={this.state.value || ''} />
       </InputGroup>
     )
   }

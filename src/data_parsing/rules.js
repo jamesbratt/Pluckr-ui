@@ -2,7 +2,30 @@ import { OPERATOR_VALUES } from '../Constants';
 
 const executeRule = (leftOperand, operator, rightOperand ,type) => {
   if (type === 'date') {
-    return false;
+    const leftOperandDate = new Date(leftOperand).getTime();
+
+    if (isNaN(leftOperandDate)) {
+      throw new Error(`DATA_KEY must be of type ${type}`);
+    }
+
+    const rightOperandDate = new Date(rightOperand).getTime();
+
+    switch(operator) {
+      case OPERATOR_VALUES.EQUAL_TO:
+        return leftOperandDate === rightOperandDate;
+      case OPERATOR_VALUES.NOT_EQUAL_TO:
+        return leftOperandDate !== rightOperandDate;
+      case OPERATOR_VALUES.GREATER_THAN:
+        return leftOperandDate > rightOperandDate;
+      case OPERATOR_VALUES.LESS_THAN:
+        return leftOperandDate < rightOperandDate;
+      case OPERATOR_VALUES.GREATER_THAN_OR_EQUAL_TO:
+        return leftOperandDate >= rightOperandDate;
+      case OPERATOR_VALUES.LESS_THAN_OR_EQUAL_TO:
+        return leftOperandDate <= rightOperandDate;
+      default:
+        return false;
+    }
   }
 
   if (type === 'variable') {
