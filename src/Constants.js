@@ -10,6 +10,34 @@
 export const SALESFORCE_REDIRECT = 'https://login.salesforce.com/services/oauth2/authorize?response_type=code&client_id=3MVG9tzQRhEbH_K3xwzvYEwgSPo59l0Wo1d55C46uZyF0V3jd7PrgQ1DKfbV7xhV8I4.zxOvHJMY.qQXKfFz6&redirect_uri='+ process.env.REACT_APP_REDIRECT_URI +'/authenticate/salesforce&scope=full%20refresh_token';
 export const GITHUB_REDIRECT = 'https://github.com/login/oauth/authorize?client_id=5e1960289e1bb322b2c6&redirect_uri=' + process.env.REACT_APP_REDIRECT_URI + '/authenticate/github&scope=read,repo';
 export const FACEBOOK_REDIRECT = 'https://www.facebook.com/v4.0/dialog/oauth?client_id=383901508907652&redirect_uri=' + process.env.REACT_APP_REDIRECT_URI + '/authenticate/facebook&state=test'
+export const JIRA_REDIRECT = 'https://auth.atlassian.com/authorize?audience=api.atlassian.com&client_id=vRq5RE46A8BCPhGJcv16WzqovBvqYAmV&scope=offline_access%20read%3Ajira-user%20read%3Ajira-work&redirect_uri=' + process.env.REACT_APP_REDIRECT_URI + '/authenticate/jira&state=test&response_type=code&prompt=consent';
+export const STRIPE_REDIRECT = 'https://connect.stripe.com/oauth/authorize?response_type=code&client_id=ca_G5CZaJNVr3W8BtcdOt1MdqK3oMXTBjV5&scope=read_only&stripe_landing=login&redirect_uri=' + process.env.REACT_APP_REDIRECT_URI + '/authenticate/stripe';
+
+export const OPERATOR_VALUES = {
+  EQUAL_TO: 'EQUAL_TO',
+  NOT_EQUAL_TO: 'NOT_EQUAL_TO',
+  GREATER_THAN: 'GREATER_THAN',
+  LESS_THAN: 'LESS_THAN',
+  GREATER_THAN_OR_EQUAL_TO: 'GREATER_THAN_OR_EQUAL_TO',
+  LESS_THAN_OR_EQUAL_TO: 'LESS_THAN_OR_EQUAL_TO',
+};
+
+export const VARIABLES = [
+  { label: 'Current Month Beginning', value: 'CURRENT_MONTH_BEGINNING' },
+  { label: 'Last 30 days', value: 'LAST_30_DAYS' },
+  { label: 'Last 7 days', value: 'LAST_7_DAYS' },
+  { label: 'Last 24 Hours', value: 'LAST_24_HOURS' },
+  { label: 'Current Day', value: 'CURRENT_DAY' },
+];
+
+export const OPERATORS = [
+  { label: 'is equal to', value: OPERATOR_VALUES.EQUAL_TO },
+  { label: 'is not equal to', value: OPERATOR_VALUES.NOT_EQUAL_TO  },
+  { label: 'is greater than', value: OPERATOR_VALUES.GREATER_THAN  },
+  { label: 'is less than', value: OPERATOR_VALUES.LESS_THAN  },
+  { label: 'is greater than or equal to', value: OPERATOR_VALUES.GREATER_THAN_OR_EQUAL_TO  },
+  { label: 'is less than or equal to', value: OPERATOR_VALUES.LESS_THAN_OR_EQUAL_TO  },
+];
 
 export const CHART_TYPES = [
   { value: 'line', label: 'Line Chart' },
@@ -41,6 +69,12 @@ export const OPERATION_FUNCTIONS = [
     label: 'For Every Item',
     help: 'Iterate over every item in the dataset and perform an operation.', 
     accepts: ['FUNCTION']
+  },
+  {
+    name: 'FILTER_WHERE',
+    label: 'Filter Where',
+    help: 'Filter based on a condition.', 
+    accepts: ['DATA_KEY', 'OPERATOR', 'VALUE_SELECT']
   },
   {
     name: 'TARGET',

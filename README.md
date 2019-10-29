@@ -6,7 +6,7 @@ To run locally, start by creating an `.env.local` file in the project root,
 containing the following:
 
 ```
-REACT_APP_PLUCKR_API_URI=https://app.pluckr.io
+REACT_APP_PLUCKR_API_URI=https://api.pluckr.io
 REACT_APP_REDIRECT_URI=http://localhost:3000
 ```
 

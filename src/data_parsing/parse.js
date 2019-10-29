@@ -1,4 +1,5 @@
 import { assoc, assocPath, pathOr } from 'ramda';
+import executeRule from './rules';
 
 const constructSeries = (node, data, ast) => {
   if (Array.isArray(data)) {
@@ -151,6 +152,18 @@ const pluck = (node, data, ast) => {
   throw new Error('PLUCK can only be executed on a data structure with keys');
 }
 
+const filterWhere = (node, data, ast) => {
+  if (Array.isArray(data)) {
+    const args = ast.filter(childNode => childNode.parent === node.id);
+    const leftOperand = args.find(arg => arg.name === 'DATA_KEY');
+    const operator = args.find(arg => arg.name === 'OPERATOR');
+    const rightOperand = args.find(arg => arg.name === 'VALUE_SELECT');
+
+    return data.filter(item => executeRule(item[leftOperand.value], operator.value, rightOperand.value.value, rightOperand.value.type));
+  }
+  throw new Error('FILTER_WHERE can only be executed on a list of items');
+}
+
 const multiplyBy = (node, data, ast) => {
   if (!isNaN(data)) {
     let dataPoint = data;
@@ -269,6 +282,12 @@ const executeFunction = (node, data, ast) => {
       );
     case 'SORT_NUMERICAL_XAXIS':
       return sortNumericalXaxis(
+        node,
+        data,
+        ast
+      );
+    case 'FILTER_WHERE':
+      return filterWhere(
         node,
         data,
         ast

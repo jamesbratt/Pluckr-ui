@@ -3,6 +3,7 @@ import Picker from '../Picker';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import JSONTree from 'react-json-tree';
+import DateSelector from './DateSelector';
 import { pathOr } from 'ramda';
 import { DATA_TYPES } from '../../Constants';
 import { connect } from 'react-redux';
@@ -180,10 +181,7 @@ class DataSourceDetail extends Component {
           case DATA_TYPES.date:
             return (
               <React.Fragment key={parameterField.name}>
-                <div class="form-group">
-                  <label>{parameterField.name}</label>
-                  <input defaultValue={val} name={parameterField.name} onChange={this.onParameterChange} type="date" className="form-control" placeholder={parameterField.name} />
-                </div>
+                <DateSelector useVariables={parameterField.useVariables} name={parameterField.name} value={val} onChange={this.onParameterChange} />
               </React.Fragment>
             );
           case DATA_TYPES.int:

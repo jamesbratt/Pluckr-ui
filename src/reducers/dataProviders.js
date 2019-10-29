@@ -2,11 +2,15 @@
 import { getGitHubData, GITHUB_RESOURCES } from '../data_sources/Github';
 import { getSalesforceData, SALESFORCE_RESOURCES } from '../data_sources/Salesforce';
 import { getFacebookData, FACEBOOK_RESOURCES } from '../data_sources/Facebook';
+import { getJiraData, JIRA_RESOURCES } from '../data_sources/Jira';
+import { getStripeData, STRIPE_RESOURCES } from '../data_sources/Stripe';
 import { assocPath } from 'ramda';
-import { GITHUB_REDIRECT, SALESFORCE_REDIRECT, FACEBOOK_REDIRECT } from '../Constants';
+import { GITHUB_REDIRECT, SALESFORCE_REDIRECT, FACEBOOK_REDIRECT, JIRA_REDIRECT, STRIPE_REDIRECT } from '../Constants';
 import salesforceLogo from '../img/salesforce-logo.png';
 import githubLogo from '../img/github-logo.png';
 import facebookLogo from '../img/facebook-logo.png';
+import jiraLogo from '../img/jira-logo.png';
+import stripeLogo from '../img/stripe-logo.png';
 
 const initialState = [
   {
@@ -32,6 +36,22 @@ const initialState = [
     resources: FACEBOOK_RESOURCES,
     isActive: false,
     icon: facebookLogo,
+  },
+  {
+    provider: 'jira',
+    redirectUrl: JIRA_REDIRECT,
+    request: getJiraData,
+    resources: JIRA_RESOURCES,
+    isActive: false,
+    icon: jiraLogo,
+  },
+  {
+    provider: 'stripe',
+    redirectUrl: STRIPE_REDIRECT,
+    request: getStripeData,
+    resources: STRIPE_RESOURCES,
+    isActive: false,
+    icon: stripeLogo,
   },
 ];
 

@@ -34,8 +34,8 @@ export const GITHUB_RESOURCES = {
       { name: 'owner', type: DATA_TYPES.string },
       { name: 'repo', type: DATA_TYPES.string },
       { name: 'author', type: DATA_TYPES.string },
-      { name: 'since', type: DATA_TYPES.date, transform: ConvertToIso },
-      { name: 'until', type: DATA_TYPES.date, transform: ConvertToIso },
+      { name: 'since', type: DATA_TYPES.date, transform: ConvertToIso, useVariables: true },
+      { name: 'until', type: DATA_TYPES.date, transform: ConvertToIso, useVariables: false },
     ]
   },
   repo_issues: {
