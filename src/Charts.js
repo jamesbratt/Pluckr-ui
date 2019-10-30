@@ -88,7 +88,6 @@ class Charts extends Component {
       let content = (
         <React.Fragment>
           <h2>Your Charts</h2>
-          {charts.length === 0 ? <p className="lead">You have no charts yet, get building!</p> : null}
           <button style={{ marginRight: '1em' }} type="button" onClick={() => this.setState({createChartModalShow: true})} className="btn btn-primary">
             Create Chart from Scratch
           </button>
@@ -97,37 +96,35 @@ class Charts extends Component {
           </Link>
           <div className="row">
             <div className="col-md-8">
-              {
-                charts.length > 0 ?
-                  <Table bordered hover>
-                    <thead>
-                      <tr>
-                        <th></th>
-                        <th>Name</th>
-                        <th>Chart Type</th>
-                        <th>Series Type</th>
-                        <th></th>
+              <Table bordered hover>
+                <thead>
+                  <tr>
+                    <th></th>
+                    <th>Name</th>
+                    <th>Chart Type</th>
+                    <th>Series Type</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {charts.map((chart) => {
+                    return (
+                      <tr key={chart.id}>
+                        <td width="40">
+                          <i className={ICON_MAPPER[chart.series_type]} />
+                        </td>
+                        <td><Link to={`/charts/${chart.id}/data-sources`}>{chart.name}</Link></td>
+                        <td className="capitalize">{chart.chart_type}</td>
+                        <td className="capitalize">{chart.series_type}</td>
+                        <td width="40">
+                          <button onClick={() => this.removeChart(chart.id)} className="btn btn-link table-btn float-right"><i className="fa fa-trash" /></button>
+                        </td>
                       </tr>
-                    </thead>
-                    <tbody>
-                      {charts.map((chart) => {
-                        return (
-                          <tr key={chart.id}>
-                            <td width="40">
-                              <i className={ICON_MAPPER[chart.series_type]} />
-                            </td>
-                            <td><Link to={`/charts/${chart.id}/data-sources`}>{chart.name}</Link></td>
-                            <td className="capitalize">{chart.chart_type}</td>
-                            <td className="capitalize">{chart.series_type}</td>
-                            <td width="40">
-                              <button onClick={() => this.removeChart(chart.id)} className="btn btn-link table-btn float-right"><i className="fa fa-trash" /></button>
-                            </td>
-                          </tr>
-                        )
-                      })}
-                    </tbody>
-                  </Table> : null
-              }
+                    )
+                  })}
+                </tbody>
+              </Table>
+              {charts.length === 0 ? <p style={{ textAlign: 'center' }} className="lead">You have no charts yet, get building!</p> : null}
             </div>
             <div className="col-md-4">
               <DataProviderTable />

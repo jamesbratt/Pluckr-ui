@@ -2,7 +2,6 @@ import * as React from "react";
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Nav from 'react-bootstrap/Nav';
-import { fetchDatasets } from './actions/dataset';
 import { Link } from "react-router-dom";
 import { connect } from 'react-redux';
 import { addNotification } from './actions/notification';
@@ -12,25 +11,12 @@ const ChartConfigHoc = WrappedComponent => {
   const mapStateToProps = (state) => {
     return {
       user: state.user[0],
+      charts: state.charts,
     };
   };
 
-  const mapDispatchToProps = (dispatch) => {
-    return {
-      fetchDatasets: (apiKey, user, chartId) => {
-        dispatch(fetchDatasets(
-          apiKey,
-          user,
-          chartId,
-        ));
-      },
-      addNotification: (message, type) => {
-        dispatch(addNotification(
-          message,
-          type,
-        ));
-      }
-    };
+  const mapDispatchToProps = {
+    addNotification,
   };
 
   class ComponentWithNav extends React.Component {
@@ -63,6 +49,7 @@ const ChartConfigHoc = WrappedComponent => {
     }
     
     render() {
+      const chartName = this.props.charts.find(chart => chart.id === parseInt(this.props.match.params.id)).name;
       return (
         <Row>
           <Col md={2}>
@@ -73,6 +60,7 @@ const ChartConfigHoc = WrappedComponent => {
             </Nav>
           </Col>
           <Col md={10}>
+            <h2>{chartName}</h2>
             <WrappedComponent {...this.props} />
           </Col>
         </Row>

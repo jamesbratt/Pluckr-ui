@@ -90,8 +90,6 @@ class TemplateList extends Component {
                 <h2>Chart Templates</h2>
                 <div className="row">
                   <div className="col-md-8">
-                  {
-                    templates.length === 0 ? <p className="lead">There are no templates available</p> :
                     <Table bordered hover>
                       <thead>
                         <tr>
@@ -120,7 +118,7 @@ class TemplateList extends Component {
                         })}
                       </tbody>
                     </Table>
-                  }
+                    {templates.length === 0 ? <p className="lead">There are no templates available</p> : null}
                   </div>
                   <div className="col-md-4">
                     <DataProviderTable />

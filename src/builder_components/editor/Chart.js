@@ -129,7 +129,6 @@ class Chart extends Component {
 
     return (
       <div className="clearfix">
-        <h2 style={{ display: 'inline-block' }}>Chart Editor</h2>
         <div style={{position: 'relative', marginBottom: '1em'}}>
           <div className={overlayClasses}>
             <div className="overlay-text">
