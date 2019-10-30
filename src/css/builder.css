@@ -345,3 +345,6 @@
   width: 80%;
   max-width: none!important;
 }
+.capitalize {
+  text-transform: capitalize;
+}
