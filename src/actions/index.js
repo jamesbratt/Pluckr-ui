@@ -1,7 +1,6 @@
-import { assocPath, merge } from 'ramda';
-import { executeOperations } from '../data_parsing/parse';
+import { assocPath } from 'ramda';
+import executeDataUpdates from '../data_parsing/execute';
 import { getTokenId } from '../utils/Helpers';
-import { diff } from 'deep-object-diff';
 import { addNotification } from './notification';
 import axios from "axios";
 
@@ -60,6 +59,20 @@ export const addSource = (id, sourceName, chartId, provider, resource, params, d
   }
 };
 
+export const updateSource = (id, sourceName, chartId, provider, resource, params, data, properties) => {
+  return {
+    type: 'UPDATE_SOURCE',
+    id,
+    sourceName,
+    chartId,
+    provider,
+    resource,
+    params,
+    data,
+    properties,
+  }
+};
+
 export const receiveDataSources = (data) => {
   return {
     type: 'RECEIVE_DATA_SOURCES',
@@ -102,127 +115,14 @@ export const fetchDataSources = (apiKey, username, chartId) => {
       .then(json => {
         const dataSources = json.objects;
         if (dataSources.length > 0) {
-          const dataSourcesToAddToState = [];
-          const dataSourceRequests = dataSources.map(dataSource => {
-            const provider = dataProviders.find(dataProvider => dataProvider.provider === dataSource.provider);
-              
-            return provider.request(
-              dataSource.resource,
-              JSON.parse(dataSource.params),
-              username,
-              apiKey,
-              dataSource.id
-            ).catch((error) => {
-              dataSourcesToAddToState.push(dataSource);
-              dispatch(
-                receiveDataSources(
-                  dataSourcesToAddToState
-                )
-              );
-              dispatch(setLoader(false));
-              dispatch(addNotification({ message: `Error from data provider: ${error.message}`, type: 'error' }));
-            });
-            
-          });
-
-          Promise.all(dataSourceRequests).then(responses => {
-            
-            responses.forEach(response => {
-              const sourceConfig = dataSources.find(dataSource => dataSource.id === response.sourceId);
-              const source = {
-                rawData: response.data,
-                properties: response.properties,
-              };
-
-              dataSourcesToAddToState.push(merge(sourceConfig, source));
-            });
-
-            console.log('fetching datasets');
-
-            fetch(`${process.env.REACT_APP_PLUCKR_API_URI}/api/v1/dataset/?chart=${chartId}`, {
-              headers: {
-                  'Content-Type': 'application/json',
-                  'Authorization': `ApiKey ${username}:${apiKey}`
-              },
-            })
-              .then(response => response.json())
-              .then(response => {
-                console.log('datasets received');
-                const datasetDataUpdates = response.objects.map(dataset => {
-                  const latestData = dataSourcesToAddToState.find(source => source.id === dataset.data_source);
-
-                  console.log('fetching operations for ' + dataset.name);
-
-                  return fetch(`${process.env.REACT_APP_PLUCKR_API_URI}/api/v1/operation/?dataset=${dataset.id}`, {
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `ApiKey ${username}:${apiKey}`
-                    },
-                  })
-                    .then(response => response.json())
-                    .then(response => {
-                      let data = latestData.rawData;
-                      let operations = response.objects.length > 0 ? response.objects.map(operation => {
-                        return assocPath(['ast'], JSON.parse(operation.ast), operation);
-                      }) : response.objects;
-
-                      operations.sort(function(a, b) {
-                        return a.sort_order - b.sort_order;
-                      });
-          
-                      try {
-                        data = executeOperations(
-                          latestData.rawData,
-                          dataset,
-                          operations,
-                        );
-
-                        const isDataDiff = diff(data, JSON.parse(dataset.data));
-
-                        if(Object.entries(isDataDiff).length > 0 && isDataDiff.constructor === Object) {
-                          const payload = {
-                            data: JSON.stringify(data),
-                            chart: {pk: dataset.chart},
-                            data_source: {pk: dataset.data_source},
-                          };
-        
-                          console.log('updating data reference for dataset ' + dataset.name);
-                          
-                          fetch(`${process.env.REACT_APP_PLUCKR_API_URI}/api/v1/dataset/${dataset.id}/`, {
-                            method: 'PATCH',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'Authorization': `ApiKey ${username}:${apiKey}`
-                            },
-                            body: JSON.stringify(payload)
-                          })
-                            .then((response) => response.json())
-                            .then(response => {
-                            })
-                            .catch(error => dispatch(addNotification({ message: error.message, type: 'error' })));
-                        } else {
-                          Promise.resolve();
-                        }
-                      
-                      } catch (error) {
-                        dispatch(addNotification({ message: error.message, type: 'error' }));
-                      }
-                    })
-                    .catch(error => dispatch(addNotification({ message: error.message, type: 'error' })));
-                });
-
-                Promise.all(datasetDataUpdates).then(responses => {
-                  console.log('all datasets updated');
-                  dispatch(
-                    receiveDataSources(
-                      dataSourcesToAddToState
-                    )
-                  );
-                  dispatch(setLoader(false));
-                });
-              })
-          })
-
+          executeDataUpdates(
+            dataSources,
+            dataProviders,
+            username,
+            apiKey,
+            chartId,
+            dispatch,
+          );
         } else {
           dispatch(
             receiveDataSources(
@@ -260,7 +160,7 @@ export const createDataSource = (
     integration_auth: { pk: integration_id },
   };
 
-  return dispatch => {
+  return (dispatch, getState) => {
     dispatch(setLoader(true));
     const options = {
       method: id ? 'PUT' : 'POST',
@@ -274,18 +174,55 @@ export const createDataSource = (
     return axios(options)
     .then(response => {
       dispatch(
-        addSource(
+        !id ? addSource(
           response.data.id,
           response.data.name,
           response.data.chart,
           response.data.provider,
           response.data.resource,
           JSON.parse(response.data.params),
-          rawData,
+          rawData.data,
+          properties,
+        ) : updateSource(
+          response.data.id,
+          response.data.name,
+          response.data.chart,
+          response.data.provider,
+          response.data.resource,
+          JSON.parse(response.data.params),
+          rawData.data,
           properties,
         )
       );
+
+      // If a source is being updated, then perform data
+      // update and execution based on new source config
+      if (id) {
+        const { dataProviders } = getState();
+        const updatedSource = {
+          id: response.data.id,
+          name: response.data.name,
+          chart: response.data.chart,
+          provider: response.data.provider,
+          resource: response.data.resource,
+          params: response.data.params,
+          rawData: rawData.data,
+          properties: properties,
+        };
+        executeDataUpdates(
+          [updatedSource],
+          dataProviders,
+          username,
+          apiKey,
+          chartId,
+          dispatch,
+          true,
+          rawData,
+        );
+      }
+      
       dispatch(setLoader(false));
+
       return Promise.resolve(response.data.id);
     })
     .catch(error => {

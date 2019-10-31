@@ -4,6 +4,7 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import JSONTree from 'react-json-tree';
 import DateSelector from './DateSelector';
+import Loader from '../../Loader';
 import { pathOr } from 'ramda';
 import { DATA_TYPES } from '../../Constants';
 import { connect } from 'react-redux';
@@ -15,6 +16,7 @@ const mapStateToProps = (state) => {
     user: state.user[0],
     dataProviders: state.dataProviders,
     sources: state.sources.data,
+    loader: state.loader,
   };
 };
 
@@ -64,7 +66,11 @@ class DataSourceDetail extends Component {
     event.preventDefault();
     if(selectedResource && sourceName && selectedProvider) {
       try {
-        this.state.selectedProvider.request(selectedResource, params, username, api_key)
+        this.state.selectedProvider.request(
+          selectedResource,
+          params, username, api_key,
+          parseInt(this.props.match.params.data_source_id) || parseInt(this.state.newlySavedDataSoucerId)
+        )
           .then(response => {
             this.setState({
               data: response.data,
@@ -77,7 +83,7 @@ class DataSourceDetail extends Component {
                 selectedProvider,
                 selectedResource,
                 params,
-                response.data,
+                response,
                 response.properties,
                 this.props.match.params.data_source_id || this.state.newlySavedDataSoucerId
               )).then(response => this.setState({ newlySavedDataSoucerId: response }));
@@ -252,14 +258,17 @@ class DataSourceDetail extends Component {
           <Col md={7}>
             {
               this.state.data ?
-              <JSONTree
-                theme={{
-                  tree: ({ style }) => ({
-                    style: { ...style, padding: "1em" }, 
-                  }),
-                }}
-                data={this.state.data}
-               /> :
+              <>
+                {this.props.loader ? <Loader /> :
+                <JSONTree
+                  theme={{
+                    tree: ({ style }) => ({
+                      style: { ...style, padding: "1em" }, 
+                    }),
+                  }}
+                  data={this.state.data}
+                />}
+               </> :
               null
             }
           </Col>
