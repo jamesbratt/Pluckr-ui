@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 import Charts from './Charts';
 import DataProviderList from './builder_components/DataProviderList';
 import Modal from 'react-bootstrap/Modal';
-import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
-import Tooltip from 'react-bootstrap/Tooltip';
 import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
 import ChartConfigHoc from './ChartConfigHoc';
@@ -63,7 +61,6 @@ class Wrapper extends Component {
     }
 
     render() {
-      const activeProviders = this.props.dataProviders.filter(provider => provider.isActive);
       const tokenObj = localStorage.getItem('pluckr_token');
       if (!tokenObj) {
         return <Redirect to='/' />;
@@ -84,31 +81,6 @@ class Wrapper extends Component {
             </Nav>
           </Navbar.Collapse>
         </Navbar>
-        {activeProviders.length === 0 && this.props.charts.length === 0 ? null :
-        <div className="data-providers clearfix">
-          <div className="float-right">
-            {
-              this.props.dataProviders.map(provider => {
-                return provider.isActive ?
-                  <OverlayTrigger
-                    key={provider.provider}
-                    placement='bottom'
-                    overlay={
-                      <Tooltip id={`tooltip-bottom`}>
-                        Connected to {provider.provider}
-                      </Tooltip>
-                    }
-                  >
-                    <div className="active-provider">
-                      <img height={40} src={provider.icon} alt={provider.provider} />
-                    </div> 
-                  </OverlayTrigger> :
-                null;
-              })
-            }
-            <button onClick={() => this.setState({providerModalShow: true})} className="btn btn-link my-2 my-sm-0">Connect Data Providers</button>
-          </div>
-        </div>}
         <div id='chart-canvas'>
           <div className='container-fluid wrapper'>
             <Route

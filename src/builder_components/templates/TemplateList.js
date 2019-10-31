@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
-import Tooltip from 'react-bootstrap/Tooltip';
+import Table from 'react-bootstrap/Table';
+import DataProviderTable from '../dataproviders/DataProviderTable';
 import { connect } from 'react-redux';
 import { fetchCharts } from '../../actions/chart';
 import { Redirect } from "react-router-dom";
@@ -87,40 +87,45 @@ class TemplateList extends Component {
           {
             this.state.hasInstalled ? <Redirect to={`/charts/${this.state.hasInstalled.id}/data-sources`} /> :
               <React.Fragment>
-                <h2 className="page-header">Chart Templates</h2>
-                {templates.length === 0 ? <p>There are no templates available</p> :
-                <div className='row'>
-                  {
-                    templates.map((template) => {
-                      return (
-                        <div key={template.id} className='col-lg-3 col-xl-2'>
-                          <div className='add-chart-card'>
-                            <div className="chart-icon"><i style={{fontSize: '3em', textAlign: 'center'}} className={ICON_MAPPER[template.series_type]} /></div>
-                            <div className="chart-card-inner">
-                              <OverlayTrigger
-                                key={template.name}
-                                placement='bottom'
-                                overlay={
-                                  <Tooltip id={`tooltip-bottom`}>
-                                    {template.name}
-                                  </Tooltip>
-                                }
-                              >
-                                <h3>{template.name}</h3>
-                              </OverlayTrigger>
-                              <div className="btn-group-fixe">
-                                <button onClick={() => this.install(template.id)} style={{paddingLeft: '0'}} className="btn btn-link">Install Template</button>
-                              </div>
-                            </div>
-                          </div>
-                        </div>                
-                      )
-                    })
-                  }
-                </div>}
+                <h2>Chart Templates</h2>
+                <div className="row">
+                  <div className="col-md-8">
+                    <Table bordered hover>
+                      <thead>
+                        <tr>
+                          <th></th>
+                          <th>Name</th>
+                          <th>Chart Type</th>
+                          <th>Series Type</th>
+                          <th></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {templates.map((template) => {
+                          return (
+                            <tr key={template.id}>
+                              <td width="40">
+                                <i className={ICON_MAPPER[template.series_type]} />
+                              </td>
+                              <td>{template.name}</td>
+                              <td className="capitalize">{template.chart_type}</td>
+                              <td className="capitalize">{template.series_type}</td>
+                              <td width="40">
+                                <button onClick={() => this.install(template.id)} className="btn btn-link table-btn float-right"><i className="fa fa-download" /></button>
+                              </td>
+                            </tr>
+                          )
+                        })}
+                      </tbody>
+                    </Table>
+                    {templates.length === 0 ? <p className="lead">There are no templates available</p> : null}
+                  </div>
+                  <div className="col-md-4">
+                    <DataProviderTable />
+                  </div>
+                </div>
             </React.Fragment>
           }
-
         </React.Fragment>
       )
     }
