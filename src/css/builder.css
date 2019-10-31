@@ -29,7 +29,8 @@
   position: absolute;
   left: 0;
   right: 0;
-  top: 50%;
+  top: 45%;
+  text-align: center;
 }
 
 .overlay-text p {

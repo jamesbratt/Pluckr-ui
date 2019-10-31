@@ -3,7 +3,7 @@ import Table from 'react-bootstrap/Table';
 import Modal from 'react-bootstrap/Modal';
 import AddDataSet from './AddDataSet';
 import { connect } from 'react-redux';
-import { createDataSet, deleteDataset, fetchDatasets } from '../../actions/dataset';
+import { createDataSet, deleteDataset } from '../../actions/dataset';
 import { Link, Redirect } from "react-router-dom";
 
 const mapStateToProps = (state) => {
@@ -15,13 +15,6 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    fetchDatasets: (apiKey, user, chartId) => {
-      dispatch(fetchDatasets(
-        apiKey,
-        user,
-        chartId,
-      ));
-    },
     deleteDataset: (apiKey, user, dataSetId) => {
       dispatch(deleteDataset(
         apiKey,
@@ -58,15 +51,6 @@ class DataSetList extends Component {
       hasCreated: null,
     }
   }
-
-  componentDidMount() {
-    const { api_key, username } = this.props.user;
-    this.props.fetchDatasets(
-      api_key,
-      username,
-      this.props.chartId,
-    );
-  };
 
   addDataset = (name, chartId, sourceId, rawData) => {
 

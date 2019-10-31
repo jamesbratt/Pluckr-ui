@@ -2,9 +2,12 @@ import React, { Component } from 'react';
 import ChartTabs from './ChartTabs';
 import DataSetDetail from '../datasets/DataSetDetail';
 import classNames from 'classnames';
+import Modal from 'react-bootstrap/Modal';
+import AddDataSet from '../datasets/AddDataSet';
+import { createDataSet, fetchDatasets } from '../../actions/dataset';
 import { addDataSeries, destroyChart, getChart, setChart } from './Graph';
 import { connect } from 'react-redux';
-import { Route } from "react-router-dom";
+import { Route, Redirect } from "react-router-dom";
 
 const Highcharts = require('highcharts');
 require('highcharts/modules/exporting')(Highcharts);
@@ -24,11 +27,43 @@ const mapStateToProps = (state) => {
   };
 };
 
+const mapDispatchToProps = {
+  createDataSet,
+  fetchDatasets,
+};
+
 class Chart extends Component {
 
   constructor(props) {
     super(props);
     this.chartInstance = getChart();
+    this.state = {
+      createChartModalShow: false,
+      hasCreated: null,
+    }
+  }
+
+  addDataset = (name, chartId, sourceId, rawData) => {
+
+    const { api_key, username } = this.props.user;
+
+    this.props.createDataSet(
+      api_key,
+      username,
+      name,
+      chartId,
+      sourceId,
+      rawData,
+    ).then((response) => {
+      this.setState({
+        createChartModalShow: false,
+        hasCreated: response,
+      }, () => {
+        this.setState({
+          hasCreated: null,
+        })
+      });
+    });
   }
 
   setUpChartData = (chart) => {
@@ -106,6 +141,12 @@ class Chart extends Component {
     );
 
     setChart(chartInstance);
+    const { api_key, username } = this.props.user;
+    this.props.fetchDatasets(
+      api_key,
+      username,
+      chart.id,
+    );
   }
 
   componentDidUpdate(prevProps) {
@@ -128,28 +169,48 @@ class Chart extends Component {
     });
 
     return (
-      <div className="clearfix">
-        <div style={{position: 'relative', marginBottom: '1em'}}>
-          <div className={overlayClasses}>
-            <div className="overlay-text">
-              <div className="overlay-text-inner">
-                <p>Start building your chart by adding a dataset</p>
+      <>
+        <div className="clearfix">
+          <div style={{position: 'relative', marginBottom: '1em'}}>
+            <div className={overlayClasses}>
+              <div className="overlay-text">
+                <div className="overlay-text-inner">
+                  <p>Start building your chart by adding a dataset</p>
+                  <button className="btn btn-primary" onClick={() =>this.setState({ createChartModalShow: true })}>Create a Dataset</button>
+                </div>
               </div>
             </div>
+            <div style={{ ...style }} id={`chart-${id}`} />
           </div>
-          <div style={{ ...style }} id={`chart-${id}`} />
+          {
+            this.props.datasets.length > 0 ? 
+              <>
+                <Route
+                  exact
+                  path={this.props.match.path}
+                  render={() => <ChartTabs chartId={this.props.match.params.id} url={this.props.match.url} />}
+                />
+                <Route path={`${this.props.match.path}/edit-dataset/:dataset_id`} component={DataSetDetail} />
+              </> : null
+          }
+          {this.state.hasCreated ? <Redirect to={`/charts/${this.state.hasCreated.chart}/chart/edit-dataset/${this.state.hasCreated.id}`} /> : null}
+          <Modal show={this.state.createChartModalShow} onHide={() => this.setState({createChartModalShow: false})}>
+            <Modal.Header closeButton>
+              <Modal.Title>Create a New Dataset</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                <AddDataSet add={this.addDataset} chartId={this.props.match.params.id} close={() => this.setState({createChartModalShow: false})} />
+            </Modal.Body>
+            <Modal.Footer>
+            </Modal.Footer>
+          </Modal>
         </div>
-        <Route
-          exact
-          path={this.props.match.path}
-          render={() => <ChartTabs chartId={this.props.match.params.id} url={this.props.match.url} />}
-        />
-        <Route path={`${this.props.match.path}/edit-dataset/:dataset_id`} component={DataSetDetail} />
-      </div>
+      </>
     )
   };
 };
 
 export default connect(
   mapStateToProps,
+  mapDispatchToProps,
 )(Chart);
