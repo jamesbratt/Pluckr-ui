@@ -8,7 +8,7 @@ import Loader from '../../Loader';
 import { pathOr } from 'ramda';
 import { DATA_TYPES } from '../../Constants';
 import { connect } from 'react-redux';
-import { createDataSource } from '../../actions';
+import { createDataSource, fetchDataSources } from '../../actions';
 import { addNotification } from '../../actions/notification';
 
 const mapStateToProps = (state) => {
@@ -38,22 +38,31 @@ class DataSourceDetail extends Component {
 
   componentDidMount() {
     const { sources, dataProviders } = this.props;
-
-    if(this.props.match.params.data_source_id) {
-      const dataSource = sources.find(source => source.id === parseInt(this.props.match.params.data_source_id));
-      const selectedProvider = dataProviders.find(
-        dataProvider => dataProvider.provider === dataSource.provider,
-      );
-      this.setState({
-        sourceName: dataSource.name,
-        data: dataSource.rawData,
-        selectedProvider,
-        selectedResource: dataSource.resource,
-        parameterFields: selectedProvider.resources[dataSource.resource].parameters,
-        parameterValues: typeof dataSource.params === 'string' ? JSON.parse(dataSource.params) : dataSource.params,
-      })
+    const sourcesLoaded = this.props.sources.filter(source => source.chart === parseInt(this.props.match.params.id))
+    const { api_key, username } = this.props.user;
+    if (sourcesLoaded.length === 0) {
+      this.props.dispatch(fetchDataSources(
+        api_key,
+        username,
+        this.props.match.params.id,
+      ));
+    } else {
+      if(this.props.match.params.data_source_id) {
+        const dataSource = sources.find(source => source.id === parseInt(this.props.match.params.data_source_id));
+        const selectedProvider = dataProviders.find(
+          dataProvider => dataProvider.provider === dataSource.provider,
+        );
+        this.setState({
+          sourceName: dataSource.name,
+          data: dataSource.rawData,
+          selectedProvider,
+          selectedResource: dataSource.resource,
+          parameterFields: selectedProvider.resources[dataSource.resource].parameters,
+          parameterValues: typeof dataSource.params === 'string' ? JSON.parse(dataSource.params) : dataSource.params,
+        })
+      }
     }
-  }
+  };
 
   addDataSource = (event) => {
     const { username, api_key } = this.props.user;

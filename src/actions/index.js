@@ -132,7 +132,10 @@ export const fetchDataSources = (apiKey, username, chartId) => {
           dispatch(setLoader(false));
         }
       })
-      .catch(error => dispatch(addNotification({ message: error.message, type: 'error' })));
+      .catch(error => {
+        dispatch(addNotification({ message: error.message, type: 'error' }));
+        dispatch(setLoader(false));
+      });
   }
 }
 
