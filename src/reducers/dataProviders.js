@@ -19,6 +19,7 @@ const initialState = [
     request: getGitHubData,
     resources: GITHUB_RESOURCES,
     isActive: false,
+    isDisabled: false,
     icon: githubLogo,
   },
   {
@@ -27,6 +28,7 @@ const initialState = [
     request: getSalesforceData,
     resources: SALESFORCE_RESOURCES,
     isActive: false,
+    isDisabled: false,
     icon: salesforceLogo,
   },
   {
@@ -35,6 +37,7 @@ const initialState = [
     request: getFacebookData,
     resources: FACEBOOK_RESOURCES,
     isActive: false,
+    isDisabled: true,
     icon: facebookLogo,
   },
   {
@@ -43,6 +46,7 @@ const initialState = [
     request: getJiraData,
     resources: JIRA_RESOURCES,
     isActive: false,
+    isDisabled: false,
     icon: jiraLogo,
   },
   {
@@ -51,6 +55,7 @@ const initialState = [
     request: getStripeData,
     resources: STRIPE_RESOURCES,
     isActive: false,
+    isDisabled: true,
     icon: stripeLogo,
   },
 ];
