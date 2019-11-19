@@ -25,6 +25,7 @@ export const receiveCharts = (data) => {
 
 export const fetchCharts = (apiKey, username) => {
   return dispatch => {
+    dispatch(setLoader(true));
     return fetch(`${process.env.REACT_APP_PLUCKR_API_URI}/api/v1/chart/`, {
       headers: {
           'Content-Type': 'application/json',
@@ -36,7 +37,10 @@ export const fetchCharts = (apiKey, username) => {
         dispatch(receiveCharts(json.objects));
         dispatch(setLoader(false));
       })
-      .catch(error => dispatch(addNotification({ message: error.message, type: 'error' })));
+      .catch(error => {
+        dispatch(addNotification({ message: error.message, type: 'error' }));
+        dispatch(setLoader(false));
+      });
   }
 }
 

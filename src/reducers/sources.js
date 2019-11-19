@@ -18,6 +18,25 @@ const sources = (state = { data: [] }, action) => {
         properties: action.properties,
       };
       return { data: prepend(newSource, state.data) };
+    case 'UPDATE_SOURCE':
+      const existingSource = {
+        id: action.id,
+        name: action.sourceName,
+        chart: action.chartId,
+        provider: action.provider,
+        resource: action.resource,
+        params: action.params,
+        rawData: action.data,
+        properties: action.properties,
+      };
+
+      const updatedSources = state.data.map((source) => {
+        if (source.id === action.id) {
+          return existingSource;
+        }
+        return source;
+      })
+      return { data: updatedSources };
 
     default:
       return state;

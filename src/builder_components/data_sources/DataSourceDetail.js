@@ -4,10 +4,12 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import JSONTree from 'react-json-tree';
 import DateSelector from './DateSelector';
+import Loader from '../../Loader';
+
 import { pathOr } from 'ramda';
 import { DATA_TYPES } from '../../Constants';
 import { connect } from 'react-redux';
-import { createDataSource } from '../../actions';
+import { createDataSource, fetchDataSources } from '../../actions';
 import { addNotification } from '../../actions/notification';
 
 const mapStateToProps = (state) => {
@@ -15,6 +17,7 @@ const mapStateToProps = (state) => {
     user: state.user[0],
     dataProviders: state.dataProviders,
     sources: state.sources.data,
+    loader: state.loader,
   };
 };
 
@@ -36,22 +39,31 @@ class DataSourceDetail extends Component {
 
   componentDidMount() {
     const { sources, dataProviders } = this.props;
-
-    if(this.props.match.params.data_source_id) {
-      const dataSource = sources.find(source => source.id === parseInt(this.props.match.params.data_source_id));
-      const selectedProvider = dataProviders.find(
-        dataProvider => dataProvider.provider === dataSource.provider,
-      );
-      this.setState({
-        sourceName: dataSource.name,
-        data: dataSource.rawData,
-        selectedProvider,
-        selectedResource: dataSource.resource,
-        parameterFields: selectedProvider.resources[dataSource.resource].parameters,
-        parameterValues: typeof dataSource.params === 'string' ? JSON.parse(dataSource.params) : dataSource.params,
-      })
+    const sourcesLoaded = this.props.sources.filter(source => source.chart === parseInt(this.props.match.params.id))
+    const { api_key, username } = this.props.user;
+    if (sourcesLoaded.length === 0) {
+      this.props.dispatch(fetchDataSources(
+        api_key,
+        username,
+        this.props.match.params.id,
+      ));
+    } else {
+      if(this.props.match.params.data_source_id) {
+        const dataSource = sources.find(source => source.id === parseInt(this.props.match.params.data_source_id));
+        const selectedProvider = dataProviders.find(
+          dataProvider => dataProvider.provider === dataSource.provider,
+        );
+        this.setState({
+          sourceName: dataSource.name,
+          data: dataSource.rawData,
+          selectedProvider,
+          selectedResource: dataSource.resource,
+          parameterFields: selectedProvider.resources[dataSource.resource].parameters,
+          parameterValues: typeof dataSource.params === 'string' ? JSON.parse(dataSource.params) : dataSource.params,
+        })
+      }
     }
-  }
+  };
 
   addDataSource = (event) => {
     const { username, api_key } = this.props.user;
@@ -64,7 +76,11 @@ class DataSourceDetail extends Component {
     event.preventDefault();
     if(selectedResource && sourceName && selectedProvider) {
       try {
-        this.state.selectedProvider.request(selectedResource, params, username, api_key)
+        this.state.selectedProvider.request(
+          selectedResource,
+          params, username, api_key,
+          parseInt(this.props.match.params.data_source_id) || parseInt(this.state.newlySavedDataSoucerId)
+        )
           .then(response => {
             this.setState({
               data: response.data,
@@ -77,7 +93,7 @@ class DataSourceDetail extends Component {
                 selectedProvider,
                 selectedResource,
                 params,
-                response.data,
+                response,
                 response.properties,
                 this.props.match.params.data_source_id || this.state.newlySavedDataSoucerId
               )).then(response => this.setState({ newlySavedDataSoucerId: response }));
@@ -215,6 +231,7 @@ class DataSourceDetail extends Component {
       <React.Fragment>
         <Row>
           <Col md={5}>
+            <h2>{this.state.sourceName ? this.state.sourceName : 'Create a new data source'}</h2>
             <div className="form-group">
               <label>Title</label>
               <input value={this.state.sourceName || ''} onChange={this.onSourceNameChange} type="text" className="form-control" placeholder="Enter a title" />
@@ -252,14 +269,17 @@ class DataSourceDetail extends Component {
           <Col md={7}>
             {
               this.state.data ?
-              <JSONTree
-                theme={{
-                  tree: ({ style }) => ({
-                    style: { ...style, padding: "1em" }, 
-                  }),
-                }}
-                data={this.state.data}
-               /> :
+              <>
+                {this.props.loader ? <Loader /> :
+                <JSONTree
+                  theme={{
+                    tree: ({ style }) => ({
+                      style: { ...style, padding: "1em" }, 
+                    }),
+                  }}
+                  data={this.state.data}
+                />}
+               </> :
               null
             }
           </Col>

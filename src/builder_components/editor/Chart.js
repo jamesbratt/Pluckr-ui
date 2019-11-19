@@ -88,80 +88,89 @@ class Chart extends Component {
     const { id } = this.props.match.params;
     const chart = this.props.charts.find(chart => chart.id === parseInt(id));
 
-    const chartConfig = {
-      title: {
-        text: chart.name,
-        type: chart.series_type
-      },
-      chart: {
-        backgroundColor: chart.background_color ? chart.background_color : null
-      },   
-      legend: {
-        align: 'left',
-        verticalAlign: 'top',
-      }
-    };
-
-    if (chart.chart_type !== 'pie') {
-      chartConfig['xAxis'] = {
-        type: chart.chart_type,
-        id: 'master-x-axis',
-        visible: chart.x_axis_enabled,
+    if (chart) {
+      const chartConfig = {
         title: {
-          text: chart.x_axis_title,
+          text: chart.name,
+          type: chart.series_type
+        },
+        chart: {
+          backgroundColor: chart.background_color ? chart.background_color : null
+        },   
+        legend: {
+          align: 'left',
+          verticalAlign: 'top',
         }
       };
-
-      chartConfig['yAxis'] = {
-        title: false,
-        gridLineWidth: 0,
-        minorGridLineWidth: 0,
-      };
-    } else {
-      chartConfig['tooltip'] = {
-        pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
-      };
-      
-      chartConfig['plotOptions'] = {
-        pie: {
-            allowPointSelect: true,
-            cursor: 'pointer',
-            dataLabels: {
-              enabled: true,
-              format: '<b>{point.name}</b>: {point.percentage:.1f} %'
-            },
-            showInLegend: true
-        }
-      };
-    }
   
-    const chartInstance = Highcharts.chart(
-      `chart-${chart.id}`,
-      chartConfig
-    );
+      if (chart.chart_type !== 'pie') {
+        chartConfig['xAxis'] = {
+          type: chart.chart_type,
+          id: 'master-x-axis',
+          visible: chart.x_axis_enabled,
+          title: {
+            text: chart.x_axis_title,
+          }
+        };
+  
+        chartConfig['yAxis'] = {
+          title: false,
+          gridLineWidth: 0,
+          minorGridLineWidth: 0,
+        };
+      } else {
+        chartConfig['tooltip'] = {
+          pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+        };
+        
+        chartConfig['plotOptions'] = {
+          pie: {
+              allowPointSelect: true,
+              cursor: 'pointer',
+              dataLabels: {
+                enabled: true,
+                format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+              },
+              showInLegend: true
+          }
+        };
+      }
+    
+      const chartInstance = Highcharts.chart(
+        `chart-${chart.id}`,
+        chartConfig
+      );
+  
+      setChart(chartInstance);
+      const { api_key, username } = this.props.user;
+      this.props.fetchDatasets(
+        api_key,
+        username,
+        chart.id,
+      );
+    }
 
-    setChart(chartInstance);
-    const { api_key, username } = this.props.user;
-    this.props.fetchDatasets(
-      api_key,
-      username,
-      chart.id,
-    );
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate() {
     const { id } = this.props.match.params;
     const chart = this.props.charts.find(chart => chart.id === parseInt(id));
     this.setUpChartData(chart);
   }
 
   componentWillUnmount() {
-    destroyChart();
+    const { id } = this.props.match.params;
+    const chart = this.props.charts.find(chart => chart.id === parseInt(id));
+  
+    if (chart) {
+      destroyChart();
+    }
   }
 
   render() {
 
     const { id } = this.props.match.params;
+    const chart = this.props.charts.find(chart => chart.id === parseInt(id));
 
     const overlayClasses = classNames({
       'overlay': true,
@@ -169,43 +178,42 @@ class Chart extends Component {
     });
 
     return (
-      <>
-        <div className="clearfix">
-          <div style={{position: 'relative', marginBottom: '1em'}}>
-            <div className={overlayClasses}>
-              <div className="overlay-text">
-                <div className="overlay-text-inner">
-                  <p>Start building your chart by adding a dataset</p>
-                  <button className="btn btn-primary" onClick={() =>this.setState({ createChartModalShow: true })}>Create a Dataset</button>
-                </div>
+      <div className="clearfix">
+        {chart ? <h2 style={{ display: 'inline-block' }}>{chart.name}</h2> : null}
+        <div style={{position: 'relative', marginBottom: '1em'}}>
+          <div className={overlayClasses}>
+            <div className="overlay-text">
+              <div className="overlay-text-inner">
+                <p>Start building your chart by adding a dataset</p>
+                <button className="btn btn-primary" onClick={() =>this.setState({ createChartModalShow: true })}>Create a Dataset</button>
               </div>
             </div>
-            <div style={{ ...style }} id={`chart-${id}`} />
           </div>
-          {
-            this.props.datasets.length > 0 ? 
-              <>
-                <Route
-                  exact
-                  path={this.props.match.path}
-                  render={() => <ChartTabs chartId={this.props.match.params.id} url={this.props.match.url} />}
-                />
-                <Route path={`${this.props.match.path}/edit-dataset/:dataset_id`} component={DataSetDetail} />
-              </> : null
-          }
-          {this.state.hasCreated ? <Redirect to={`/charts/${this.state.hasCreated.chart}/chart/edit-dataset/${this.state.hasCreated.id}`} /> : null}
-          <Modal show={this.state.createChartModalShow} onHide={() => this.setState({createChartModalShow: false})}>
-            <Modal.Header closeButton>
-              <Modal.Title>Create a New Dataset</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-                <AddDataSet add={this.addDataset} chartId={this.props.match.params.id} close={() => this.setState({createChartModalShow: false})} />
-            </Modal.Body>
-            <Modal.Footer>
-            </Modal.Footer>
-          </Modal>
+          <div style={{ ...style }} id={`chart-${id}`} />
         </div>
-      </>
+        {
+          this.props.datasets.length > 0 ? 
+            <>
+              <Route
+                exact
+                path={this.props.match.path}
+                render={() => <ChartTabs chartId={this.props.match.params.id} url={this.props.match.url} />}
+              />
+              <Route path={`${this.props.match.path}/edit-dataset/:dataset_id`} component={DataSetDetail} />
+            </> : null
+        }
+        {this.state.hasCreated ? <Redirect to={`/charts/${this.state.hasCreated.chart}/chart/edit-dataset/${this.state.hasCreated.id}`} /> : null}
+        <Modal show={this.state.createChartModalShow} onHide={() => this.setState({createChartModalShow: false})}>
+          <Modal.Header closeButton>
+            <Modal.Title>Create a New Dataset</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+              <AddDataSet add={this.addDataset} chartId={this.props.match.params.id} close={() => this.setState({createChartModalShow: false})} />
+          </Modal.Body>
+          <Modal.Footer>
+          </Modal.Footer>
+        </Modal>
+      </div>
     )
   };
 };

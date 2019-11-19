@@ -2,9 +2,11 @@ import * as React from "react";
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Nav from 'react-bootstrap/Nav';
+
 import { Link } from "react-router-dom";
 import { connect } from 'react-redux';
 import { addNotification } from './actions/notification';
+import { fetchDataSources } from './actions';
 
 const ChartConfigHoc = WrappedComponent => {
 
@@ -12,14 +14,33 @@ const ChartConfigHoc = WrappedComponent => {
     return {
       user: state.user[0],
       charts: state.charts,
+      sources: state.sources.data,
+      datasets: state.datasets,
+      loader: state.loader,
     };
   };
 
   const mapDispatchToProps = {
     addNotification,
+    fetchDataSources,
   };
 
   class ComponentWithNav extends React.Component {
+
+    componentDidMount() {
+      const user = this.props.user.username;
+      const apiKey = this.props.user.api_key;
+
+      const sourcesLoaded = this.props.sources.filter(source => source.chart === parseInt(this.props.match.params.id));
+
+      if (sourcesLoaded.length === 0) {
+        this.props.fetchDataSources(
+          apiKey,
+          user,
+          this.props.match.params.id,
+        )
+      }
+    }
 
     publish = (chart_id) => {
       const user = this.props.user.username;
@@ -49,7 +70,6 @@ const ChartConfigHoc = WrappedComponent => {
     }
     
     render() {
-      const chartName = this.props.charts.find(chart => chart.id === parseInt(this.props.match.params.id)).name;
       return (
         <Row>
           <Col md={2}>
@@ -60,7 +80,6 @@ const ChartConfigHoc = WrappedComponent => {
             </Nav>
           </Col>
           <Col md={10}>
-            <h2>{chartName}</h2>
             <WrappedComponent {...this.props} />
           </Col>
         </Row>

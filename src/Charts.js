@@ -91,7 +91,7 @@ class Charts extends Component {
           <button style={{ marginRight: '1em' }} type="button" onClick={() => this.setState({createChartModalShow: true})} className="btn btn-primary">
             Create Chart from Scratch
           </button>
-          <Link type="button" to={`/charts/templates`} className="btn btn-secondary">
+          <Link to={`/charts/templates`}>
               Create Chart from Template
           </Link>
           <div className="row">

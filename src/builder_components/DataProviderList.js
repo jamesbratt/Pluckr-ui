@@ -2,7 +2,7 @@ import React from 'react';
 
 const DataProviderList = (props) => {
 
-  const dataProviders = props.dataProviders.map((dataProvider) => {
+  const dataProviders = props.dataProviders.filter((dataProvider) => !dataProvider.isDisabled).map((dataProvider) => {
     return (
       <div className="provider-grid-item">
         <a href={dataProvider.redirectUrl}>
