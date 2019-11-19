@@ -5,6 +5,7 @@ import Col from 'react-bootstrap/Col';
 import JSONTree from 'react-json-tree';
 import DateSelector from './DateSelector';
 import Loader from '../../Loader';
+
 import { pathOr } from 'ramda';
 import { DATA_TYPES } from '../../Constants';
 import { connect } from 'react-redux';

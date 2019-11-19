@@ -178,44 +178,42 @@ class Chart extends Component {
     });
 
     return (
-      <>
-        <div className="clearfix">
-          {chart ? <h2 style={{ display: 'inline-block' }}>{chart.name}</h2> : null}
-          <div style={{position: 'relative', marginBottom: '1em'}}>
-            <div className={overlayClasses}>
-              <div className="overlay-text">
-                <div className="overlay-text-inner">
-                  <p>Start building your chart by adding a dataset</p>
-                  <button className="btn btn-primary" onClick={() =>this.setState({ createChartModalShow: true })}>Create a Dataset</button>
-                </div>
+      <div className="clearfix">
+        {chart ? <h2 style={{ display: 'inline-block' }}>{chart.name}</h2> : null}
+        <div style={{position: 'relative', marginBottom: '1em'}}>
+          <div className={overlayClasses}>
+            <div className="overlay-text">
+              <div className="overlay-text-inner">
+                <p>Start building your chart by adding a dataset</p>
+                <button className="btn btn-primary" onClick={() =>this.setState({ createChartModalShow: true })}>Create a Dataset</button>
               </div>
             </div>
-            <div style={{ ...style }} id={`chart-${id}`} />
           </div>
-          {
-            this.props.datasets.length > 0 ? 
-              <>
-                <Route
-                  exact
-                  path={this.props.match.path}
-                  render={() => <ChartTabs chartId={this.props.match.params.id} url={this.props.match.url} />}
-                />
-                <Route path={`${this.props.match.path}/edit-dataset/:dataset_id`} component={DataSetDetail} />
-              </> : null
-          }
-          {this.state.hasCreated ? <Redirect to={`/charts/${this.state.hasCreated.chart}/chart/edit-dataset/${this.state.hasCreated.id}`} /> : null}
-          <Modal show={this.state.createChartModalShow} onHide={() => this.setState({createChartModalShow: false})}>
-            <Modal.Header closeButton>
-              <Modal.Title>Create a New Dataset</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-                <AddDataSet add={this.addDataset} chartId={this.props.match.params.id} close={() => this.setState({createChartModalShow: false})} />
-            </Modal.Body>
-            <Modal.Footer>
-            </Modal.Footer>
-          </Modal>
+          <div style={{ ...style }} id={`chart-${id}`} />
         </div>
-      </>
+        {
+          this.props.datasets.length > 0 ? 
+            <>
+              <Route
+                exact
+                path={this.props.match.path}
+                render={() => <ChartTabs chartId={this.props.match.params.id} url={this.props.match.url} />}
+              />
+              <Route path={`${this.props.match.path}/edit-dataset/:dataset_id`} component={DataSetDetail} />
+            </> : null
+        }
+        {this.state.hasCreated ? <Redirect to={`/charts/${this.state.hasCreated.chart}/chart/edit-dataset/${this.state.hasCreated.id}`} /> : null}
+        <Modal show={this.state.createChartModalShow} onHide={() => this.setState({createChartModalShow: false})}>
+          <Modal.Header closeButton>
+            <Modal.Title>Create a New Dataset</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+              <AddDataSet add={this.addDataset} chartId={this.props.match.params.id} close={() => this.setState({createChartModalShow: false})} />
+          </Modal.Body>
+          <Modal.Footer>
+          </Modal.Footer>
+        </Modal>
+      </div>
     )
   };
 };

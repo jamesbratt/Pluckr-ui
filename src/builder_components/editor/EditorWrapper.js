@@ -1,6 +1,7 @@
 import * as React from "react";
 import Loader from '../../Loader';
 import Chart from './Chart';
+
 import { connect } from 'react-redux';
 import { fetchCharts } from '../../actions/chart';
 
