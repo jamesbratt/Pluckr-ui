@@ -41,18 +41,6 @@ class DataSourceList extends Component {
     }
   }
 
-  componentDidMount() {
-    const sourcesLoaded = this.props.sources.data.filter(source => source.chart === parseInt(this.props.match.params.id))
-    const { api_key, username } = this.props.user;
-    if (sourcesLoaded.length === 0) {
-      this.props.fetchDataSources(
-        api_key,
-        username,
-        this.props.match.params.id,
-      )
-    }
-  };
-
   componentDidUpdate(prevProps) {
     if (this.props.match.params.id !== prevProps.match.params.id) {
       const { api_key, username } = this.props.user;
@@ -79,6 +67,7 @@ class DataSourceList extends Component {
         {this.props.loader ? <Loader /> :
             this.props.sources.data.length > 0 ?
             <React.Fragment>
+              <h2>Available Data Sources</h2>
               <Link className="btn btn-primary" to="create-data-source">Create a Data Source</Link>
               <Table bordered hover>
                 <thead>
@@ -106,6 +95,7 @@ class DataSourceList extends Component {
               </Table>
             </React.Fragment> :
             <div>
+              <h2>Available Data Sources</h2>
               <p className="lead">Get started by creating a data source. Data sources use your connected data providers to retrieve specific data</p>
               <Link className="btn btn-primary" to="create-data-source">Create a Data Source</Link>
             </div>

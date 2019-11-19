@@ -6,7 +6,7 @@ import Loader from './Loader';
 import { Link } from "react-router-dom";
 import { connect } from 'react-redux';
 import { addNotification } from './actions/notification';
-import { fetchCharts } from './actions/chart';
+import { fetchDataSources } from './actions';
 
 const ChartConfigHoc = WrappedComponent => {
 
@@ -22,7 +22,7 @@ const ChartConfigHoc = WrappedComponent => {
 
   const mapDispatchToProps = {
     addNotification,
-    fetchCharts,
+    fetchDataSources,
   };
 
   class ComponentWithNav extends React.Component {
@@ -31,11 +31,14 @@ const ChartConfigHoc = WrappedComponent => {
       const user = this.props.user.username;
       const apiKey = this.props.user.api_key;
 
-      if (this.props.charts.length === 0) {
-        this.props.fetchCharts(
-            apiKey,
-            user,
-          )
+      const sourcesLoaded = this.props.sources.filter(source => source.chart === parseInt(this.props.match.params.id));
+
+      if (sourcesLoaded.length === 0) {
+        this.props.fetchDataSources(
+          apiKey,
+          user,
+          this.props.match.params.id,
+        )
       }
     }
 
@@ -80,7 +83,6 @@ const ChartConfigHoc = WrappedComponent => {
               </Nav>
             </Col>
             <Col md={10}>
-              <h2>{this.props.charts.find(chart => chart.id === parseInt(this.props.match.params.id)).name}</h2>
               <WrappedComponent {...this.props} />
             </Col>
           </Row>}

@@ -5,7 +5,7 @@ import Modal from 'react-bootstrap/Modal';
 import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
 import ChartConfigHoc from './ChartConfigHoc';
-import Chart from './builder_components/editor/Chart';
+import EditorWrapper from './builder_components/editor/EditorWrapper';
 import TemplateList from './builder_components/templates/TemplateList';
 import DataSourceList from './builder_components/data_sources/DataSourceList';
 import DataSourceDetail from './builder_components/data_sources/DataSourceDetail';
@@ -16,7 +16,7 @@ import { getToken } from './utils/Helpers';
 
 const DataSourceListWrapped = ChartConfigHoc(DataSourceList);
 const DataSourceDetailWrapped = ChartConfigHoc(DataSourceDetail);
-const ChartEditorWrapped = ChartConfigHoc(Chart);
+const ChartEditorWrapped = ChartConfigHoc(EditorWrapper);
 
 const mapStateToProps = state => {
   return state

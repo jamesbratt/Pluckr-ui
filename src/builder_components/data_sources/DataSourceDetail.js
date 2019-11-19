@@ -230,6 +230,7 @@ class DataSourceDetail extends Component {
       <React.Fragment>
         <Row>
           <Col md={5}>
+            <h2>{this.state.sourceName ? this.state.sourceName : 'Create a new data source'}</h2>
             <div className="form-group">
               <label>Title</label>
               <input value={this.state.sourceName || ''} onChange={this.onSourceNameChange} type="text" className="form-control" placeholder="Enter a title" />
