@@ -26,7 +26,7 @@ const AddChart = (props) => {
         <label>Chart Name</label>
         <input ref={chartNameRef} className="form-control" type="text" placeholder="What is your chart called?" aria-label="New Chart" />
       </div>
-      <div class="form-group">
+      <div className="form-group">
         <label>Chart Type</label>
         <select ref={chartTypeRef} className="form-control">
           <option value={null}>-- Select a Chart --</option>
