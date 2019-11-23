@@ -349,3 +349,12 @@
 .capitalize {
   text-transform: capitalize;
 }
+.export-btns {
+  display: flex;
+}
+.export-btns > button:first-child {
+  margin-right: 0.5em;
+}
+.export-btns div:last-child {
+  margin-left: 0.5em;
+}

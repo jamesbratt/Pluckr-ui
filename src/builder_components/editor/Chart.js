@@ -3,7 +3,10 @@ import ChartTabs from './ChartTabs';
 import DataSetDetail from '../datasets/DataSetDetail';
 import classNames from 'classnames';
 import Modal from 'react-bootstrap/Modal';
+import DropdownButton from 'react-bootstrap/DropdownButton';
+import Dropdown from 'react-bootstrap/Dropdown';
 import AddDataSet from '../datasets/AddDataSet';
+import { addNotification } from '../../actions/notification';
 import { createDataSet, fetchDatasets } from '../../actions/dataset';
 import { addDataSeries, destroyChart, getChart, setChart } from './Graph';
 import { connect } from 'react-redux';
@@ -30,6 +33,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = {
   createDataSet,
   fetchDatasets,
+  addNotification,
 };
 
 class Chart extends Component {
@@ -100,6 +104,13 @@ class Chart extends Component {
         legend: {
           align: 'left',
           verticalAlign: 'top',
+        },
+        exporting: {
+          buttons: {
+            contextButton: {
+              enabled: false
+            },
+          }
         }
       };
   
@@ -152,6 +163,46 @@ class Chart extends Component {
 
   }
 
+  download = (type) => {
+    const chart = getChart();
+    chart.exportChart({
+      type,
+      filename: chart.title.textStr
+    });
+  }
+
+  print = () => {
+    const chart = getChart();
+    chart.print();
+  }
+
+  publish = (chart_id) => {
+    const user = this.props.user.username;
+    const apiKey = this.props.user.api_key;
+
+    const payload = {
+      chart_id,
+    };
+
+    fetch(`${process.env.REACT_APP_PLUCKR_API_URI}/api/v1/library/publish/`, {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `ApiKey ${user}:${apiKey}`
+      },
+      body: JSON.stringify(payload)
+    })
+    .then((response) => {
+      return response.json();
+    })
+    .then(() => {
+      this.props.addNotification(
+        { message: 'Chart has been successfully published to the template library', type: 'success' }
+      );
+    })
+    .catch(error => this.props.addNotification({ message: error.message, type: 'error' }));
+  }
+
   componentDidUpdate() {
     const { id } = this.props.match.params;
     const chart = this.props.charts.find(chart => chart.id === parseInt(id));
@@ -180,6 +231,16 @@ class Chart extends Component {
     return (
       <div className="clearfix">
         {chart ? <h2 style={{ display: 'inline-block' }}>{chart.name}</h2> : null}
+        <div className="float-right export-btns">
+          <button onClick={() => this.publish(id)} className="btn btn-success">Publish as Template</button>
+          <button onClick={this.print} className="btn btn-secondary">Print</button>
+          <DropdownButton alignRight id="dropdown-item-button" title="Download">
+            <Dropdown.Item onClick={() => this.download('image/png')} as="button">Download as PNG image</Dropdown.Item>
+            <Dropdown.Item onClick={() => this.download('image/jpeg')} as="button">Download as JPEG image</Dropdown.Item>
+            <Dropdown.Item onClick={() => this.download('application/pdf')} as="button">Download as PDF file</Dropdown.Item>
+            <Dropdown.Item onClick={() => this.download('image/svg+xml')} as="button">Download as SVG vector image</Dropdown.Item>
+          </DropdownButton>
+        </div>
         <div style={{position: 'relative', marginBottom: '1em'}}>
           <div className={overlayClasses}>
             <div className="overlay-text">

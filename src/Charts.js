@@ -137,7 +137,7 @@ class Charts extends Component {
         content = <Loader />;
       };
 
-      if(activeProviders.length === 0 && charts.length === 0) {
+      if(activeProviders.length === 0 && charts.length === 0 && !this.props.loader) {
         content = <GetStarted providers={this.props.dataProviders} />;
       };
 
