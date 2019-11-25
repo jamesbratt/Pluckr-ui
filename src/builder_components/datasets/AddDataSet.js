@@ -34,17 +34,33 @@ const mapDispatchToProps = (dispatch) => {
 const AddDataSet = (props) => {
 
   const add = () => {
-    if(dataSetNameRef.current.value && dataSetSourceRef.current.value) {
-      const sourceId = dataSetSourceRef.current.value;
-      const dataSource = props.sources.find(
-        source => source.id === parseInt(sourceId),
-      );
+    const { value } = dataSetNameRef.current;
+    const { options } = dataSetSourceRef.current;
+    if(value) {
+      const selectedOptions = [];
+      for (let i = 0, l = options.length; i < l; i++) {
+        if (options[i].selected) {
+          selectedOptions.push({pk: options[i].value});
+        }
+      }
+
+      const rawData = selectedOptions.length === 1 ?
+        props.sources.find(
+          source => source.id === parseInt(selectedOptions[0].pk),
+        ).rawData :
+        selectedOptions.reduce((acc, curr) => {
+          const data = props.sources.find(
+            source => source.id === parseInt(curr.pk),
+          ).rawData;
+          acc.push(data);
+          return acc;
+        }, [])
   
       props.add(
         dataSetNameRef.current.value,
         props.chartId,
-        sourceId,
-        dataSource.rawData,
+        selectedOptions,
+        rawData,
       );
 
     } else {
@@ -60,8 +76,7 @@ const AddDataSet = (props) => {
       </div>
       <div className="form-group">
         <label>Data Source</label>
-        <select ref={dataSetSourceRef} className="form-control">
-          <option value={null} hidden>-- Select a data source --</option>
+        <select multiple={true} ref={dataSetSourceRef} className="form-control">
           {props.sources.map(source => {
             if(source.chart === parseInt(props.chartId)) {
               return <option key={source.name} value={source.id}>{source.name}</option>;

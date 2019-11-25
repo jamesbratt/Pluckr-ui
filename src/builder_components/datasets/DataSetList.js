@@ -52,7 +52,7 @@ class DataSetList extends Component {
     }
   }
 
-  addDataset = (name, chartId, sourceId, rawData) => {
+  addDataset = (name, chartId, sources, rawData) => {
 
       const { api_key, username } = this.props.user;
   
@@ -61,7 +61,7 @@ class DataSetList extends Component {
         username,
         name,
         chartId,
-        sourceId,
+        sources,
         rawData,
       ).then((response) => {
         this.setState({
