@@ -70,6 +70,22 @@ const target = (node, data, ast) => {
   throw new Error('TARGET can only be executed on a data structure with keys');
 }
 
+const contains = (node, data, ast) => {
+  if ((typeof data === 'function' || (typeof data === 'object' && !!data)) && !Array.isArray(data)) {
+    const args = ast.filter(childNode => childNode.parent === node.id);
+    const target = args.find(arg => arg.name === 'DATA_KEY').value;
+    const value = args.find(arg => arg.name === 'VALUE').value;
+    const func = args.find(arg => arg.name === 'FUNCTION');
+
+    if (data[target].indexOf(value) !== -1) {
+      return executeFunction(func, data, ast)
+    }
+
+    return data;
+  }
+  throw new Error('"Contains" can only be executed on a data structure with keys');
+}
+
 const updateKey = (node, data, ast) => {
   if ((typeof data === 'function' || (typeof data === 'object' && !!data)) && !Array.isArray(data)) {
     const args = ast.filter(childNode => childNode.parent === node.id);
@@ -110,6 +126,24 @@ const addKey = (node, data, ast) => {
   throw new Error('ADD_KEY can only be executed on a data structure with keys');
 }
 
+const addStaticKey = (node, data, ast) => {
+  if ((typeof data === 'function' || (typeof data === 'object' && !!data)) && !Array.isArray(data)) {
+    const args = ast.filter(childNode => childNode.parent === node.id);
+    const newKey = args.find(arg => arg.name === 'NEW_DATA_KEY').value;
+    const newValue = args.find(arg => arg.name === 'VALUE').value;
+
+    return assoc(newKey, newValue, data);
+  }
+  throw new Error('"Add Static Key" can only be executed on a data structure with keys');
+}
+
+const concatenate = (node, data, ast) => {
+  if (Array.isArray(data)) {
+    return [].concat.apply([], data);
+  }
+  throw new Error('"Concatenate" can only be executed on a list of items');
+}
+
 const groupBy = (node, data, ast) => {
   if (Array.isArray(data)) {
     const args = ast.filter(childNode => childNode.parent === node.id);
@@ -135,7 +169,7 @@ const groupBy = (node, data, ast) => {
       }
 
     });
-    
+
     return groupedData;
   }
   throw new Error('ADD_KEY can only be executed on a data structure with keys');
@@ -243,7 +277,7 @@ const getMonth = (node, data, ast) => {
   const dateKey = args.find(arg => arg.name === 'DATA_KEY');
   const dateKeyValue = data[dateKey.value];
   if (!isNaN(Date.parse(dateKeyValue))) {
-  
+
     const months = [
       'January',
       'February',
@@ -388,6 +422,24 @@ const executeFunction = (node, data, ast) => {
         data,
         ast,
       );
+    case 'CONCAT':
+      return concatenate(
+        node,
+        data,
+        ast,
+      );
+    case 'ADD_STATIC_KEY':
+        return addStaticKey(
+          node,
+          data,
+          ast,
+        );
+    case 'CONTAINS':
+        return contains(
+          node,
+          data,
+          ast,
+        );
     default:
       console.error('Something bad has gone wrong');
   }

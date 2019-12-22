@@ -55,67 +55,67 @@ export const OPERATION_FUNCTIONS = [
   {
     name: 'CONSTRUCT_SERIES',
     label: 'Construct axis-based Chart Series',
-    help: 'Pick keys that will represent the X and Y axis in your chart (applicable to line/bar charts).', 
+    help: 'Pick keys that will represent the X and Y axis in your chart (applicable to line/bar charts).',
     accepts: ['XAXIS', 'YAXIS']
   },
   {
     name: 'CONSTRUCT_PIE_SERIES',
     label: 'Construct Pie Chart Series',
-    help: 'Pick keys that will represent a pie chart segment, the value of which will be calculated as a percentage of the total numeration value (applicable to pie/donut charts only).', 
+    help: 'Pick keys that will represent a pie chart segment, the value of which will be calculated as a percentage of the total numeration value (applicable to pie/donut charts only).',
     accepts: ['NAME', 'VALUE']
   },
   {
     name: 'FOR_EVERY_ITEM',
     label: 'For Every Item',
-    help: 'Iterate over every item in the dataset and perform an operation.', 
+    help: 'Iterate over every item in the dataset and perform an operation.',
     accepts: ['FUNCTION']
   },
   {
     name: 'FILTER_WHERE',
     label: 'Filter Where',
-    help: 'Filter based on a condition.', 
+    help: 'Filter based on a condition.',
     accepts: ['DATA_KEY', 'OPERATOR', 'VALUE_SELECT']
   },
   {
     name: 'TARGET',
     label: 'Target',
-    help: 'Specify a key and perform an operation on it. This will return only the result of the operation performed.', 
+    help: 'Specify a key and perform an operation on it. This will return only the result of the operation performed.',
     accepts: ['DATA_KEY', 'FUNCTION']
   },
   {
     name: 'UPDATE_KEY',
     label: 'Update Key',
-    help: 'Specify a key and perform an operation on it to change its value.', 
+    help: 'Specify a key and perform an operation on it to change its value.',
     accepts: ['DATA_KEY', 'FUNCTION']
   },
   {
     name: 'TARGET_BY_INDEX',
     label: 'Target by Index',
-    help: 'Specify an index in a list and perform an operation on it. This will modify the specified index based on the result of the operation.', 
+    help: 'Specify an index in a list and perform an operation on it. This will modify the specified index based on the result of the operation.',
     accepts: ['DATA_INDEX', 'FUNCTION']
   },
   {
     name: 'ADD_KEY',
     label: 'Add Key',
-    help: 'Injects a new key into an object the value of which will be what ever the specified operation returns.', 
+    help: 'Injects a new key into an object the value of which will be what ever the specified operation returns.',
     accepts: ['NEW_DATA_KEY', 'FUNCTION']
   },
   {
     name: 'GROUP_BY',
     label: 'Group By',
-    help: 'Group a list of objects by a specific key.', 
+    help: 'Group a list of objects by a specific key.',
     accepts: ['DATA_KEY']
   },
   {
     name: 'PLUCK',
     label: 'Pluck',
-    help: 'Will return the value of the specified key.', 
+    help: 'Will return the value of the specified key.',
     accepts: ['DATA_KEY']
   },
   {
     name: 'MULTIPLY_BY',
     label: 'Multiply By',
-    help: 'Performs multiplication on a target.', 
+    help: 'Performs multiplication on a target.',
     accepts: ['INTEGER']
   },
   {
@@ -171,5 +171,23 @@ export const OPERATION_FUNCTIONS = [
     label: 'Get Month',
     help: 'Takes a human-readable date and returns the month only.',
     accepts: ['DATA_KEY']
-  }
+  },
+  {
+    name: 'CONCAT',
+    label: 'Concatenate',
+    help: 'Will concatenate and then flatten a list of nested lists.',
+    accepts: []
+  },
+  {
+    name: 'ADD_STATIC_KEY',
+    label: 'Add Static Key',
+    help: 'Will inject a new key into an object, the value of which will be a specified string.',
+    accepts: ['NEW_DATA_KEY', 'VALUE']
+  },
+  {
+    name: 'CONTAINS',
+    label: 'Contains',
+    help: 'Executes a specified operation if the value of the specified key contains the specified substring value',
+    accepts: ['DATA_KEY', 'VALUE', 'FUNCTION']
+  },
 ];

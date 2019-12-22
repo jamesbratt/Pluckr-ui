@@ -265,9 +265,9 @@ export const updateOperation = (id, rootFunction, ast) => {
   }
 };
 
-export const fetchOperations = (apiKey, username) => {
+export const fetchOperations = (apiKey, username, datasetId) => {
   return dispatch => {
-    return fetch(`${process.env.REACT_APP_PLUCKR_API_URI}/api/v1/operation/`, {
+    return fetch(`${process.env.REACT_APP_PLUCKR_API_URI}/api/v1/operation/?dataset=${datasetId}`, {
       headers: {
           'Content-Type': 'application/json',
           'Authorization': `ApiKey ${username}:${apiKey}`
