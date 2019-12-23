@@ -119,6 +119,51 @@ export const GITHUB_RESOURCES = {
       { name: 'org', type: DATA_TYPES.string },
     ]
   },
+  repo_contributor_stats: {
+    endpoint: '/repos/{owner}/{repo}/stats/contributors',
+    name: 'repo_contributor_stats',
+    label: 'Repository Contributor Stats',
+    parameters: [
+      { name: 'owner', type: DATA_TYPES.string },
+      { name: 'repo', type: DATA_TYPES.string },
+    ]
+  },
+  repo_yearly_commit_stats: {
+    endpoint: '/repos/{owner}/{repo}/stats/commit_activity',
+    name: 'repo_yearly_commit_stats',
+    label: 'Repository Yearly Commit Stats',
+    parameters: [
+      { name: 'owner', type: DATA_TYPES.string },
+      { name: 'repo', type: DATA_TYPES.string },
+    ]
+  },
+  repo_weekly_code_frequency: {
+    endpoint: '/repos/{owner}/{repo}/stats/code_frequency',
+    name: 'repo_weekly_code_frequency',
+    label: 'Repository Weekly Code Frequency Stats',
+    parameters: [
+      { name: 'owner', type: DATA_TYPES.string },
+      { name: 'repo', type: DATA_TYPES.string },
+    ]
+  },
+  repo_weekly_commit_count_stats: {
+    endpoint: '/repos/{owner}/{repo}/stats/participation',
+    name: 'repo_weekly_commit_count_stats',
+    label: 'Repository Weekly Commit Code Stats',
+    parameters: [
+      { name: 'owner', type: DATA_TYPES.string },
+      { name: 'repo', type: DATA_TYPES.string },
+    ]
+  },
+  repo_daily_commits_stats: {
+    endpoint: '/repos/{owner}/{repo}/stats/punch_card',
+    name: 'repo_daily_commits_stats',
+    label: 'Repository Daily Commit Code Stats',
+    parameters: [
+      { name: 'owner', type: DATA_TYPES.string },
+      { name: 'repo', type: DATA_TYPES.string },
+    ]
+  },
 };
 
 const RESOURCE_PROPERTIES = {
@@ -131,6 +176,106 @@ const RESOURCE_PROPERTIES = {
     'commit',
   ],
 }
+
+const getRepoDailyCommits = (params, resource, username, apiKey, sourceId) => {
+  const urlComponents = injectParametersIntoEndpoint(
+    GITHUB_RESOURCES.repo_daily_commits_stats.endpoint,
+    params,
+  )
+
+  const { endPoint } = urlComponents;
+  const { parameters } = urlComponents;
+
+  const key = getToken(INTEGRATION_TYPE);
+  const queryString = parameters.length > 0 ? '?' +
+    generateQueryString(
+      parameters,
+      'repo_daily_commits_stats',
+      GITHUB_RESOURCES['repo_daily_commits_stats'].parameters,
+    ) : '';
+  const url = `${GITHUB_URI}${endPoint}${queryString}`;
+  return proxyRequest(url, key, INTEGRATION_TYPE, username, apiKey, sourceId);
+};
+
+const getRepoWeeklyCommits = (params, resource, username, apiKey, sourceId) => {
+  const urlComponents = injectParametersIntoEndpoint(
+    GITHUB_RESOURCES.repo_weekly_commit_count_stats.endpoint,
+    params,
+  )
+
+  const { endPoint } = urlComponents;
+  const { parameters } = urlComponents;
+
+  const key = getToken(INTEGRATION_TYPE);
+  const queryString = parameters.length > 0 ? '?' +
+    generateQueryString(
+      parameters,
+      'repo_weekly_commit_count_stats',
+      GITHUB_RESOURCES['repo_weekly_commit_count_stats'].parameters,
+    ) : '';
+  const url = `${GITHUB_URI}${endPoint}${queryString}`;
+  return proxyRequest(url, key, INTEGRATION_TYPE, username, apiKey, sourceId);
+};
+
+const getRepoWeeklyCodeFrequency = (params, resource, username, apiKey, sourceId) => {
+  const urlComponents = injectParametersIntoEndpoint(
+    GITHUB_RESOURCES.repo_weekly_code_frequency.endpoint,
+    params,
+  )
+
+  const { endPoint } = urlComponents;
+  const { parameters } = urlComponents;
+
+  const key = getToken(INTEGRATION_TYPE);
+  const queryString = parameters.length > 0 ? '?' +
+    generateQueryString(
+      parameters,
+      'repo_weekly_code_frequency',
+      GITHUB_RESOURCES['repo_weekly_code_frequency'].parameters,
+    ) : '';
+  const url = `${GITHUB_URI}${endPoint}${queryString}`;
+  return proxyRequest(url, key, INTEGRATION_TYPE, username, apiKey, sourceId);
+};
+
+const getRepoYearlyCommits = (params, resource, username, apiKey, sourceId) => {
+  const urlComponents = injectParametersIntoEndpoint(
+    GITHUB_RESOURCES.repo_yearly_commit_stats.endpoint,
+    params,
+  )
+
+  const { endPoint } = urlComponents;
+  const { parameters } = urlComponents;
+
+  const key = getToken(INTEGRATION_TYPE);
+  const queryString = parameters.length > 0 ? '?' +
+    generateQueryString(
+      parameters,
+      'repo_yearly_commit_stats',
+      GITHUB_RESOURCES['repo_yearly_commit_stats'].parameters,
+    ) : '';
+  const url = `${GITHUB_URI}${endPoint}${queryString}`;
+  return proxyRequest(url, key, INTEGRATION_TYPE, username, apiKey, sourceId);
+};
+
+const getRepoContributorStats = (params, resource, username, apiKey, sourceId) => {
+  const urlComponents = injectParametersIntoEndpoint(
+    GITHUB_RESOURCES.repo_contributor_stats.endpoint,
+    params,
+  )
+
+  const { endPoint } = urlComponents;
+  const { parameters } = urlComponents;
+
+  const key = getToken(INTEGRATION_TYPE);
+  const queryString = parameters.length > 0 ? '?' +
+    generateQueryString(
+      parameters,
+      'repo_contributor_stats',
+      GITHUB_RESOURCES['repo_contributor_stats'].parameters,
+    ) : '';
+  const url = `${GITHUB_URI}${endPoint}${queryString}`;
+  return proxyRequest(url, key, INTEGRATION_TYPE, username, apiKey, sourceId);
+};
 
 const getPublicEvents = (params, resource, username, apiKey, sourceId) => {
   const urlComponents = injectParametersIntoEndpoint(
@@ -387,6 +532,21 @@ export const getGitHubData = (resource, params, username, apiKey, sourceId = nul
       break;
     case GITHUB_RESOURCES.org_events.name:
       call = getOrgEvents;
+      break;
+    case GITHUB_RESOURCES.repo_daily_commits_stats.name:
+      call = getRepoDailyCommits;
+      break;
+    case GITHUB_RESOURCES.repo_weekly_commit_count_stats.name:
+      call = getRepoWeeklyCommits;
+      break;
+    case GITHUB_RESOURCES.repo_weekly_code_frequency.name:
+      call = getRepoWeeklyCodeFrequency;
+      break;
+    case GITHUB_RESOURCES.repo_yearly_commit_stats.name:
+      call = getRepoYearlyCommits;
+      break;
+    case GITHUB_RESOURCES.repo_contributor_stats.name:
+      call = getRepoContributorStats;
       break;
   default:
     console.error('Invalid');
