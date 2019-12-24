@@ -19,7 +19,7 @@ const mapDispatchToProps = (dispatch) => {
       dispatch(deleteDataset(
         apiKey,
         user,
-        dataSetId,        
+        dataSetId,
       ))
     },
     createDataSet: (
@@ -28,7 +28,7 @@ const mapDispatchToProps = (dispatch) => {
       name,
       chartId,
       sourceId,
-      rawData, 
+      rawData,
     ) => {
       return dispatch(createDataSet(
         api_key,
@@ -36,8 +36,8 @@ const mapDispatchToProps = (dispatch) => {
         name,
         chartId,
         sourceId,
-        rawData,       
-      ))      
+        rawData,
+      ))
     }
   };
 };
@@ -52,16 +52,16 @@ class DataSetList extends Component {
     }
   }
 
-  addDataset = (name, chartId, sourceId, rawData) => {
+  addDataset = (name, chartId, sources, rawData) => {
 
       const { api_key, username } = this.props.user;
-  
+
       this.props.createDataSet(
         api_key,
         username,
         name,
         chartId,
-        sourceId,
+        sources,
         rawData,
       ).then((response) => {
         this.setState({
@@ -87,25 +87,33 @@ class DataSetList extends Component {
           this.props.datasets.length > 0 ?
           <React.Fragment>
             {
-              this.state.hasCreated ? <Redirect to={`/charts/${this.state.hasCreated.chart}/chart/edit-dataset/${this.state.hasCreated.id}`} />
+              this.state.hasCreated ? <Redirect to={`/charts/${this.state.hasCreated.chart.id}/chart/edit-dataset/${this.state.hasCreated.id}`} />
               : <React.Fragment>
                 <button className="btn btn-primary" onClick={() =>this.setState({ createChartModalShow: true })}>Create a Dataset</button>
                 <Table bordered hover>
                   <thead>
                     <tr>
                       <th>Name</th>
-                      <th>Data Source</th>
-                      <th>Data Provider</th>
+                      <th>Data Sources</th>
+                      <th>Data Providers</th>
                       <th></th>
                     </tr>
                   </thead>
                   <tbody>
                     {this.props.datasets.map(dataset => {
+                      const dataSources = dataset.sources.reduce((acc, curr) => {
+                        return acc += `${curr.name}, `
+                      }, '');
+
+                      const providers = dataset.sources.reduce((acc, curr) => {
+                        return acc += `${curr.provider}, `
+                      }, '');
+
                       return (
                         <tr key={dataset.id}>
                           <td><Link to={`${this.props.url}/edit-dataset/${dataset.id}`}>{dataset.name}</Link></td>
-                          <td>{dataset.data_source_name}</td>
-                          <td>{dataset.provider}</td>
+                          <td>{dataSources}</td>
+                          <td>{providers}</td>
                           <td width="40">
                             <button onClick={() => this.delete(dataset.id)} className="btn btn-link table-btn"><i className="fa fa-trash" /></button>
                           </td>

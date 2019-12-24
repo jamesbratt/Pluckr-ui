@@ -1,5 +1,5 @@
-import { getToken, proxyRequest } from '../utils/Helpers';
-import { DATA_TYPES } from '../Constants';
+import { getToken, proxyRequest, ConvertToIso, calculateVariableDate } from '../utils/Helpers';
+import { DATA_TYPES, VARIABLES } from '../Constants';
 
 const SALESFORCE_URI = 'https://um5.salesforce.com';
 const INTEGRATION_TYPE = 'salesforce';
@@ -67,6 +67,8 @@ export const SALESFORCE_RESOURCES = {
     ],
     parameters: [
       { name: 'fields', type: DATA_TYPES.list },
+      { name: 'from', type: DATA_TYPES.date, transform: ConvertToIso, useVariables: true },
+      { name: 'to', type: DATA_TYPES.date, transform: ConvertToIso, useVariables: false },
     ]
   },
   campaign: {
@@ -109,6 +111,8 @@ export const SALESFORCE_RESOURCES = {
     ],
     parameters: [
       { name: 'fields', type: DATA_TYPES.list },
+      { name: 'from', type: DATA_TYPES.date, transform: ConvertToIso, useVariables: true },
+      { name: 'to', type: DATA_TYPES.date, transform: ConvertToIso, useVariables: false },
     ]
   },
   opportunity: {
@@ -154,9 +158,11 @@ export const SALESFORCE_RESOURCES = {
       'TotalOpportunityQuantity',
       'TrackingNumber__c',
       'Type',
-    ], 
+    ],
     parameters: [
       { name: 'fields', type: DATA_TYPES.list },
+      { name: 'from', type: DATA_TYPES.date, transform: ConvertToIso, useVariables: true },
+      { name: 'to', type: DATA_TYPES.date, transform: ConvertToIso, useVariables: false },
     ]
   },
   contact: {
@@ -221,6 +227,8 @@ export const SALESFORCE_RESOURCES = {
     ],
     parameters: [
       { name: 'fields', type: DATA_TYPES.list },
+      { name: 'from', type: DATA_TYPES.date, transform: ConvertToIso, useVariables: true },
+      { name: 'to', type: DATA_TYPES.date, transform: ConvertToIso, useVariables: false },
     ]
   },
   account: {
@@ -290,6 +298,8 @@ export const SALESFORCE_RESOURCES = {
     ],
     parameters: [
       { name: 'fields', type: DATA_TYPES.list },
+      { name: 'from', type: DATA_TYPES.date, transform: ConvertToIso, useVariables: true },
+      { name: 'to', type: DATA_TYPES.date, transform: ConvertToIso, useVariables: false },
     ]
   },
   case: {
@@ -332,6 +342,8 @@ export const SALESFORCE_RESOURCES = {
     ],
     parameters: [
       { name: 'fields', type: DATA_TYPES.list },
+      { name: 'from', type: DATA_TYPES.date, transform: ConvertToIso, useVariables: true },
+      { name: 'to', type: DATA_TYPES.date, transform: ConvertToIso, useVariables: false },
     ]
   },
 };
@@ -346,13 +358,24 @@ const constructSFQLQuery = (params, resource) => {
     const endComma = index === params.value.length -1 ? '' : ',';
     query += `+${param}${endComma}`
   });
-  return `${query}+FROM+${resource}`; 
+  return `${query}+FROM+${resource}`;
 }
 
 const doSalesforceQuery = (params, resource, username, apiKey, sourceId) => {
-  const query = constructSFQLQuery(params.find(params => params.name === 'fields'), resource);
+  let query = constructSFQLQuery(params.find(params => params.name === 'fields'), resource);
+  const dateRange = params.filter(param => param.name === 'from' || param.name === 'to');
+
+  const queryWithDateRange = dateRange.length > 0 ? dateRange.reduce((acc, curr) => {
+    let date = curr.value;
+    if (VARIABLES.find(v => v.value === curr.value)) {
+      date = calculateVariableDate(curr);
+    }
+
+    return curr.name === 'from' ? acc += `+CreatedDate+>=+${ConvertToIso(date)}` : acc += `+AND+CreatedDate+<=+${ConvertToIso(date)}`
+  }, (query += '+WHERE')) : query;
+
   const key = getToken(INTEGRATION_TYPE);
-  const url = `${SALESFORCE_URI}/services/data/v40.0/query?q=${query}`;
+  const url = `${SALESFORCE_URI}/services/data/v40.0/query?q=${queryWithDateRange}`;
   return proxyRequest(url, key, INTEGRATION_TYPE, username, apiKey, sourceId);
 };
 
@@ -378,5 +401,5 @@ export const getSalesforceData = (resource, params, username, apiKey, sourceId =
       data: response,
       properties: null,
     }
-  }) 
+  })
 };

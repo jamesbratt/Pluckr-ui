@@ -1,4 +1,4 @@
-import { assocPath, merge } from 'ramda';
+import { assocPath, merge, pathOr } from 'ramda';
 import { executeOperations } from './parse';
 import { diff } from 'deep-object-diff';
 import { addNotification } from '../actions/notification';
@@ -50,7 +50,7 @@ const executeDataUpdates = (
   });
 
   Promise.all(dataSourceRequests).then(responses => {
-    
+
     responses.forEach(response => {
       const sourceConfig = dataSources.find(dataSource => dataSource.id === response.sourceId);
       const source = {
@@ -73,11 +73,22 @@ const executeDataUpdates = (
       .then(response => {
         console.log('datasets received');
         const datasetDataUpdates = response.objects.map(dataset => {
-          const latestData = dataSourcesToAddToState.find(source => source.id === dataset.data_source);
 
-          if (latestData) {
+          const rawData = dataset.sources.length === 1 ?
+            pathOr(null, ['rawData'], dataSourcesToAddToState.find(source => source.id === dataset.sources[0].id)) :
+            dataset.sources.reduce((acc, curr) => {
+              const data = dataSourcesToAddToState.find(
+                source => source.id === curr.id,
+              );
+              if (data) {
+                acc.push(data.rawData);
+              }
+              return acc;
+            }, []);
+
+          if (rawData) {
             console.log('fetching operations for ' + dataset.name);
-  
+
             return fetch(`${process.env.REACT_APP_PLUCKR_API_URI}/api/v1/operation/?dataset=${dataset.id}`, {
               headers: {
                   'Content-Type': 'application/json',
@@ -86,33 +97,31 @@ const executeDataUpdates = (
             })
               .then(response => response.json())
               .then(response => {
-                let data = latestData.rawData;
+                let data = rawData;
                 let operations = response.objects.length > 0 ? response.objects.map(operation => {
                   return assocPath(['ast'], JSON.parse(operation.ast), operation);
                 }) : response.objects;
-  
+
                 operations.sort(function(a, b) {
                   return a.sort_order - b.sort_order;
                 });
-  
+
                 try {
                   data = executeOperations(
-                    latestData.rawData,
+                    rawData,
                     dataset,
                     operations,
                   );
-  
+
                   const isDataDiff = diff(data, JSON.parse(dataset.data));
-  
+
                   if(Object.entries(isDataDiff).length > 0 && isDataDiff.constructor === Object) {
                     const payload = {
                       data: JSON.stringify(data),
-                      chart: {pk: dataset.chart},
-                      data_source: {pk: dataset.data_source},
                     };
-  
+
                     console.log('updating data reference for dataset ' + dataset.name);
-                    
+
                     fetch(`${process.env.REACT_APP_PLUCKR_API_URI}/api/v1/dataset/${dataset.id}/`, {
                       method: 'PATCH',
                       headers: {
@@ -128,7 +137,7 @@ const executeDataUpdates = (
                   } else {
                     Promise.resolve();
                   }
-                
+
                 } catch (error) {
                   dispatch(addNotification({ message: error.message, type: 'error' }));
                 }

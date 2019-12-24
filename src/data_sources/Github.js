@@ -52,7 +52,7 @@ export const GITHUB_RESOURCES = {
       { name: 'labels', type: DATA_TYPES.string },
       { name: 'sort', type: DATA_TYPES.string },
       { name: 'direction', type: DATA_TYPES.string },
-      { name: 'since', type: DATA_TYPES.date, transform: ConvertToIso },
+      { name: 'since', type: DATA_TYPES.date, transform: ConvertToIso, useVariables: true },
     ]
   },
   repo_releases: {
@@ -78,6 +78,92 @@ export const GITHUB_RESOURCES = {
       { name: 'direction', type: DATA_TYPES.string },
     ]
   },
+  public_events: {
+    endpoint: '/events',
+    name: 'public_events',
+    label: 'Public Events',
+    parameters: []
+  },
+  repo_events: {
+    endpoint: '/repos/{owner}/{repo}/events',
+    name: 'repo_events',
+    label: 'Repository Events',
+    parameters: [
+      { name: 'owner', type: DATA_TYPES.string },
+      { name: 'repo', type: DATA_TYPES.string },
+    ]
+  },
+  issue_events: {
+    endpoint: '/repos/{owner}/{repo}/issues/events',
+    name: 'issue_events',
+    label: 'Issue Events',
+    parameters: [
+      { name: 'owner', type: DATA_TYPES.string },
+      { name: 'repo', type: DATA_TYPES.string },
+    ]
+  },
+  user_events: {
+    endpoint: '/users/{username}/events',
+    name: 'user_events',
+    label: 'User Events',
+    parameters: [
+      { name: 'username', type: DATA_TYPES.string },
+    ]
+  },
+  org_events: {
+    endpoint: '/users/{username}/events/orgs/{org}',
+    name: 'org_events',
+    label: 'Organisation Events',
+    parameters: [
+      { name: 'username', type: DATA_TYPES.string },
+      { name: 'org', type: DATA_TYPES.string },
+    ]
+  },
+  repo_contributor_stats: {
+    endpoint: '/repos/{owner}/{repo}/stats/contributors',
+    name: 'repo_contributor_stats',
+    label: 'Repository Contributor Stats',
+    parameters: [
+      { name: 'owner', type: DATA_TYPES.string },
+      { name: 'repo', type: DATA_TYPES.string },
+    ]
+  },
+  repo_yearly_commit_stats: {
+    endpoint: '/repos/{owner}/{repo}/stats/commit_activity',
+    name: 'repo_yearly_commit_stats',
+    label: 'Repository Yearly Commit Stats',
+    parameters: [
+      { name: 'owner', type: DATA_TYPES.string },
+      { name: 'repo', type: DATA_TYPES.string },
+    ]
+  },
+  repo_weekly_code_frequency: {
+    endpoint: '/repos/{owner}/{repo}/stats/code_frequency',
+    name: 'repo_weekly_code_frequency',
+    label: 'Repository Weekly Code Frequency Stats',
+    parameters: [
+      { name: 'owner', type: DATA_TYPES.string },
+      { name: 'repo', type: DATA_TYPES.string },
+    ]
+  },
+  repo_weekly_commit_count_stats: {
+    endpoint: '/repos/{owner}/{repo}/stats/participation',
+    name: 'repo_weekly_commit_count_stats',
+    label: 'Repository Weekly Commit Code Stats',
+    parameters: [
+      { name: 'owner', type: DATA_TYPES.string },
+      { name: 'repo', type: DATA_TYPES.string },
+    ]
+  },
+  repo_daily_commits_stats: {
+    endpoint: '/repos/{owner}/{repo}/stats/punch_card',
+    name: 'repo_daily_commits_stats',
+    label: 'Repository Daily Commit Code Stats',
+    parameters: [
+      { name: 'owner', type: DATA_TYPES.string },
+      { name: 'repo', type: DATA_TYPES.string },
+    ]
+  },
 };
 
 const RESOURCE_PROPERTIES = {
@@ -90,6 +176,206 @@ const RESOURCE_PROPERTIES = {
     'commit',
   ],
 }
+
+const getRepoDailyCommits = (params, resource, username, apiKey, sourceId) => {
+  const urlComponents = injectParametersIntoEndpoint(
+    GITHUB_RESOURCES.repo_daily_commits_stats.endpoint,
+    params,
+  )
+
+  const { endPoint } = urlComponents;
+  const { parameters } = urlComponents;
+
+  const key = getToken(INTEGRATION_TYPE);
+  const queryString = parameters.length > 0 ? '?' +
+    generateQueryString(
+      parameters,
+      'repo_daily_commits_stats',
+      GITHUB_RESOURCES['repo_daily_commits_stats'].parameters,
+    ) : '';
+  const url = `${GITHUB_URI}${endPoint}${queryString}`;
+  return proxyRequest(url, key, INTEGRATION_TYPE, username, apiKey, sourceId);
+};
+
+const getRepoWeeklyCommits = (params, resource, username, apiKey, sourceId) => {
+  const urlComponents = injectParametersIntoEndpoint(
+    GITHUB_RESOURCES.repo_weekly_commit_count_stats.endpoint,
+    params,
+  )
+
+  const { endPoint } = urlComponents;
+  const { parameters } = urlComponents;
+
+  const key = getToken(INTEGRATION_TYPE);
+  const queryString = parameters.length > 0 ? '?' +
+    generateQueryString(
+      parameters,
+      'repo_weekly_commit_count_stats',
+      GITHUB_RESOURCES['repo_weekly_commit_count_stats'].parameters,
+    ) : '';
+  const url = `${GITHUB_URI}${endPoint}${queryString}`;
+  return proxyRequest(url, key, INTEGRATION_TYPE, username, apiKey, sourceId);
+};
+
+const getRepoWeeklyCodeFrequency = (params, resource, username, apiKey, sourceId) => {
+  const urlComponents = injectParametersIntoEndpoint(
+    GITHUB_RESOURCES.repo_weekly_code_frequency.endpoint,
+    params,
+  )
+
+  const { endPoint } = urlComponents;
+  const { parameters } = urlComponents;
+
+  const key = getToken(INTEGRATION_TYPE);
+  const queryString = parameters.length > 0 ? '?' +
+    generateQueryString(
+      parameters,
+      'repo_weekly_code_frequency',
+      GITHUB_RESOURCES['repo_weekly_code_frequency'].parameters,
+    ) : '';
+  const url = `${GITHUB_URI}${endPoint}${queryString}`;
+  return proxyRequest(url, key, INTEGRATION_TYPE, username, apiKey, sourceId);
+};
+
+const getRepoYearlyCommits = (params, resource, username, apiKey, sourceId) => {
+  const urlComponents = injectParametersIntoEndpoint(
+    GITHUB_RESOURCES.repo_yearly_commit_stats.endpoint,
+    params,
+  )
+
+  const { endPoint } = urlComponents;
+  const { parameters } = urlComponents;
+
+  const key = getToken(INTEGRATION_TYPE);
+  const queryString = parameters.length > 0 ? '?' +
+    generateQueryString(
+      parameters,
+      'repo_yearly_commit_stats',
+      GITHUB_RESOURCES['repo_yearly_commit_stats'].parameters,
+    ) : '';
+  const url = `${GITHUB_URI}${endPoint}${queryString}`;
+  return proxyRequest(url, key, INTEGRATION_TYPE, username, apiKey, sourceId);
+};
+
+const getRepoContributorStats = (params, resource, username, apiKey, sourceId) => {
+  const urlComponents = injectParametersIntoEndpoint(
+    GITHUB_RESOURCES.repo_contributor_stats.endpoint,
+    params,
+  )
+
+  const { endPoint } = urlComponents;
+  const { parameters } = urlComponents;
+
+  const key = getToken(INTEGRATION_TYPE);
+  const queryString = parameters.length > 0 ? '?' +
+    generateQueryString(
+      parameters,
+      'repo_contributor_stats',
+      GITHUB_RESOURCES['repo_contributor_stats'].parameters,
+    ) : '';
+  const url = `${GITHUB_URI}${endPoint}${queryString}`;
+  return proxyRequest(url, key, INTEGRATION_TYPE, username, apiKey, sourceId);
+};
+
+const getPublicEvents = (params, resource, username, apiKey, sourceId) => {
+  const urlComponents = injectParametersIntoEndpoint(
+    GITHUB_RESOURCES.public_events.endpoint,
+    params,
+  )
+
+  const { endPoint } = urlComponents;
+  const { parameters } = urlComponents;
+
+  const key = getToken(INTEGRATION_TYPE);
+  const queryString = parameters.length > 0 ? '?' +
+    generateQueryString(
+      parameters,
+      'public_events',
+      GITHUB_RESOURCES['public_events'].parameters,
+    ) : '';
+  const url = `${GITHUB_URI}${endPoint}${queryString}`;
+  return proxyRequest(url, key, INTEGRATION_TYPE, username, apiKey, sourceId);
+};
+
+const getRepoEvents = (params, resource, username, apiKey, sourceId) => {
+  const urlComponents = injectParametersIntoEndpoint(
+    GITHUB_RESOURCES.repo_events.endpoint,
+    params,
+  )
+
+  const { endPoint } = urlComponents;
+  const { parameters } = urlComponents;
+
+  const key = getToken(INTEGRATION_TYPE);
+  const queryString = parameters.length > 0 ? '?' +
+    generateQueryString(
+      parameters,
+      'repo_events',
+      GITHUB_RESOURCES['repo_events'].parameters,
+    ) : '';
+  const url = `${GITHUB_URI}${endPoint}${queryString}`;
+  return proxyRequest(url, key, INTEGRATION_TYPE, username, apiKey, sourceId);
+};
+
+const getIssueEvents = (params, resource, username, apiKey, sourceId) => {
+  const urlComponents = injectParametersIntoEndpoint(
+    GITHUB_RESOURCES.issue_events.endpoint,
+    params,
+  )
+
+  const { endPoint } = urlComponents;
+  const { parameters } = urlComponents;
+
+  const key = getToken(INTEGRATION_TYPE);
+  const queryString = parameters.length > 0 ? '?' +
+    generateQueryString(
+      parameters,
+      'issue_events',
+      GITHUB_RESOURCES['issue_events'].parameters,
+    ) : '';
+  const url = `${GITHUB_URI}${endPoint}${queryString}`;
+  return proxyRequest(url, key, INTEGRATION_TYPE, username, apiKey, sourceId);
+};
+
+const getUserEvents = (params, resource, username, apiKey, sourceId) => {
+  const urlComponents = injectParametersIntoEndpoint(
+    GITHUB_RESOURCES.user_events.endpoint,
+    params,
+  )
+
+  const { endPoint } = urlComponents;
+  const { parameters } = urlComponents;
+
+  const key = getToken(INTEGRATION_TYPE);
+  const queryString = parameters.length > 0 ? '?' +
+    generateQueryString(
+      parameters,
+      'user_events',
+      GITHUB_RESOURCES['user_events'].parameters,
+    ) : '';
+  const url = `${GITHUB_URI}${endPoint}${queryString}`;
+  return proxyRequest(url, key, INTEGRATION_TYPE, username, apiKey, sourceId);
+};
+
+const getOrgEvents = (params, resource, username, apiKey, sourceId) => {
+  const urlComponents = injectParametersIntoEndpoint(
+    GITHUB_RESOURCES.org_events.endpoint,
+    params,
+  )
+
+  const { endPoint } = urlComponents;
+  const { parameters } = urlComponents;
+
+  const key = getToken(INTEGRATION_TYPE);
+  const queryString = parameters.length > 0 ? '?' +
+    generateQueryString(
+      parameters,
+      'org_events',
+      GITHUB_RESOURCES['org_events'].parameters,
+    ) : '';
+  const url = `${GITHUB_URI}${endPoint}${queryString}`;
+  return proxyRequest(url, key, INTEGRATION_TYPE, username, apiKey, sourceId);
+};
 
 const getRepoCommits = (params, resource, username, apiKey, sourceId) => {
   const urlComponents = injectParametersIntoEndpoint(
@@ -231,6 +517,36 @@ export const getGitHubData = (resource, params, username, apiKey, sourceId = nul
       break;
     case GITHUB_RESOURCES.repo_pull_requests.name:
       call = getRepoPulls;
+      break;
+    case GITHUB_RESOURCES.public_events.name:
+      call = getPublicEvents;
+      break;
+    case GITHUB_RESOURCES.repo_events.name:
+      call = getRepoEvents;
+      break;
+    case GITHUB_RESOURCES.issue_events.name:
+      call = getIssueEvents;
+      break;
+    case GITHUB_RESOURCES.user_events.name:
+      call = getUserEvents;
+      break;
+    case GITHUB_RESOURCES.org_events.name:
+      call = getOrgEvents;
+      break;
+    case GITHUB_RESOURCES.repo_daily_commits_stats.name:
+      call = getRepoDailyCommits;
+      break;
+    case GITHUB_RESOURCES.repo_weekly_commit_count_stats.name:
+      call = getRepoWeeklyCommits;
+      break;
+    case GITHUB_RESOURCES.repo_weekly_code_frequency.name:
+      call = getRepoWeeklyCodeFrequency;
+      break;
+    case GITHUB_RESOURCES.repo_yearly_commit_stats.name:
+      call = getRepoYearlyCommits;
+      break;
+    case GITHUB_RESOURCES.repo_contributor_stats.name:
+      call = getRepoContributorStats;
       break;
   default:
     console.error('Invalid');

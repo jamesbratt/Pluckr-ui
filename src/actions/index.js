@@ -104,7 +104,7 @@ export const fetchDataSources = (apiKey, username, chartId) => {
   return (dispatch, getState) => {
     dispatch(setLoader(true));
     const { dataProviders } = getState();
-  
+
     return fetch(`${process.env.REACT_APP_PLUCKR_API_URI}/api/v1/datasource/?chart=${chartId}`, {
       headers: {
           'Content-Type': 'application/json',
@@ -223,7 +223,7 @@ export const createDataSource = (
           rawData,
         );
       }
-      
+
       dispatch(setLoader(false));
 
       return Promise.resolve(response.data.id);
@@ -265,9 +265,9 @@ export const updateOperation = (id, rootFunction, ast) => {
   }
 };
 
-export const fetchOperations = (apiKey, username) => {
+export const fetchOperations = (apiKey, username, datasetId) => {
   return dispatch => {
-    return fetch(`${process.env.REACT_APP_PLUCKR_API_URI}/api/v1/operation/`, {
+    return fetch(`${process.env.REACT_APP_PLUCKR_API_URI}/api/v1/operation/?dataset=${datasetId}`, {
       headers: {
           'Content-Type': 'application/json',
           'Authorization': `ApiKey ${username}:${apiKey}`
@@ -313,7 +313,7 @@ export const createOperation = (
 
   const payload = {
     name: '',
-    dataset: { pk: dataSetId },
+    dataset: `/api/v1/dataset/${dataSetId}/`,
     root_function: rootFunction,
     ast: JSON.stringify(ast),
     sort_order: sortOrder,
@@ -352,21 +352,13 @@ export const updateOperationAst = (
   ast,
 ) => {
 
-  return (dispatch, getState) => {
+  return (dispatch) => {
 
-    const { operations } = getState();
-
-    const currentOperation = operations.find(operation => operation.id === operationId);
-
-    // Because the api is dehydrating these fields
-    // we need to add them into a PATCH payload
-    // TODO find solution for this on the api
     const payload = {
-      dataset: {pk: currentOperation.dataset},
       root_function,
       ast: JSON.stringify(ast),
     };
-    
+
     return fetch(`${process.env.REACT_APP_PLUCKR_API_URI}/api/v1/operation/${operationId}/`, {
       method: 'PATCH',
       headers: {

@@ -33,6 +33,33 @@ export const getTokenId = (dataProvider) => {
   return pathOr('', [dataProvider, 'id'], parsedTokens);
 }
 
+export const calculateVariableDate = (param) => {
+  const variables = VARIABLES.reduce((acc, cur) => {
+    acc[cur.value] = cur.value;
+    return acc;
+  }, {});
+
+  const today = new Date();
+  const year = today.getFullYear();
+  const month = today.getMonth();
+  const day = today.getDate();
+
+  switch(param.value) {
+    case variables.CURRENT_MONTH_BEGINNING:
+      return new Date(year, month, 1).getTime();
+    case variables.LAST_30_DAYS:
+      return new Date(year, month, day).getTime() - 30*24*60*60*1000;
+    case variables.LAST_7_DAYS:
+      return new Date(year, month, day).getTime() - 7*24*60*60*1000;
+    case variables.LAST_24_HOURS:
+      return new Date(year, month, day).getTime() - 24*60*60*1000;
+    case variables.CURRENT_DAY:
+      return new Date(year, month, day).getTime();
+    default:
+      return null;
+  }
+}
+
 export const generateQueryString = (params, resource, paramConfigs) => {
   const resourceParameters = paramConfigs;
   return params.map(param => {
@@ -41,38 +68,8 @@ export const generateQueryString = (params, resource, paramConfigs) => {
       resourceParameter => resourceParameter.name === param.name
     ).transform;
     if (transformation && VARIABLES.find(v => v.value === param.value)) {
-  
-      const variables = VARIABLES.reduce((acc, cur) => {
-        acc[cur.value] = cur.value;
-        return acc;
-      }, {});
-  
-      const today = new Date();
-      const year = today.getFullYear();
-      const month = today.getMonth();
-      const day = today.getDate();
-  
-      switch(param.value) {
-        case variables.CURRENT_MONTH_BEGINNING:
-          value = new Date(year, month, 1).getTime();
-          break;
-        case variables.LAST_30_DAYS:
-          value = new Date(year, month, day).getTime() - 30*24*60*60*1000;
-          break;
-        case variables.LAST_7_DAYS:
-          value = new Date(year, month, day).getTime() - 7*24*60*60*1000;
-          break;
-        case variables.LAST_24_HOURS:
-          value = new Date(year, month, day).getTime() - 24*60*60*1000;
-          break;
-        case variables.CURRENT_DAY:
-          value = new Date(year, month, day).getTime();
-          break;
-        default:
-          value = null;
-          break;
-      }
-    } 
+      value = calculateVariableDate(param);
+    }
     return param.name + '=' + (transformation ? transformation(value) : value);
   }).join('&');
 };

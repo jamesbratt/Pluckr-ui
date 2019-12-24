@@ -130,7 +130,7 @@ class Operations extends Component {
 
     this.setState({
       operationAst: rootFunctionArguments,
-      rootFunction: rootFunctionType, 
+      rootFunction: rootFunctionType,
     })
   }
 
@@ -157,7 +157,7 @@ class Operations extends Component {
       for(var i in ast) {
           if(ast[i].parent === parent) {
               var children = getRidOfOffspring(ast, ast[i].id)
-  
+
               if(children.length) {
                 children.forEach(child => {
                   nodesToRemove.push(child)
@@ -173,7 +173,7 @@ class Operations extends Component {
       ast,
       getRidOfOffspring(ast, parentFunction.id)
     );
-    
+
     // Now the selected functions value is set
     cleanedAst.find(currentFn => {
       if (currentFn.id === selectedFunctionId) {
@@ -273,7 +273,7 @@ class Operations extends Component {
     );
 
     const operations = this.props.operations.map(operation => {
-      if (operation.dataset === parseInt(this.props.dataSetId)) {
+      if (operation.dataset.id === parseInt(this.props.dataSetId)) {
         return <li key={operation.id} className="list-group-item">
           <button className="btn btn-link btn-sm table-btn" onClick={() => this.onOperationEdit(operation)}>{OPERATION_FUNCTIONS.find(func => operation.root_function === func.name).label}</button>
           <div key={operation.id} className="operation-actions float-right">

@@ -39,15 +39,10 @@ export const updateDataSet = (
   updates
 ) => {
 
-  return (dispatch, getState) => {
-
-    const { datasets } = getState();
-    const currentDataSet = datasets.find(dataset => dataset.id === dataSetId);
+  return (dispatch) => {
 
     const payload = Object.assign({}, ...updates);
-    payload['chart'] = {pk: currentDataSet.chart};
-    payload['data_source'] = {pk: currentDataSet.data_source};
-    
+
     return fetch(`${process.env.REACT_APP_PLUCKR_API_URI}/api/v1/dataset/${dataSetId}/`, {
       method: 'PATCH',
       headers: {
@@ -99,14 +94,14 @@ export const createDataSet = (
   username,
   name,
   chartId,
-  sourceId,
+  sources,
   data,
 ) => {
 
   const payload = {
     name,
-    chart: { pk: chartId },
-    data_source: { pk: sourceId },
+    chart: `/api/v1/chart/${chartId}/`,
+    sources,
     y_axis_id: null,
     data: JSON.stringify(data),
   };
@@ -162,14 +157,9 @@ export const updateDatasetYaxis = (
   isEnabled,
 ) => {
 
-  return (dispatch, getState) => {
-
-    const { datasets } = getState();
-    const currentDataSet = datasets.find(dataset => dataset.id === dataSetId);
+  return (dispatch) => {
 
     const payload = {
-      chart: {pk: currentDataSet.chart},
-      data_source: {pk: currentDataSet.data_source},
       y_axis_title: title,
       y_axis_is_opposite: isOpposite,
       y_axis_enabled: isEnabled,
@@ -187,7 +177,7 @@ export const updateDatasetYaxis = (
       .then(response => {
         response['data'] = JSON.parse(response.data);
         updateYaxis(dataSetId, title, isOpposite, isEnabled);
-  
+
         dispatch(patchDataset(
           dataSetId,
           response,
@@ -211,15 +201,23 @@ export const runDataSet = (
 
     let data = [];
     const currentDataSet = datasets.find(dataset => dataset.id === dataSetId);
-    const currentOperations = operations.filter(operation => operation.dataset === dataSetId);
+    const currentOperations = operations.filter(operation => operation.dataset.id === dataSetId);
 
-    const currentDataSource = sources.data.find(
-      source => source.id === parseInt(currentDataSet.data_source),
-    );
+    const rawData = currentDataSet.sources.length === 1 ?
+      sources.data.find(
+        source => source.id === currentDataSet.sources[0].id,
+      ).rawData :
+      currentDataSet.sources.reduce((acc, curr) => {
+        const data = sources.data.find(
+          source => source.id === curr.id,
+        ).rawData;
+        acc.push(data);
+        return acc;
+      }, []);
 
     // Having to clone the source data here as for some reason
     // the highcharts api is mutating the raw data in the sources store
-    const clonedData = clone(currentDataSource.rawData);
+    const clonedData = clone(rawData);
 
     try {
       data = executeOperations(
@@ -231,15 +229,10 @@ export const runDataSet = (
       dispatch(addNotification({ message: error.message, type: 'error' }));
     }
 
-    // Because the api is dehydrating these fields
-    // we need to add them into a PATCH payload
-    // TODO find solution for this on the api
     const payload = {
-      chart: {pk: currentDataSet.chart},
-      data_source: {pk: currentDataSet.data_source},
       data: JSON.stringify(data),
     };
-    
+
     return fetch(`${process.env.REACT_APP_PLUCKR_API_URI}/api/v1/dataset/${dataSetId}/`, {
       method: 'PATCH',
       headers: {

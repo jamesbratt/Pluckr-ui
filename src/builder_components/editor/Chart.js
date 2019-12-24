@@ -74,9 +74,9 @@ class Chart extends Component {
     const datasets = this.props.datasets.sort(function(a, b) {
       return b.data.length - a.data.length;
     });
-  
+
     datasets.forEach((dataset) => {
-      if(dataset.chart === chart.id) {
+      if(dataset.chart.id === chart.id) {
         addDataSeries(
           dataset.id,
           dataset.name,
@@ -100,7 +100,7 @@ class Chart extends Component {
         },
         chart: {
           backgroundColor: chart.background_color ? chart.background_color : null
-        },   
+        },
         legend: {
           align: 'left',
           verticalAlign: 'top',
@@ -113,7 +113,7 @@ class Chart extends Component {
           }
         }
       };
-  
+
       if (chart.chart_type !== 'pie') {
         chartConfig['xAxis'] = {
           type: chart.chart_type,
@@ -123,7 +123,7 @@ class Chart extends Component {
             text: chart.x_axis_title,
           }
         };
-  
+
         chartConfig['yAxis'] = {
           title: false,
           gridLineWidth: 0,
@@ -133,7 +133,7 @@ class Chart extends Component {
         chartConfig['tooltip'] = {
           pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
         };
-        
+
         chartConfig['plotOptions'] = {
           pie: {
               allowPointSelect: true,
@@ -146,12 +146,12 @@ class Chart extends Component {
           }
         };
       }
-    
+
       const chartInstance = Highcharts.chart(
         `chart-${chart.id}`,
         chartConfig
       );
-  
+
       setChart(chartInstance);
       const { api_key, username } = this.props.user;
       this.props.fetchDatasets(
@@ -212,7 +212,7 @@ class Chart extends Component {
   componentWillUnmount() {
     const { id } = this.props.match.params;
     const chart = this.props.charts.find(chart => chart.id === parseInt(id));
-  
+
     if (chart) {
       destroyChart();
     }
@@ -253,7 +253,7 @@ class Chart extends Component {
           <div style={{ ...style }} id={`chart-${id}`} />
         </div>
         {
-          this.props.datasets.length > 0 ? 
+          this.props.datasets.length > 0 ?
             <>
               <Route
                 exact
@@ -263,7 +263,7 @@ class Chart extends Component {
               <Route path={`${this.props.match.path}/edit-dataset/:dataset_id`} component={DataSetDetail} />
             </> : null
         }
-        {this.state.hasCreated ? <Redirect to={`/charts/${this.state.hasCreated.chart}/chart/edit-dataset/${this.state.hasCreated.id}`} /> : null}
+        {this.state.hasCreated ? <Redirect to={`/charts/${this.state.hasCreated.chart.id}/chart/edit-dataset/${this.state.hasCreated.id}`} /> : null}
         <Modal show={this.state.createChartModalShow} onHide={() => this.setState({createChartModalShow: false})}>
           <Modal.Header closeButton>
             <Modal.Title>Create a New Dataset</Modal.Title>
