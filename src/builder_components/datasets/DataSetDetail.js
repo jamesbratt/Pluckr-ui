@@ -15,12 +15,16 @@ const mapStateToProps = (state) => {
   return {
     user: state.user[0],
     datasets: state.datasets,
+    operations: state.operations,
+    sources: state.sources.data,
   };
 };
 
 class DataSetDetail extends Component {
+
   render() {
     const dataset = this.props.datasets.find(dataset => dataset.id === parseInt(this.props.match.params.dataset_id));
+
     return (
       <div className="dataset-detail">
         <h3>{dataset.name}</h3><Link className="back" to={`/charts/${this.props.match.params.id}/chart`}>Back to Dataset List</Link>
@@ -38,7 +42,7 @@ class DataSetDetail extends Component {
               <JSONTree
                 theme={{
                   tree: ({ style }) => ({
-                    style: { ...style, padding: "1em" }, 
+                    style: { ...style, padding: "1em" },
                   }),
                 }}
                 data={dataset.data}

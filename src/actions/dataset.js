@@ -32,6 +32,14 @@ export const patchDataset = (datasetId, payload) => {
   }
 }
 
+export const dataSetUpdate = (dataSetId, data) => {
+  return {
+    type: 'UPDATE_DATASET',
+    dataSetId,
+    data
+  }
+}
+
 export const updateDataSet = (
   apiKey,
   username,
@@ -103,7 +111,7 @@ export const createDataSet = (
     chart: `/api/v1/chart/${chartId}/`,
     sources,
     y_axis_id: null,
-    data: JSON.stringify(data),
+    // data: JSON.stringify(data),
   };
 
   return dispatch => {
