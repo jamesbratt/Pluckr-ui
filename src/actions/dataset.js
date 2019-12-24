@@ -1,14 +1,7 @@
-import { assocPath, clone } from 'ramda';
+import { clone } from 'ramda';
 import { updateYaxis, updateDataSeries } from '../builder_components/editor/Graph';
 import { executeOperations } from '../data_parsing/parse';
 import { addNotification } from './notification';
-
-export const receiveDatasets = (data) => {
-  return {
-    type: 'RECEIVE_DATASETS',
-    data
-  }
-};
 
 export const addDataset = (data) => {
   return {
@@ -29,14 +22,6 @@ export const patchDataset = (datasetId, payload) => {
     type: 'UPDATE_DATASET_YAXIS',
     datasetId,
     payload
-  }
-}
-
-export const dataSetUpdate = (dataSetId, data) => {
-  return {
-    type: 'UPDATE_DATASET',
-    dataSetId,
-    data
   }
 }
 
@@ -63,35 +48,12 @@ export const updateDataSet = (
         return response.json();
       })
       .then(response => {
-        response['data'] = JSON.parse(response.data);
         updateDataSeries(dataSetId, Object.assign({}, ...updates));
         dispatch({
           type: 'UPDATE_DATASET',
           dataSetId,
           data: response
         });
-      })
-      .catch(error => dispatch(addNotification({ message: error.message, type: 'error' })));
-  }
-}
-
-export const fetchDatasets = (apiKey, username, chartId) => {
-  return dispatch => {
-    return fetch(`${process.env.REACT_APP_PLUCKR_API_URI}/api/v1/dataset/?chart=${chartId}`, {
-      headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `ApiKey ${username}:${apiKey}`
-      },
-    })
-      .then(response => response.json())
-      .then(json => {
-        const datasets = json.objects.map(dataset => {
-          if (dataset.data) {
-            return assocPath(['data'], JSON.parse(dataset.data), dataset);
-          }
-          return dataset;
-        });
-        dispatch(receiveDatasets(datasets));
       })
       .catch(error => dispatch(addNotification({ message: error.message, type: 'error' })));
   }
@@ -111,7 +73,6 @@ export const createDataSet = (
     chart: `/api/v1/chart/${chartId}/`,
     sources,
     y_axis_id: null,
-    // data: JSON.stringify(data),
   };
 
   return dispatch => {
@@ -127,7 +88,7 @@ export const createDataSet = (
       return response.json();
     })
     .then(json => {
-      json['data'] = json.data ? JSON.parse(json.data) : json.data;
+      json['data'] = data;
       dispatch(
         addDataset(
           json,
@@ -183,7 +144,6 @@ export const updateDatasetYaxis = (
     })
       .then((response) => response.json())
       .then(response => {
-        response['data'] = JSON.parse(response.data);
         updateYaxis(dataSetId, title, isOpposite, isEnabled);
 
         dispatch(patchDataset(
@@ -196,8 +156,6 @@ export const updateDatasetYaxis = (
 };
 
 export const runDataSet = (
-  apiKey,
-  username,
   dataSetId,
   callback,
   seriesType,
@@ -233,41 +191,23 @@ export const runDataSet = (
         currentDataSet,
         currentOperations,
       );
+
+      dispatch({
+        type: 'RUN_DATASET',
+        datasetId: dataSetId,
+        rawData: data
+      })
+
+      callback(
+        currentDataSet.id,
+        currentDataSet.name,
+        data,
+        seriesType,
+        currentDataSet,
+      );
+
     } catch (error) {
       dispatch(addNotification({ message: error.message, type: 'error' }));
     }
-
-    const payload = {
-      data: JSON.stringify(data),
-    };
-
-    return fetch(`${process.env.REACT_APP_PLUCKR_API_URI}/api/v1/dataset/${dataSetId}/`, {
-      method: 'PATCH',
-      headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `ApiKey ${username}:${apiKey}`
-      },
-      body: JSON.stringify(payload)
-    })
-      .then((response) => {
-        return response.json();
-      })
-      .then(json => {
-        json['data'] = JSON.parse(json.data);
-        dispatch({
-          type: 'RUN_DATASET',
-          datasetId: dataSetId,
-          rawData: json.data
-        })
-
-        callback(
-          currentDataSet.id,
-          currentDataSet.name,
-          data,
-          seriesType,
-          currentDataSet,
-        );
-      })
-      .catch(error => dispatch(addNotification({ message: error.message, type: 'error' })));
   }
 }

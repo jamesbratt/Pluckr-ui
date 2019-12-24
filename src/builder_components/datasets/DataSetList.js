@@ -3,22 +3,17 @@ import Table from 'react-bootstrap/Table';
 import Modal from 'react-bootstrap/Modal';
 import AddDataSet from './AddDataSet';
 import { connect } from 'react-redux';
-import { createDataSet, deleteDataset, dataSetUpdate } from '../../actions/dataset';
+import { createDataSet, deleteDataset } from '../../actions/dataset';
 import { Link, Redirect } from "react-router-dom";
-import { pathOr } from 'ramda';
-import { executeOperations } from '../../data_parsing/parse';
 
 const mapStateToProps = (state) => {
   return {
     user: state.user[0],
     datasets: state.datasets,
-    operations: state.operations,
-    sources: state.sources.data,
   };
 };
 
 const mapDispatchToProps = {
-  dataSetUpdate,
   deleteDataset,
   createDataSet,
 }
@@ -30,90 +25,6 @@ class DataSetList extends Component {
     this.state = {
       createChartModalShow: false,
       hasCreated: null,
-    }
-  }
-
-  componentDidMount() {
-
-    if (this.props.sources.length > 0) {
-      // const dataset = this.props.datasets.find(dataset => dataset.id === parseInt(this.props.match.params.dataset_id));
-
-
-
-      this.props.datasets.forEach(dataset => {
-        const sourceIds = dataset.sources.map(source => source.id);
-        const dataSetSources = this.props.sources.filter(source => sourceIds.includes(source.id));
-
-        if (dataSetSources.length > 0) {
-          const rawData = dataSetSources.length === 1 ?
-          pathOr(null, ['rawData'], dataSetSources[0]) :
-          dataSetSources.reduce((acc, curr) => {
-            if (curr.rawData) {
-              acc.push(curr.rawData);
-            }
-            return acc;
-          }, []);
-
-          if (this.props.operations) {
-              const datasetOperations = this.props.operations.filter(operation => operation.dataset.id === parseInt(dataset.id));
-              const sortedOperations = datasetOperations.sort(function(a, b) {
-                return a.sort_order - b.sort_order;
-              });
-
-              const data = executeOperations(
-                rawData,
-                dataset,
-                sortedOperations,
-              );
-
-              this.props.dataSetUpdate(dataset.id, { data: data });
-          } else {
-            this.props.dataSetUpdate(dataset.id, { data: rawData });
-          }
-
-
-        }
-      })
-    }
-  }
-
-  componentDidUpdate(prevProps) {
-    if (
-      (this.props.operations &&
-      prevProps.operations.length !== this.props.operations.length) &&
-      (this.props.sources && prevProps.sources.length !== this.props.sources.length)
-    ) {
-      // const dataset = this.props.datasets.find(dataset => dataset.id === parseInt(this.props.match.params.dataset_id));
-
-
-      this.props.datasets.forEach(dataset => {
-        const datasetOperations = this.props.operations.filter(operation => operation.dataset.id === parseInt(dataset.id));
-        const sortedOperations = datasetOperations.sort(function(a, b) {
-          return a.sort_order - b.sort_order;
-        });
-        const sourceIds = dataset.sources.map(source => source.id);
-        const dataSetSources = this.props.sources.filter(source => sourceIds.includes(source.id));
-
-        if (dataSetSources.length > 0) {
-          const rawData = dataSetSources.length === 1 ?
-          pathOr(null, ['rawData'], dataSetSources[0]) :
-          dataSetSources.reduce((acc, curr) => {
-            if (curr.rawData) {
-              acc.push(curr.rawData);
-            }
-            return acc;
-          }, []);
-
-
-          const data = executeOperations(
-            rawData,
-            dataset,
-            sortedOperations,
-          );
-
-          this.props.dataSetUpdate(dataset.id, { data: data });
-        }
-      });
     }
   }
 
@@ -146,10 +57,11 @@ class DataSetList extends Component {
   }
 
   render() {
+    const dataSetsToDisplay = this.props.datasets.filter(dataset => dataset.chart.id === parseInt(this.props.chartId));
     return (
       <React.Fragment>
         {
-          this.props.datasets.length > 0 ?
+          dataSetsToDisplay.length > 0 ?
           <React.Fragment>
             {
               this.state.hasCreated ? <Redirect to={`/charts/${this.state.hasCreated.chart.id}/chart/edit-dataset/${this.state.hasCreated.id}`} />
@@ -165,7 +77,7 @@ class DataSetList extends Component {
                     </tr>
                   </thead>
                   <tbody>
-                    {this.props.datasets.map(dataset => {
+                    {dataSetsToDisplay.map(dataset => {
                       const dataSources = dataset.sources.reduce((acc, curr) => {
                         return acc += `${curr.name}, `
                       }, '');

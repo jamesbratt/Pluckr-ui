@@ -69,8 +69,6 @@ class Operations extends Component {
       )).then(() => {
         this.props.dispatch(
           runDataSet(
-            api_key,
-            username,
             parseInt(this.props.dataSetId),
             addDataSeries,
             chart.series_type,
@@ -98,8 +96,6 @@ class Operations extends Component {
     ).then(() => {
       this.props.dispatch(
         runDataSet(
-          api_key,
-          username,
           parseInt(this.props.dataSetId),
           () => {},
           '',
@@ -244,8 +240,6 @@ class Operations extends Component {
     ).then(() => {
       this.props.dispatch(
         runDataSet(
-          api_key,
-          username,
           parseInt(this.props.dataSetId),
           () => {},
           '',

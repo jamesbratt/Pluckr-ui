@@ -1,8 +1,8 @@
 import { assocPath, merge, pathOr } from 'ramda';
 import { executeOperations } from './parse';
-import { diff } from 'deep-object-diff';
 import { addNotification } from '../actions/notification';
 import { receiveDataSources, setLoader, updateSource } from '../actions';
+import { addDataset } from '../actions/dataset';
 
 const executeDataUpdates = (
   dataSources,
@@ -115,11 +115,9 @@ const executeDataUpdates = (
 
                   console.log('updating data reference for dataset ' + dataset.name);
 
-                  dispatch({
-                    type: 'UPDATE_DATASET',
-                    dataSetId: dataset.id,
-                    data: JSON.stringify(data)
-                  });
+                  dataset['data'] = data;
+
+                  dispatch(addDataset(dataset));
 
                   Promise.resolve();
 
