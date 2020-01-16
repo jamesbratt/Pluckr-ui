@@ -38,7 +38,7 @@ class DataSetDetail extends Component {
               <JSONTree
                 theme={{
                   tree: ({ style }) => ({
-                    style: { ...style, padding: "1em" }, 
+                    style: { ...style, padding: "1em" },
                   }),
                 }}
                 data={dataset.data}

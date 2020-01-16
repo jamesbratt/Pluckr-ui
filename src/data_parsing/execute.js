@@ -1,8 +1,8 @@
 import { assocPath, merge, pathOr } from 'ramda';
 import { executeOperations } from './parse';
-import { diff } from 'deep-object-diff';
 import { addNotification } from '../actions/notification';
 import { receiveDataSources, setLoader, updateSource } from '../actions';
+import { addDataset } from '../actions/dataset';
 
 const executeDataUpdates = (
   dataSources,
@@ -113,30 +113,13 @@ const executeDataUpdates = (
                     operations,
                   );
 
-                  const isDataDiff = diff(data, JSON.parse(dataset.data));
+                  console.log('updating data reference for dataset ' + dataset.name);
 
-                  if(Object.entries(isDataDiff).length > 0 && isDataDiff.constructor === Object) {
-                    const payload = {
-                      data: JSON.stringify(data),
-                    };
+                  dataset['data'] = data;
 
-                    console.log('updating data reference for dataset ' + dataset.name);
+                  dispatch(addDataset(dataset));
 
-                    fetch(`${process.env.REACT_APP_PLUCKR_API_URI}/api/v1/dataset/${dataset.id}/`, {
-                      method: 'PATCH',
-                      headers: {
-                          'Content-Type': 'application/json',
-                          'Authorization': `ApiKey ${username}:${apiKey}`
-                      },
-                      body: JSON.stringify(payload)
-                    })
-                      .then((response) => response.json())
-                      .then(response => {
-                      })
-                      .catch(error => dispatch(addNotification({ message: error.message, type: 'error' })));
-                  } else {
-                    Promise.resolve();
-                  }
+                  Promise.resolve();
 
                 } catch (error) {
                   dispatch(addNotification({ message: error.message, type: 'error' }));
