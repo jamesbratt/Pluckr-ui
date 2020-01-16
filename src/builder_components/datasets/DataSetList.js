@@ -13,34 +13,10 @@ const mapStateToProps = (state) => {
   };
 };
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    deleteDataset: (apiKey, user, dataSetId) => {
-      dispatch(deleteDataset(
-        apiKey,
-        user,
-        dataSetId,
-      ))
-    },
-    createDataSet: (
-      api_key,
-      username,
-      name,
-      chartId,
-      sourceId,
-      rawData,
-    ) => {
-      return dispatch(createDataSet(
-        api_key,
-        username,
-        name,
-        chartId,
-        sourceId,
-        rawData,
-      ))
-    }
-  };
-};
+const mapDispatchToProps = {
+  deleteDataset,
+  createDataSet,
+}
 
 class DataSetList extends Component {
 
@@ -81,10 +57,11 @@ class DataSetList extends Component {
   }
 
   render() {
+    const dataSetsToDisplay = this.props.datasets.filter(dataset => dataset.chart.id === parseInt(this.props.chartId));
     return (
       <React.Fragment>
         {
-          this.props.datasets.length > 0 ?
+          dataSetsToDisplay.length > 0 ?
           <React.Fragment>
             {
               this.state.hasCreated ? <Redirect to={`/charts/${this.state.hasCreated.chart.id}/chart/edit-dataset/${this.state.hasCreated.id}`} />
@@ -100,7 +77,7 @@ class DataSetList extends Component {
                     </tr>
                   </thead>
                   <tbody>
-                    {this.props.datasets.map(dataset => {
+                    {dataSetsToDisplay.map(dataset => {
                       const dataSources = dataset.sources.reduce((acc, curr) => {
                         return acc += `${curr.name}, `
                       }, '');

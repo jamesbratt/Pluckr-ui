@@ -7,7 +7,7 @@ import DropdownButton from 'react-bootstrap/DropdownButton';
 import Dropdown from 'react-bootstrap/Dropdown';
 import AddDataSet from '../datasets/AddDataSet';
 import { addNotification } from '../../actions/notification';
-import { createDataSet, fetchDatasets } from '../../actions/dataset';
+import { createDataSet } from '../../actions/dataset';
 import { addDataSeries, destroyChart, getChart, setChart } from './Graph';
 import { connect } from 'react-redux';
 import { Route, Redirect } from "react-router-dom";
@@ -32,7 +32,6 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = {
   createDataSet,
-  fetchDatasets,
   addNotification,
 };
 
@@ -71,6 +70,7 @@ class Chart extends Component {
   }
 
   setUpChartData = (chart) => {
+
     const datasets = this.props.datasets.sort(function(a, b) {
       return b.data.length - a.data.length;
     });
@@ -153,12 +153,7 @@ class Chart extends Component {
       );
 
       setChart(chartInstance);
-      const { api_key, username } = this.props.user;
-      this.props.fetchDatasets(
-        api_key,
-        username,
-        chart.id,
-      );
+      this.setUpChartData(chart);
     }
 
   }
@@ -222,10 +217,11 @@ class Chart extends Component {
 
     const { id } = this.props.match.params;
     const chart = this.props.charts.find(chart => chart.id === parseInt(id));
+    const dataSetsToDisplay = this.props.datasets.filter(dataset => dataset.chart.id === parseInt(id));
 
     const overlayClasses = classNames({
       'overlay': true,
-      'overlay-hide': this.props.datasets.length > 0,
+      'overlay-hide': dataSetsToDisplay.length > 0,
     });
 
     return (
@@ -253,7 +249,7 @@ class Chart extends Component {
           <div style={{ ...style }} id={`chart-${id}`} />
         </div>
         {
-          this.props.datasets.length > 0 ?
+          dataSetsToDisplay.length > 0 ?
             <>
               <Route
                 exact

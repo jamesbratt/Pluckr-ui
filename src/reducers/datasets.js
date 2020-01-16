@@ -2,11 +2,19 @@ import { append, merge } from 'ramda';
 
 const datasets = (state = [], action) => {
   switch (action.type) {
-    case 'ADD_DATASET':
-      return append(action.data, state);
-
-    case 'RECEIVE_DATASETS':
-      return action.data;
+    case 'ADD_DATASET': {
+      const existing = state.find(dataset => dataset.id === action.data.id);
+      if (existing) {
+        return state.map(dataset => {
+          if (dataset.id === action.data.id) {
+            return action.data;
+          }
+          return dataset;
+        })
+      } else {
+        return append(action.data, state);
+      }
+    }
 
     case 'REMOVE_DATASET':
       return state.filter(dataset => dataset.id !== action.datasetId);
@@ -43,7 +51,7 @@ const datasets = (state = [], action) => {
         }
         return dataset;
       });
-  
+
     default:
       return state;
   }
