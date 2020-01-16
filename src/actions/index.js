@@ -164,7 +164,6 @@ export const createDataSource = (
   };
 
   return (dispatch, getState) => {
-    dispatch(setLoader(true));
     const options = {
       method: id ? 'PUT' : 'POST',
       headers: {
@@ -223,8 +222,6 @@ export const createDataSource = (
           rawData,
         );
       }
-
-      dispatch(setLoader(false));
 
       return Promise.resolve(response.data.id);
     })

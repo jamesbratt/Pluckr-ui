@@ -9,7 +9,7 @@ import Loader from '../../Loader';
 import { pathOr } from 'ramda';
 import { DATA_TYPES } from '../../Constants';
 import { connect } from 'react-redux';
-import { createDataSource, fetchDataSources } from '../../actions';
+import { createDataSource, fetchDataSources, setLoader } from '../../actions';
 import { addNotification } from '../../actions/notification';
 
 const mapStateToProps = (state) => {
@@ -20,6 +20,13 @@ const mapStateToProps = (state) => {
     loader: state.loader,
   };
 };
+
+const mapDispatchToProps = {
+  setLoader,
+  createDataSource,
+  fetchDataSources,
+  addNotification,
+}
 
 class DataSourceDetail extends Component {
 
@@ -42,11 +49,11 @@ class DataSourceDetail extends Component {
     const sourcesLoaded = this.props.sources.filter(source => source.chart === parseInt(this.props.match.params.id))
     const { api_key, username } = this.props.user;
     if (sourcesLoaded.length === 0) {
-      this.props.dispatch(fetchDataSources(
+      this.props.fetchDataSources(
         api_key,
         username,
         this.props.match.params.id,
-      ));
+      );
     } else {
       if(this.props.match.params.data_source_id) {
         const dataSource = sources.find(source => source.id === parseInt(this.props.match.params.data_source_id));
@@ -76,6 +83,7 @@ class DataSourceDetail extends Component {
     event.preventDefault();
     if(selectedResource && sourceName && selectedProvider) {
       try {
+        this.props.setLoader(true);
         this.state.selectedProvider.request(
           selectedResource,
           params, username, api_key,
@@ -85,7 +93,7 @@ class DataSourceDetail extends Component {
             this.setState({
               data: response.data,
             }, () => {
-              this.props.dispatch(createDataSource(
+              this.props.createDataSource(
                 api_key,
                 username,
                 sourceName,
@@ -96,15 +104,22 @@ class DataSourceDetail extends Component {
                 response,
                 response.properties,
                 this.props.match.params.data_source_id || this.state.newlySavedDataSoucerId
-              )).then(response => this.setState({ newlySavedDataSoucerId: response }));
+              ).then(response => {
+                this.props.setLoader(false);
+                this.setState({ newlySavedDataSoucerId: response });
+              });
             });
-          }).catch(error => this.props.dispatch(addNotification({ message: error.message, type: 'error' })));
+          }).catch(error => {
+            this.props.setLoader(false);
+            this.props.addNotification({ message: error.message, type: 'error' })
+          });
       } catch(error) {
-        this.props.dispatch(addNotification({ message: error.message, type: 'error' }));
+        this.props.setLoader(false);
+        this.props.addNotification({ message: error.message, type: 'error' });
       }
 
     } else {
-      this.props.dispatch(addNotification({ message: 'Fill out all required data source fields', type: 'error' }));
+      this.props.addNotification({ message: 'Fill out all required data source fields', type: 'error' });
     }
   };
 
@@ -135,11 +150,11 @@ class DataSourceDetail extends Component {
       let availableFields = [];
       const resourceName = event.target.value;
       const resourceParams = this.state.selectedProvider.resources[resourceName].parameters;
-  
+
       if (resourceParams) {
         availableFields = resourceParams;
       }
-  
+
       this.setState({
         selectedResource: resourceName,
         parameterFields: availableFields,
@@ -223,7 +238,7 @@ class DataSourceDetail extends Component {
                   <input defaultValue={val} name={parameterField.name} onKeyUp={this.onParameterChange} type="text" className="form-control" placeholder={parameterField.name} />
                 </div>
               </React.Fragment>
-            );          
+            );
         }
       })
     }
@@ -245,7 +260,7 @@ class DataSourceDetail extends Component {
                     return <option key={dataProvider.provider} value={dataProvider.provider}>{dataProvider.provider}</option>
                   }
                 })}
-              </select>            
+              </select>
             </div>
             {this.state.selectedProvider ?
               <div className="form-group">
@@ -255,7 +270,7 @@ class DataSourceDetail extends Component {
                   {Object.keys(this.state.selectedProvider.resources).map(resourceKey => {
                     return <option key={this.state.selectedProvider.resources[resourceKey].name} value={this.state.selectedProvider.resources[resourceKey].name}>{this.state.selectedProvider.resources[resourceKey].label}</option>
                   })}
-                </select>            
+                </select>
               </div>
             : null
             }
@@ -274,7 +289,7 @@ class DataSourceDetail extends Component {
                 <JSONTree
                   theme={{
                     tree: ({ style }) => ({
-                      style: { ...style, padding: "1em" }, 
+                      style: { ...style, padding: "1em" },
                     }),
                   }}
                   data={this.state.data}
@@ -291,4 +306,5 @@ class DataSourceDetail extends Component {
 
 export default connect(
   mapStateToProps,
+  mapDispatchToProps,
 )(DataSourceDetail);
