@@ -4,6 +4,7 @@ import { getSalesforceData, SALESFORCE_RESOURCES } from '../data_sources/Salesfo
 import { getFacebookData, FACEBOOK_RESOURCES } from '../data_sources/Facebook';
 import { getJiraData, JIRA_RESOURCES } from '../data_sources/Jira';
 import { getStripeData, STRIPE_RESOURCES } from '../data_sources/Stripe';
+import { getFinanceData, FINANCE_RESOURCES } from '../data_sources/Finance';
 import { assocPath } from 'ramda';
 import { GITHUB_REDIRECT, SALESFORCE_REDIRECT, FACEBOOK_REDIRECT, JIRA_REDIRECT, STRIPE_REDIRECT } from '../Constants';
 import salesforceLogo from '../img/salesforce-logo.png';
@@ -21,6 +22,7 @@ const initialState = [
     isActive: false,
     isDisabled: false,
     icon: githubLogo,
+    auth: true,
   },
   {
     provider: 'salesforce',
@@ -30,6 +32,7 @@ const initialState = [
     isActive: false,
     isDisabled: false,
     icon: salesforceLogo,
+    auth: true,
   },
   {
     provider: 'facebook',
@@ -39,6 +42,7 @@ const initialState = [
     isActive: false,
     isDisabled: true,
     icon: facebookLogo,
+    auth: true,
   },
   {
     provider: 'jira',
@@ -48,6 +52,7 @@ const initialState = [
     isActive: false,
     isDisabled: false,
     icon: jiraLogo,
+    auth: true,
   },
   {
     provider: 'stripe',
@@ -57,6 +62,17 @@ const initialState = [
     isActive: false,
     isDisabled: true,
     icon: stripeLogo,
+    auth: true,
+  },
+  {
+    provider: 'financial modeling',
+    redirectUrl: null,
+    request: getFinanceData,
+    resources: FINANCE_RESOURCES,
+    isActive: true,
+    isDisabled: false,
+    icon: null,
+    auth: false,
   },
 ];
 
@@ -65,7 +81,7 @@ const dataProviders = (state = initialState, action) => {
     case 'SET_PROVIDERS':
       const providers = state.map(dataProvider => {
         const currentProvider = action.payload.find(dp => dp.provider === dataProvider.provider);
-        return assocPath(['isActive'], (currentProvider ? true : false), dataProvider);
+        return assocPath(['isActive'], (currentProvider || !dataProvider.auth ? true : false), dataProvider);
       })
       return providers;
 
