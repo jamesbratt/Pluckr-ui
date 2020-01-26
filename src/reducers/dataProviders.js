@@ -12,28 +12,9 @@ import githubLogo from '../img/github-logo.png';
 import facebookLogo from '../img/facebook-logo.png';
 import jiraLogo from '../img/jira-logo.png';
 import stripeLogo from '../img/stripe-logo.png';
+import financeLogo from '../img/finance-logo.png';
 
 const initialState = [
-  {
-    provider: 'github',
-    redirectUrl: GITHUB_REDIRECT,
-    request: getGitHubData,
-    resources: GITHUB_RESOURCES,
-    isActive: false,
-    isDisabled: false,
-    icon: githubLogo,
-    auth: true,
-  },
-  {
-    provider: 'salesforce',
-    redirectUrl: SALESFORCE_REDIRECT,
-    request: getSalesforceData,
-    resources: SALESFORCE_RESOURCES,
-    isActive: false,
-    isDisabled: false,
-    icon: salesforceLogo,
-    auth: true,
-  },
   {
     provider: 'facebook',
     redirectUrl: FACEBOOK_REDIRECT,
@@ -42,6 +23,26 @@ const initialState = [
     isActive: false,
     isDisabled: true,
     icon: facebookLogo,
+    auth: true,
+  },
+  {
+    provider: 'financial modeling',
+    redirectUrl: null,
+    request: getFinanceData,
+    resources: FINANCE_RESOURCES,
+    isActive: true,
+    isDisabled: false,
+    icon: financeLogo,
+    auth: false,
+  },
+  {
+    provider: 'github',
+    redirectUrl: GITHUB_REDIRECT,
+    request: getGitHubData,
+    resources: GITHUB_RESOURCES,
+    isActive: false,
+    isDisabled: false,
+    icon: githubLogo,
     auth: true,
   },
   {
@@ -55,6 +56,16 @@ const initialState = [
     auth: true,
   },
   {
+    provider: 'salesforce',
+    redirectUrl: SALESFORCE_REDIRECT,
+    request: getSalesforceData,
+    resources: SALESFORCE_RESOURCES,
+    isActive: false,
+    isDisabled: false,
+    icon: salesforceLogo,
+    auth: true,
+  },
+  {
     provider: 'stripe',
     redirectUrl: STRIPE_REDIRECT,
     request: getStripeData,
@@ -63,16 +74,6 @@ const initialState = [
     isDisabled: true,
     icon: stripeLogo,
     auth: true,
-  },
-  {
-    provider: 'financial modeling',
-    redirectUrl: null,
-    request: getFinanceData,
-    resources: FINANCE_RESOURCES,
-    isActive: true,
-    isDisabled: false,
-    icon: null,
-    auth: false,
   },
 ];
 
