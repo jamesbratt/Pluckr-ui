@@ -114,6 +114,13 @@ export const proxyRequest = (url, key, integration_type, username, apiKey, sourc
     }
   }
 
+  if(!key && !source_id) {
+    payload = {
+      url,
+      integration_type,
+    }
+  }
+
   return axios.post(`${process.env.REACT_APP_PLUCKR_API_URI}/api/v1/integration-request/`,
     JSON.stringify(payload),
     {

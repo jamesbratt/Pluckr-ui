@@ -1,4 +1,4 @@
-import { assocPath, merge, pathOr } from 'ramda';
+import { assocPath, clone, merge, pathOr } from 'ramda';
 import { executeOperations } from './parse';
 import { addNotification } from '../actions/notification';
 import { receiveDataSources, setLoader, updateSource } from '../actions';
@@ -108,7 +108,7 @@ const executeDataUpdates = (
 
                 try {
                   data = executeOperations(
-                    rawData,
+                    clone(rawData),
                     dataset,
                     operations,
                   );

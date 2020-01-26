@@ -160,7 +160,7 @@ export const createDataSource = (
     provider,
     resource,
     params: JSON.stringify(params),
-    integration_auth: { pk: integration_id },
+    integration_auth: integration_id ? { pk: integration_id } : null,
   };
 
   return (dispatch, getState) => {
