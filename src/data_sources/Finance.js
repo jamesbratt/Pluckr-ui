@@ -1,4 +1,4 @@
-import { getToken, injectParametersIntoEndpoint, proxyRequest, ConvertToIso } from '../utils/Helpers';
+import { getToken, injectParametersIntoEndpoint, proxyRequest, ConvertToIso, generateQueryString } from '../utils/Helpers';
 import { DATA_TYPES } from '../Constants';
 
 const FINANCE_URI = 'https://financialmodelingprep.com/api/v3';
@@ -24,9 +24,17 @@ const getHistorical = (params, resource, username, apiKey, sourceId) => {
   )
 
   const { endPoint } = urlComponents;
+  const { parameters } = urlComponents;
 
   const key = getToken(INTEGRATION_TYPE);
-  const url = `${FINANCE_URI}${endPoint}`;
+  const queryString = parameters.length > 0 ? '?' +
+    generateQueryString(
+      parameters,
+      'historical',
+      FINANCE_RESOURCES['historical'].parameters,
+    ) : '';
+
+  const url = `${FINANCE_URI}${endPoint}${queryString}`;
   return proxyRequest(url, key, INTEGRATION_TYPE, username, apiKey, sourceId);
 };
 
