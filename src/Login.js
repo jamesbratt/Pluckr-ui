@@ -3,6 +3,7 @@ import Alert from 'react-bootstrap/Alert';
 import { Redirect } from "react-router-dom";
 import { fetchUser } from './actions';
 import { connect } from 'react-redux';
+import './css/login.css'
 
 const mapStateToProps = state => {
   return state
@@ -39,14 +40,14 @@ class Login extends Component {
           <div className="login-wrapper">
             <form onSubmit={this.login} className="form-signin">
               {this.props.location.state ? <Alert variant='success'>{this.props.location.state.alert}</Alert> : null}
-              <h1 style={{textAlign: "center"}} className="h3 mb-3 font-weight-normal">Sign-in to Pluckr</h1>
+              <h1 style={{textAlign: "center"}} className="h3 font-weight-normal">Sign-in to Pluckr</h1>
               <label className="sr-only">Username</label>
               <input ref={this.usernameRef} type="text" name="username" className="form-control" placeholder="Email Address" required="" autofocus="" />
               <label className="sr-only">Password</label>
               <input ref={this.passwordRef} type="password" id="inputPassword" className="form-control" placeholder="Password" name="password" required="" />
               <button className="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
-              <p className="mt-5 mb-3 text-muted">Not registered? Register <a href="/register">here</a></p>
-              <p className="mt-5 mb-3 text-muted">© Pluckr {new Date().getFullYear()}</p>
+              <p className="text-muted">Not registered? Register <a href="/register">here</a></p>
+              <p className="text-muted">© Pluckr {new Date().getFullYear()}</p>
             </form>
           </div>
         );

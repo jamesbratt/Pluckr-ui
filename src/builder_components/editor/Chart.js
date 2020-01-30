@@ -246,7 +246,7 @@ class Chart extends Component {
               </div>
             </div>
           </div>
-          <div style={{ ...style }} id={`chart-${id}`} />
+          <div className="table-wrapper"><div style={{ ...style }} id={`chart-${id}`} /></div>
         </div>
         {
           dataSetsToDisplay.length > 0 ?

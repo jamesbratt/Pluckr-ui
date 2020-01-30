@@ -87,38 +87,40 @@ class TemplateList extends Component {
           {
             this.state.hasInstalled ? <Redirect to={`/charts/${this.state.hasInstalled.id}/data-sources`} /> :
               <React.Fragment>
-                <h2>Chart Templates</h2>
                 <div className="row">
                   <div className="col-md-8">
-                    <Table bordered hover>
-                      <thead>
-                        <tr>
-                          <th></th>
-                          <th>Name</th>
-                          <th>Chart Type</th>
-                          <th>Series Type</th>
-                          <th></th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {templates.map((template) => {
-                          return (
-                            <tr key={template.id}>
-                              <td width="40">
-                                <i className={ICON_MAPPER[template.series_type]} />
-                              </td>
-                              <td>{template.name}</td>
-                              <td className="capitalize">{template.chart_type}</td>
-                              <td className="capitalize">{template.series_type}</td>
-                              <td width="40">
-                                <button onClick={() => this.install(template.id)} className="btn btn-link table-btn float-right"><i className="fa fa-download" /></button>
-                              </td>
-                            </tr>
-                          )
-                        })}
-                      </tbody>
-                    </Table>
-                    {templates.length === 0 ? <p className="lead">There are no templates available</p> : null}
+                    <div className="table-wrapper">
+                      <div className="table-header"><h2>Chart Templates</h2></div>
+                      <Table bordered hover>
+                        <thead>
+                          <tr>
+                            <th></th>
+                            <th>Name</th>
+                            <th>Chart Type</th>
+                            <th>Series Type</th>
+                            <th></th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {templates.map((template) => {
+                            return (
+                              <tr key={template.id}>
+                                <td width="40">
+                                  <i className={ICON_MAPPER[template.series_type]} />
+                                </td>
+                                <td>{template.name}</td>
+                                <td className="capitalize">{template.chart_type}</td>
+                                <td className="capitalize">{template.series_type}</td>
+                                <td width="40">
+                                  <button onClick={() => this.install(template.id)} className="btn btn-link table-btn float-right"><i className="fa fa-download" /></button>
+                                </td>
+                              </tr>
+                            )
+                          })}
+                        </tbody>
+                      </Table>
+                      {templates.length === 0 ? <p className="lead">There are no templates available</p> : null}
+                    </div>
                   </div>
                   <div className="col-md-4">
                     <DataProviderTable />

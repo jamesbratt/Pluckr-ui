@@ -48,7 +48,7 @@ class Wrapper extends Component {
               return dataProvider;
           }
       });
-    
+
       this.props.dispatch(
           setDataProviders(
           cachedProviders

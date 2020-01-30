@@ -39,11 +39,11 @@ const ChartConfigHoc = WrappedComponent => {
         )
       }
     }
-    
+
     render() {
       return (
-        <Row>
-          <Col md={2}>
+        <Row style={{ height: '100vh' }}>
+          <Col md={2} className="sidebar">
             <Nav defaultActiveKey="/home" className="flex-column">
               <Link className="side-nav-item" to={`/charts/${this.props.match.params.id}/data-sources`}>Data Sources</Link>
               <Link className="side-nav-item" to={`/charts/${this.props.match.params.id}/chart`}>Chart Editor</Link>

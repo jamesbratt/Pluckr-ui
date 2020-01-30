@@ -63,12 +63,14 @@ class DataSourceList extends Component {
 
   render() {
     return (
-      <React.Fragment>
+      <div className="table-wrapper">
         {this.props.loader ? <Loader /> :
             this.props.sources.data.length > 0 ?
             <React.Fragment>
               <h2>Available Data Sources</h2>
-              <Link className="btn btn-primary" to="create-data-source">Create a Data Source</Link>
+              <div className="table-header">
+                <Link className="btn btn-primary" to="create-data-source">Create a Data Source</Link>
+              </div>
               <Table bordered hover>
                 <thead>
                   <tr>
@@ -100,7 +102,7 @@ class DataSourceList extends Component {
               <Link className="btn btn-primary" to="create-data-source">Create a Data Source</Link>
             </div>
         }
-      </React.Fragment>
+      </div>
     )
   };
 };

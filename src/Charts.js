@@ -8,6 +8,7 @@ import AddChart from './builder_components/AddChart';
 import { Link, Redirect } from "react-router-dom";
 import GetStarted from './builder_components/charts/GetStarted';
 import Loader from './Loader';
+import sadFace from './img/sad-face.png';
 
 const ICON_MAPPER = {
   line: 'fa fa-line-chart',
@@ -53,7 +54,7 @@ class Charts extends Component {
     createChart = (name, chartType) => {
         const user = this.props.user.username;
         const apiKey = this.props.user.api_key;
-  
+
         this.props.dispatch(
           createChart(
             apiKey,
@@ -67,7 +68,7 @@ class Charts extends Component {
             hasInstalled: response,
           })
        });
-    } 
+    }
 
     removeChart = (chartId) => {
       const user = this.props.user.username;
@@ -76,7 +77,7 @@ class Charts extends Component {
         deleteChart(
           apiKey,
           user,
-          chartId,         
+          chartId,
         )
       );
     }
@@ -87,44 +88,50 @@ class Charts extends Component {
 
       let content = (
         <React.Fragment>
-          <h2>Your Charts</h2>
-          <button style={{ marginRight: '1em' }} type="button" onClick={() => this.setState({createChartModalShow: true})} className="btn btn-primary">
-            Create Chart from Scratch
-          </button>
-          <Link to={`/charts/templates`}>
-              Create Chart from Template
-          </Link>
           <div className="row">
             <div className="col-md-8">
-              <Table bordered hover>
-                <thead>
-                  <tr>
-                    <th></th>
-                    <th>Name</th>
-                    <th>Chart Type</th>
-                    <th>Series Type</th>
-                    <th></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {charts.map((chart) => {
-                    return (
-                      <tr key={chart.id}>
-                        <td width="40">
-                          <i className={ICON_MAPPER[chart.series_type]} />
-                        </td>
-                        <td><Link to={`/charts/${chart.id}/data-sources`}>{chart.name}</Link></td>
-                        <td className="capitalize">{chart.chart_type}</td>
-                        <td className="capitalize">{chart.series_type}</td>
-                        <td width="40">
-                          <button onClick={() => this.removeChart(chart.id)} className="btn btn-link table-btn float-right"><i className="fa fa-trash" /></button>
-                        </td>
-                      </tr>
-                    )
-                  })}
-                </tbody>
-              </Table>
-              {charts.length === 0 ? <p style={{ textAlign: 'center' }} className="lead">You have no charts yet, get building!</p> : null}
+              <div className="table-wrapper">
+                <h2>Your Charts</h2>
+                <div className="table-header">
+                  <button style={{ marginRight: '1em' }} type="button" onClick={() => this.setState({createChartModalShow: true})} className="btn btn-primary">
+                    Create Chart from Scratch
+                  </button>
+                  <Link to={`/charts/templates`}>
+                      Create Chart from Template
+                  </Link>
+                </div>
+
+                {charts.length === 0 ?
+                  <div className="sad-face"><img src={sadFace} alt=""/><p style={{ textAlign: 'center' }} className="lead">You have no charts yet, get building!</p></div> :
+                  <Table bordered hover>
+                  <thead>
+                    <tr>
+                      <th></th>
+                      <th>Name</th>
+                      <th>Chart Type</th>
+                      <th>Series Type</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {charts.map((chart) => {
+                      return (
+                        <tr key={chart.id}>
+                          <td width="40">
+                            <i className={ICON_MAPPER[chart.series_type]} />
+                          </td>
+                          <td><Link to={`/charts/${chart.id}/data-sources`}>{chart.name}</Link></td>
+                          <td className="capitalize">{chart.chart_type}</td>
+                          <td className="capitalize">{chart.series_type}</td>
+                          <td width="40">
+                            <button onClick={() => this.removeChart(chart.id)} className="btn btn-link table-btn float-right"><i className="fa fa-trash" /></button>
+                          </td>
+                        </tr>
+                      )
+                    })}
+                  </tbody>
+                </Table>}
+              </div>
             </div>
             <div className="col-md-4">
               <DataProviderTable />
