@@ -226,16 +226,18 @@ class Chart extends Component {
 
     return (
       <div className="clearfix">
-        {chart ? <h2 style={{ display: 'inline-block' }}>{chart.name}</h2> : null}
-        <div className="float-right export-btns">
-          <button onClick={() => this.publish(id)} className="btn btn-success">Publish as Template</button>
-          <button onClick={this.print} className="btn btn-secondary">Print</button>
-          <DropdownButton alignRight id="dropdown-item-button" title="Download">
-            <Dropdown.Item onClick={() => this.download('image/png')} as="button">Download as PNG image</Dropdown.Item>
-            <Dropdown.Item onClick={() => this.download('image/jpeg')} as="button">Download as JPEG image</Dropdown.Item>
-            <Dropdown.Item onClick={() => this.download('application/pdf')} as="button">Download as PDF file</Dropdown.Item>
-            <Dropdown.Item onClick={() => this.download('image/svg+xml')} as="button">Download as SVG vector image</Dropdown.Item>
-          </DropdownButton>
+        <div className="editor-header">
+          {chart ? <h2 style={{ display: 'inline-block' }}>{chart.name}</h2> : null}
+          <div className="float-right export-btns">
+            <button onClick={() => this.publish(id)} className="btn btn-success">Publish as Template</button>
+            <button onClick={this.print} className="btn btn-secondary">Print</button>
+            <DropdownButton alignRight id="dropdown-item-button" title="Download">
+              <Dropdown.Item onClick={() => this.download('image/png')} as="button">Download as PNG image</Dropdown.Item>
+              <Dropdown.Item onClick={() => this.download('image/jpeg')} as="button">Download as JPEG image</Dropdown.Item>
+              <Dropdown.Item onClick={() => this.download('application/pdf')} as="button">Download as PDF file</Dropdown.Item>
+              <Dropdown.Item onClick={() => this.download('image/svg+xml')} as="button">Download as SVG vector image</Dropdown.Item>
+            </DropdownButton>
+          </div>
         </div>
         <div style={{position: 'relative', marginBottom: '1em'}}>
           <div className={overlayClasses}>

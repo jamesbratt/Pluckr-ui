@@ -66,7 +66,9 @@ class DataSetList extends Component {
             {
               this.state.hasCreated ? <Redirect to={`/charts/${this.state.hasCreated.chart.id}/chart/edit-dataset/${this.state.hasCreated.id}`} />
               : <React.Fragment>
-                <button className="btn btn-primary" onClick={() =>this.setState({ createChartModalShow: true })}>Create a Dataset</button>
+                <div className="table-header">
+                  <button className="btn btn-primary" onClick={() =>this.setState({ createChartModalShow: true })}>Create a Dataset</button>
+                </div>
                 <Table bordered hover>
                   <thead>
                     <tr>

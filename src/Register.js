@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Redirect } from "react-router-dom";
 import { addNotification } from './actions/notification';
+import './css/login.css'
 
 const emailRef = React.createRef();
 const passwordRef = React.createRef();
@@ -67,8 +68,8 @@ class Register extends React.Component {
             <input ref={passwordConfirmRef} className="form-control" type="password" placeholder="Confirm your password" />
           </div>
           <button onClick={this.register} className="btn btn-lg btn-primary" type="submit">Register</button>
-          <p className="mt-5 mb-3 text-muted">Already registered? Sign-in <a href="/">here</a></p>
-          <p className="mt-5 mb-3 text-muted">© Pluckr {new Date().getFullYear()}</p>
+          <p className="text-muted">Already registered? Sign-in <a href="/">here</a></p>
+          <p className="text-muted">© Pluckr {new Date().getFullYear()}</p>
         </div>
       </div>
     )

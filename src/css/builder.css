@@ -9,6 +9,16 @@ a {
   background: #efefef;
   border-right: solid #d6d6d6 1px
 }
+.sidebar a {
+  margin: 0;
+  color: #515151;
+  border-bottom: solid #d6d6d6 1px
+}
+.sidebar a:hover {
+  background: #d6d6d6;
+  color: #515151;
+  text-decoration: none;
+}
 .table-success, .table-success > th, .table-success > td {
   background-color: #f2d7f4;
   border-color: #e3c3e5;
@@ -136,6 +146,11 @@ a {
   background: white;
   padding: 1em;
   border: 1px solid #ededed;
+  border-top: 0 none;
+}
+
+.editor-header {
+  margin-top: 1.3em;
 }
 
 .operations {
@@ -319,12 +334,6 @@ a {
   justify-content: center;
   padding-top: 40px;
   padding-bottom: 40px;
-}
-.form-register {
-  width: 100%;
-  max-width: 480px;
-  padding: 15px;
-  margin: 0 auto;
 }
 .active-provider {
   margin-right: 1em;

@@ -34,7 +34,7 @@
   background-position: center;
 }
 
-.form-signin {
+.form-signin, .form-register {
   width: 100%;
   max-width: 450px;
   padding: 50px;
@@ -66,11 +66,11 @@
   border-top-left-radius: 0;
   border-top-right-radius: 0;
 }
-.form-signin p {
+.form-signin p, .form-register p {
   margin-top: 1em;
   text-align: center;
 }
-.form-signin .btn {
+.form-signin .btn, .form-register .btn  {
   margin-bottom: 2em;
 }
 .form-signin h1 {
