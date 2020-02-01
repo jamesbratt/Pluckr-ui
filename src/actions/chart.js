@@ -97,10 +97,10 @@ export const updateChart = (
   graphUpdate = null,
 ) => {
 
-  return (dispatch) => {
+  return (dispatch, getState) => {
 
     const payload = Object.assign({}, ...updates);
-    
+
     return fetch(`${process.env.REACT_APP_PLUCKR_API_URI}/api/v1/chart/${chartId}/`, {
       method: 'PATCH',
       headers: {
@@ -113,7 +113,7 @@ export const updateChart = (
         return response.json();
       })
       .then(response => {
-        graphUpdate ? graphUpdate(payload) : updateChartInstance(payload);
+        graphUpdate ? graphUpdate(payload, getState(), chartId) : updateChartInstance(payload);
         dispatch({
           type: 'UPDATE_CHART',
           chartId,

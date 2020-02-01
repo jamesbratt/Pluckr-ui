@@ -57,6 +57,10 @@ export const updateDataSeries = (dataSetId, updates) => {
   existingSeries.update(updates);
 }
 
+export const updateChartColour = (dataSetIds, colour, chartId) => {
+
+}
+
 export const updateYaxis = (dataSetId, title, isOpposite, isEnabled) => {
   const yAxisId = `${dataSetId}`;
   const existingYaxis = chartInstance.get(yAxisId);
@@ -105,7 +109,7 @@ export const addDataSeries = (datasetId, title, data, chartType, dataset) => {
   } else {
     let yAxisId = null;
     const { y_axis_title, y_axis_enabled, y_axis_is_opposite } = dataset;
-  
+
     if(y_axis_title && y_axis_enabled) {
       yAxisId = `${dataset.id}`;
       const axis = {
@@ -117,10 +121,10 @@ export const addDataSeries = (datasetId, title, data, chartType, dataset) => {
         gridLineWidth: 0,
         minorGridLineWidth: 0,
       };
-    
+
       addYaxis(axis);
     }
-  
+
     const newDataSeries = {
       id: datasetId,
       name: title,
@@ -130,6 +134,6 @@ export const addDataSeries = (datasetId, title, data, chartType, dataset) => {
       yAxis: yAxisId ? yAxisId : 0,
     };
 
-    chartInstance.addSeries(newDataSeries)  
+    chartInstance.addSeries(newDataSeries)
   }
 }
