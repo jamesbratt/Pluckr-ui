@@ -27,7 +27,7 @@ class ChartStyleSettings extends Component {
         color: false,
       },
       backgroundColour: props.charts.find(chart => chart.id === parseInt(props.chartId)).background_color,
-      color: props.charts.find(chart => chart.id === parseInt(props.chartId)).color,
+      color: props.charts.find(chart => chart.id === parseInt(props.chartId)).color || '',
     }
   }
 
