@@ -83,6 +83,7 @@ class Chart extends Component {
           dataset.data,
           chart.series_type,
           dataset,
+          chart,
         );
       }
     })
@@ -96,7 +97,10 @@ class Chart extends Component {
       const chartConfig = {
         title: {
           text: chart.name,
-          type: chart.series_type
+          type: chart.series_type,
+          style: {
+            color: chart.color,
+          }
         },
         chart: {
           backgroundColor: chart.background_color ? chart.background_color : null
@@ -104,6 +108,9 @@ class Chart extends Component {
         legend: {
           align: 'left',
           verticalAlign: 'top',
+          itemStyle: {
+            color: chart.color
+          },
         },
         exporting: {
           buttons: {
@@ -121,7 +128,17 @@ class Chart extends Component {
           visible: chart.x_axis_enabled,
           title: {
             text: chart.x_axis_title,
-          }
+            style: {
+              color: chart.color
+            }
+          },
+          labels: {
+            style: {
+                color: chart.color || null
+            }
+          },
+          lineColor: chart.color,
+          tickColor: chart.color,
         };
 
         chartConfig['yAxis'] = {

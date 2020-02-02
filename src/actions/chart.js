@@ -97,7 +97,7 @@ export const updateChart = (
   graphUpdate = null,
 ) => {
 
-  return (dispatch, getState) => {
+  return (dispatch) => {
 
     const payload = Object.assign({}, ...updates);
 
@@ -113,7 +113,7 @@ export const updateChart = (
         return response.json();
       })
       .then(response => {
-        graphUpdate ? graphUpdate(payload, getState(), chartId) : updateChartInstance(payload);
+        graphUpdate ? graphUpdate(payload) : updateChartInstance(payload);
         dispatch({
           type: 'UPDATE_CHART',
           chartId,

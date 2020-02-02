@@ -24,12 +24,10 @@ class ChartStyleSettings extends Component {
     this.state = {
       displayColorPicker: {
         background_color: false,
-        font_color: false,
-        axis_color: false,
+        color: false,
       },
       backgroundColour: props.charts.find(chart => chart.id === parseInt(props.chartId)).background_color,
-      fontColour: props.charts.find(chart => chart.id === parseInt(props.chartId)).font_color,
-      axis_color: '',
+      color: props.charts.find(chart => chart.id === parseInt(props.chartId)).color,
     }
   }
 
@@ -44,17 +42,10 @@ class ChartStyleSettings extends Component {
           }
         });
         break;
-      case 'font_color':
+      case 'color':
         this.setState({
           displayColorPicker: {
-            font_color: foo,
-          }
-        });
-        break;
-      case 'axis_color':
-        this.setState({
-          displayColorPicker: {
-            axis_color: foo,
+            color: foo,
           }
         });
         break;
@@ -66,8 +57,7 @@ class ChartStyleSettings extends Component {
   handleClose = () => {
     this.setState({ displayColorPicker: {
       background_color: false,
-      font_color: false,
-      axis_color: false,
+      color: false,
     }})
   };
 
@@ -77,14 +67,14 @@ class ChartStyleSettings extends Component {
     this.props.updateChart(api_key, username, this.props.chartId, [{background_color: this.state.backgroundColour}]);
   }
 
-  handleFontChange = (color, event) => {
-    this.setState({ fontColour: color.hex });
+  handleColorChange = (color, event) => {
+    this.setState({ color: color.hex });
     const { api_key, username } = this.props.user;
     this.props.updateChart(
       api_key,
       username,
       this.props.chartId,
-      [{font_color: this.state.fontColour}],
+      [{color: this.state.color}],
       updateChartColour,
     );
   }
@@ -123,35 +113,18 @@ class ChartStyleSettings extends Component {
           </>
           <>
             <div className="form-group">
-              <label>Font Colour</label>
+              <label>Colour</label>
               <div className="input-group mb-3">
-                <input value={this.state.fontColour} type="text" className="form-control" placeholder="Font colour" aria-label="Font colour" />
+                <input value={this.state.color} type="text" className="form-control" placeholder="Colour" aria-label="Colour" />
                 <div className="input-group-append">
-                  <button onClick={() => this.handleClick('font_color')} className="btn btn-outline-secondary" type="button">Pick a Colour</button>
+                  <button onClick={() => this.handleClick('color')} className="btn btn-outline-secondary" type="button">Pick a Colour</button>
                 </div>
               </div>
             </div>
               {
-                this.state.displayColorPicker.font_color ? <div style={ popover }>
+                this.state.displayColorPicker.color ? <div style={ popover }>
                 <div style={ cover } onClick={ this.handleClose }/>
-                <ChromePicker color={ this.state.fontColour } onChangeComplete={ this.handleFontChange } />
-                </div> : null
-              }
-          </>
-          <>
-            <div className="form-group">
-              <label>Axis Colour</label>
-              <div className="input-group mb-3">
-                <input value={this.state.axis_color} type="text" className="form-control" placeholder="Axis colour" aria-label="Axis colour" />
-                <div className="input-group-append">
-                  <button onClick={() => this.handleClick('axis_color')} className="btn btn-outline-secondary" type="button">Pick a Colour</button>
-                </div>
-              </div>
-            </div>
-              {
-                this.state.displayColorPicker.axis_color ? <div style={ popover }>
-                <div style={ cover } onClick={ this.handleClose }/>
-                <ChromePicker color={ this.state.axis_color } onChangeComplete={ this.handleChange } />
+                <ChromePicker color={ this.state.color } onChangeComplete={ this.handleColorChange } />
                 </div> : null
               }
           </>
