@@ -108,7 +108,7 @@ class ChartStyleSettings extends Component {
             <div className="form-group">
               <label>Background Colour</label>
               <div className="input-group mb-3">
-                <input defaultValue={this.state.backgroundColour} type="text" className="form-control" placeholder="Background colour" aria-label="Background colour" />
+                <input value={this.state.backgroundColour} type="text" className="form-control" placeholder="Background colour" aria-label="Background colour" />
                 <div className="input-group-append">
                   <button onClick={() => this.handleClick('background_color')} className="btn btn-outline-secondary" type="button">Pick a Colour</button>
                 </div>
@@ -125,7 +125,7 @@ class ChartStyleSettings extends Component {
             <div className="form-group">
               <label>Font Colour</label>
               <div className="input-group mb-3">
-                <input defaultValue={this.state.fontColour} type="text" className="form-control" placeholder="Font colour" aria-label="Font colour" />
+                <input value={this.state.fontColour} type="text" className="form-control" placeholder="Font colour" aria-label="Font colour" />
                 <div className="input-group-append">
                   <button onClick={() => this.handleClick('font_color')} className="btn btn-outline-secondary" type="button">Pick a Colour</button>
                 </div>
@@ -142,7 +142,7 @@ class ChartStyleSettings extends Component {
             <div className="form-group">
               <label>Axis Colour</label>
               <div className="input-group mb-3">
-                <input defaultValue={this.state.axis_color} type="text" className="form-control" placeholder="Axis colour" aria-label="Axis colour" />
+                <input value={this.state.axis_color} type="text" className="form-control" placeholder="Axis colour" aria-label="Axis colour" />
                 <div className="input-group-append">
                   <button onClick={() => this.handleClick('axis_color')} className="btn btn-outline-secondary" type="button">Pick a Colour</button>
                 </div>

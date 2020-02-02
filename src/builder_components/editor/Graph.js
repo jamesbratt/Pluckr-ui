@@ -57,8 +57,37 @@ export const updateDataSeries = (dataSetId, updates) => {
   existingSeries.update(updates);
 }
 
-export const updateChartColour = (dataSetIds, colour, chartId) => {
+export const updateChartColour = (payload, state, chartId) => {
+  chartInstance.yAxis.forEach(yAxis => {
+    yAxis.update({
+      labels: {
+        style: {
+            color: payload.font_color
+        }
+      },
+      title: {
+        style: {
+            color: payload.font_color
+        }
+      },
+      lineColor: payload.font_color,
+    });
+  });
 
+  const xAxis = chartInstance.get('master-x-axis');
+  xAxis.update({
+    labels: {
+      style: {
+          color: payload.font_color
+      }
+    },
+    title: {
+      style: {
+          color: payload.font_color
+      }
+    },
+    lineColor: payload.font_color,
+  });
 }
 
 export const updateYaxis = (dataSetId, title, isOpposite, isEnabled) => {
