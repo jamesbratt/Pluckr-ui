@@ -100,7 +100,7 @@ export const updateChart = (
   return (dispatch) => {
 
     const payload = Object.assign({}, ...updates);
-    
+
     return fetch(`${process.env.REACT_APP_PLUCKR_API_URI}/api/v1/chart/${chartId}/`, {
       method: 'PATCH',
       headers: {
