@@ -49,7 +49,7 @@ const ChartConfigHoc = WrappedComponent => {
               <Link className="side-nav-item" to={`/charts/${this.props.match.params.id}/chart`}>Chart Editor</Link>
             </Nav>
           </Col>
-          <Col md={10}>
+          <Col style={{ marginBottom: '1em' }} md={10}>
             <WrappedComponent {...this.props} />
           </Col>
         </Row>

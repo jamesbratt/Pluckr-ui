@@ -107,7 +107,15 @@ export const updateChartColour = (payload) => {
   });
 }
 
-export const updateYaxis = (dataSetId, title, isOpposite, isEnabled) => {
+export const updateDefaultYaxis = (payload) => {
+  chartInstance.yAxis[0].update({
+    title: {
+      text: payload.y_axis_title,
+    },
+  })
+}
+
+export const updateYaxis = (dataSetId, title, isOpposite, isEnabled, chart) => {
   const yAxisId = `${dataSetId}`;
   const existingYaxis = chartInstance.get(yAxisId);
   const existingSeries = chartInstance.get(dataSetId);
@@ -118,22 +126,42 @@ export const updateYaxis = (dataSetId, title, isOpposite, isEnabled) => {
 
   if(existingYaxis && isEnabled) {
     existingYaxis.update({
-      title: {
-        text: title
-      },
       opposite: isOpposite,
+      title: {
+        text: title,
+        style: {
+          color: chart.color
+        }
+      },
+      lineColor: chart.color,
+      tickColor: chart.color,
+      labels: {
+        style: {
+            color: chart.color
+        }
+      },
     });
   }
 
   if(!existingYaxis && isEnabled && title && existingSeries) {
     const axis = {
-      title: {
-          text: title,
-      },
       opposite: isOpposite,
       id: yAxisId,
       gridLineWidth: 0,
       minorGridLineWidth: 0,
+      title: {
+        text: title,
+        style: {
+          color: chart.color
+        }
+      },
+      lineColor: chart.color,
+      tickColor: chart.color,
+      labels: {
+        style: {
+            color: chart.color
+        }
+      },
     };
 
     addYaxis(axis);

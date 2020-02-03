@@ -23,7 +23,7 @@ class ChartTabs extends Component {
       <Tab eventKey="settings" title="Chart Configuration">
         <ChartSettings chartId={this.props.chartId} />
       </Tab>
-      <Tab eventKey="axis" title="X-axis Configuration">
+      <Tab eventKey="axis" title="Axis Configuration">
         <ChartXaxisSettings chartId={this.props.chartId} />
       </Tab>
       <Tab eventKey="styling" title="Chart Styling">

@@ -15,19 +15,8 @@ const mapStateToProps = (state) => {
   };
 };
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    updateDatasetYaxis: (apiKey, username, dataSetId, title, isOpposite, isEnabled) => {
-      dispatch(updateDatasetYaxis(
-        apiKey,
-        username,
-        dataSetId,
-        title,
-        isOpposite,
-        isEnabled,
-      ));
-    }
-  };
+const mapDispatchToProps = {
+  updateDatasetYaxis,
 };
 
 const DataSetYaxisSettings = (props) => {
@@ -45,6 +34,7 @@ const DataSetYaxisSettings = (props) => {
       title,
       isOpposite,
       isEnabled,
+      props.dataset
     )
   }
 
