@@ -107,6 +107,14 @@ export const updateChartColour = (payload) => {
   });
 }
 
+export const updateDefaultYaxis = (payload) => {
+  chartInstance.yAxis[0].update({
+    title: {
+      text: payload.y_axis_title,
+    },
+  })
+}
+
 export const updateYaxis = (dataSetId, title, isOpposite, isEnabled, chart) => {
   const yAxisId = `${dataSetId}`;
   const existingYaxis = chartInstance.get(yAxisId);

@@ -143,7 +143,7 @@ class Chart extends Component {
 
         chartConfig['yAxis'] = {
           title: {
-            text: '$$$$$',
+            text: chart.y_axis_title,
             style: {
               color: chart.color
             }
