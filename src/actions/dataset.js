@@ -124,6 +124,7 @@ export const updateDatasetYaxis = (
   title,
   isOpposite,
   isEnabled,
+  dataset
 ) => {
 
   return (dispatch) => {
@@ -144,7 +145,7 @@ export const updateDatasetYaxis = (
     })
       .then((response) => response.json())
       .then(response => {
-        updateYaxis(dataSetId, title, isOpposite, isEnabled);
+        updateYaxis(dataSetId, title, isOpposite, isEnabled, dataset.chart);
 
         dispatch(patchDataset(
           dataSetId,

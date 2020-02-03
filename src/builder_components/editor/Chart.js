@@ -142,9 +142,21 @@ class Chart extends Component {
         };
 
         chartConfig['yAxis'] = {
-          title: false,
+          title: {
+            text: '$$$$$',
+            style: {
+              color: chart.color
+            }
+          },
           gridLineWidth: 0,
           minorGridLineWidth: 0,
+          lineColor: chart.color,
+          tickColor: chart.color,
+          labels: {
+            style: {
+                color: chart.color
+            }
+          },
         };
       } else {
         chartConfig['tooltip'] = {
