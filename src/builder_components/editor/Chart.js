@@ -71,6 +71,14 @@ class Chart extends Component {
 
   setUpChartData = (chart) => {
 
+    const charty = getChart();
+
+    while( charty.series.length > 0 ) {
+      charty.series[0].remove( false );
+    }
+
+    charty.redraw();
+
     const datasets = this.props.datasets.sort(function(a, b) {
       return b.data.length - a.data.length;
     });
@@ -227,10 +235,20 @@ class Chart extends Component {
     .catch(error => this.props.addNotification({ message: error.message, type: 'error' }));
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps) {
     const { id } = this.props.match.params;
     const chart = this.props.charts.find(chart => chart.id === parseInt(id));
-    this.setUpChartData(chart);
+    const datasets = this.props.datasets.filter(dataset => dataset.chart.id === chart.id).sort(function(a, b) {
+      return b.data.length - a.data.length;
+    });
+
+    const datasetsOld = prevProps.datasets.filter(dataset => dataset.chart.id === chart.id).sort(function(a, b) {
+      return b.data.length - a.data.length;
+    });
+
+    if(datasets.length != datasetsOld.length) {
+      this.setUpChartData(chart);
+    }
   }
 
   componentWillUnmount() {

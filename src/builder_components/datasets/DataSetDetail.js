@@ -21,43 +21,47 @@ const mapStateToProps = (state) => {
 class DataSetDetail extends Component {
   render() {
     const dataset = this.props.datasets.find(dataset => dataset.id === parseInt(this.props.match.params.dataset_id));
-    return (
-      <div className="dataset-detail">
-        <h3>{dataset.name}</h3><Link className="back" to={`/charts/${this.props.match.params.id}/chart`}>Back to Dataset List</Link>
-        <Tabs defaultActiveKey="operations" id="dataset-tabs">
-        <Tab eventKey="operations" title="Operations">
-          <Row>
-            <Col md={4}>
-              <Operations
-                chartId={parseInt(this.props.match.params.id)}
-                dataSetId={this.props.match.params.dataset_id}
-                dataSourceId={dataset.data_source}
-              />
-            </Col>
-            <Col md={8}>
-              <JSONTree
-                theme={{
-                  tree: ({ style }) => ({
-                    style: { ...style, padding: "1em" },
-                  }),
-                }}
-                data={dataset.data}
-              />
-            </Col>
-          </Row>
-        </Tab>
-        <Tab eventKey="settings" title="Settings">
-          <DataSetSettings dataSetId={dataset.id} />
-        </Tab>
-        <Tab eventKey="yaxis-settings" title="Y-axis Settings">
-          <DataSetYaxisSettings dataset={dataset} />
-        </Tab>
-        <Tab eventKey="styling" title="Styling">
-          <DataSetStyleSettings dataSetId={dataset.id} />
-        </Tab>
-      </Tabs>
-    </div>
-    )
+    if (dataset) {
+      return (
+        <div className="dataset-detail">
+          <h3>{dataset.name}</h3><Link className="back" to={`/charts/${this.props.match.params.id}/chart`}>Back to Dataset List</Link>
+          <Tabs defaultActiveKey="operations" id="dataset-tabs">
+            <Tab eventKey="operations" title="Operations">
+              <Row>
+                <Col md={4}>
+                  <Operations
+                    chartId={parseInt(this.props.match.params.id)}
+                    dataSetId={this.props.match.params.dataset_id}
+                    dataSourceId={dataset.data_source}
+                  />
+                </Col>
+                <Col md={8}>
+                  <JSONTree
+                    theme={{
+                      tree: ({ style }) => ({
+                        style: { ...style, padding: "1em" },
+                      }),
+                    }}
+                    data={dataset.data}
+                  />
+                </Col>
+              </Row>
+            </Tab>
+            <Tab eventKey="settings" title="Settings">
+              <DataSetSettings dataSetId={dataset.id} />
+            </Tab>
+            <Tab eventKey="yaxis-settings" title="Y-axis Settings">
+              <DataSetYaxisSettings dataset={dataset} />
+            </Tab>
+            <Tab eventKey="styling" title="Styling">
+              <DataSetStyleSettings dataSetId={dataset.id} />
+            </Tab>
+          </Tabs>
+        </div>
+      )
+    } else {
+      return null;
+    }
   };
 };
 

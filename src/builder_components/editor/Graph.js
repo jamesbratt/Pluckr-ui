@@ -116,12 +116,12 @@ export const updateDefaultYaxis = (payload) => {
 }
 
 export const updateYaxis = (dataSetId, title, isOpposite, isEnabled, chart) => {
-  const yAxisId = `${dataSetId}`;
+  const yAxisId = `foo`;
   const existingYaxis = chartInstance.get(yAxisId);
   const existingSeries = chartInstance.get(dataSetId);
 
   if(existingYaxis && !isEnabled && existingSeries) {
-    existingYaxis.remove();
+    existingYaxis.remove(false);
   }
 
   if(existingYaxis && isEnabled) {
@@ -177,49 +177,47 @@ export const addDataSeries = (datasetId, title, data, chartType, dataset, chart 
   const existingSeries = chartInstance.get(datasetId);
 
   if (existingSeries) {
-    existingSeries.update({
-      name: title,
-      data: clonedData,
-    });
+    existingSeries.remove(false);
 
-  } else {
-    let yAxisId = null;
-    const { y_axis_title, y_axis_enabled, y_axis_is_opposite } = dataset;
+    chartInstance.redraw();
 
-    if(y_axis_title && y_axis_enabled) {
-      yAxisId = `${dataset.id}`;
-      const axis = {
-        title: {
-            text: y_axis_title,
-            style: {
-              color: chart.color
-          }
-        },
-        opposite: y_axis_is_opposite,
-        id: yAxisId,
-        gridLineWidth: 0,
-        minorGridLineWidth: 0,
-        labels: {
+  }
+  let yAxisId = null;
+  const { y_axis_title, y_axis_enabled, y_axis_is_opposite } = dataset;
+
+  if(y_axis_title && y_axis_enabled) {
+    yAxisId = `foo`;
+    const axis = {
+      title: {
+          text: y_axis_title,
           style: {
-              color: chart.color
-          }
-        },
-        lineColor: chart.color,
-        tickColor: chart.color,
-      };
-
-      addYaxis(axis);
-    }
-
-    const newDataSeries = {
-      id: datasetId,
-      name: title,
-      type: chartType,
-      data: clonedData,
-      color: dataset.color ? dataset.color : null,
-      yAxis: yAxisId ? yAxisId : 0,
+            color: chart.color
+        }
+      },
+      opposite: y_axis_is_opposite,
+      id: yAxisId,
+      gridLineWidth: 0,
+      minorGridLineWidth: 0,
+      labels: {
+        style: {
+            color: chart.color
+        }
+      },
+      lineColor: chart.color,
+      tickColor: chart.color,
     };
 
-    chartInstance.addSeries(newDataSeries)
+    addYaxis(axis);
   }
+
+  const newDataSeries = {
+    id: datasetId,
+    name: title,
+    type: chartType,
+    data: clonedData,
+    color: dataset.color ? dataset.color : null,
+    yAxis: yAxisId ? yAxisId : 0,
+  };
+
+  chartInstance.addSeries(newDataSeries)
 }
