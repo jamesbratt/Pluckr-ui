@@ -71,14 +71,17 @@ class Chart extends Component {
 
   setUpChartData = (chart) => {
 
-    const charty = getChart();
+    const chartInstance = getChart();
 
-    while( charty.series.length > 0 ) {
-      charty.series[0].remove( false );
+    // This is so that when a dataset
+    // gets deleted, the corresponding series gets removed too
+    while(chartInstance.series.length > 0 ) {
+      chartInstance.series[0].remove();
     }
 
-    charty.redraw();
+    chartInstance.redraw();
 
+    // And then everything gets re-drawn
     const datasets = this.props.datasets.sort(function(a, b) {
       return b.data.length - a.data.length;
     });
@@ -242,11 +245,13 @@ class Chart extends Component {
       return b.data.length - a.data.length;
     });
 
-    const datasetsOld = prevProps.datasets.filter(dataset => dataset.chart.id === chart.id).sort(function(a, b) {
+    const previousDatasets = prevProps.datasets.filter(dataset => dataset.chart.id === chart.id).sort(function(a, b) {
       return b.data.length - a.data.length;
     });
 
-    if(datasets.length != datasetsOld.length) {
+    // We do not want unecessary re-renders of charts
+    // as this will cause the svg to get borked
+    if(datasets.length != previousDatasets.length) {
       this.setUpChartData(chart);
     }
   }

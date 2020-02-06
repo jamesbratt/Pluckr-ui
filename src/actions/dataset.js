@@ -127,7 +127,7 @@ export const updateDatasetYaxis = (
   dataset
 ) => {
 
-  return (dispatch) => {
+  return (dispatch, getState) => {
 
     const payload = {
       y_axis_title: title,
@@ -145,12 +145,12 @@ export const updateDatasetYaxis = (
     })
       .then((response) => response.json())
       .then(response => {
-        updateYaxis(dataSetId, title, isOpposite, isEnabled, dataset.chart);
-
         dispatch(patchDataset(
           dataSetId,
           response,
         ))
+        updateYaxis(dataSetId, title, isOpposite, isEnabled, dataset.chart, getState().datasets);
+
       })
       .catch(error => dispatch(addNotification({ message: error.message, type: 'error' })));
   }
