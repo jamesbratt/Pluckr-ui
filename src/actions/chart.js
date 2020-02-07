@@ -2,6 +2,8 @@ import { updateChartInstance } from '../builder_components/editor/Graph';
 import { setLoader } from './index';
 import { addNotification } from './notification';
 
+import axios from "axios";
+
 export const addChart = (data) => {
   return {
     type: 'ADD_CHART',
@@ -127,16 +129,18 @@ export const updateChart = (
 export const deleteChart = (apiKey, username, chartId) => {
 
   return dispatch => {
-    return fetch(`${process.env.REACT_APP_PLUCKR_API_URI}/api/v1/chart/${chartId}/`, {
-        method: 'DELETE',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `ApiKey ${username}:${apiKey}`
-        },
-    })
-    .then(() => {
-      dispatch(removeChart(chartId))
-    })
-    .catch(error => dispatch(addNotification({ message: error.message, type: 'error' })));
+    const options = {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `ApiKey ${username}:${apiKey}`
+      },
+      url: `${process.env.REACT_APP_PLUCKR_API_URI}/api/v1/chart/${chartId}/`,
+    };
+    return axios(options)
+      .then(() => {
+        dispatch(removeChart(chartId))
+      })
+      .catch(error => dispatch(addNotification({ message: 'You do not have permissions to delete this chart', type: 'error' })));
   }
 }
