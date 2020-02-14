@@ -72,6 +72,27 @@ class DataSourceDetail extends Component {
     }
   };
 
+  componentDidUpdate(prevProps) {
+    const { sources, dataProviders } = this.props;
+    const sourcesLoaded = this.props.sources.filter(source => source.chart === parseInt(this.props.match.params.id));
+    const prevSourcesLoaded = prevProps.sources.filter(source => source.chart === parseInt(this.props.match.params.id));
+
+    if(this.props.match.params.data_source_id && sourcesLoaded.length !== prevSourcesLoaded.length) {
+      const dataSource = sources.find(source => source.id === parseInt(this.props.match.params.data_source_id));
+      const selectedProvider = dataProviders.find(
+        dataProvider => dataProvider.provider === dataSource.provider,
+      );
+      this.setState({
+        sourceName: dataSource.name,
+        data: dataSource.rawData,
+        selectedProvider,
+        selectedResource: dataSource.resource,
+        parameterFields: selectedProvider.resources[dataSource.resource].parameters,
+        parameterValues: typeof dataSource.params === 'string' ? JSON.parse(dataSource.params) : dataSource.params,
+      })
+    }
+  };
+
   addDataSource = (event) => {
     const { username, api_key } = this.props.user;
 
@@ -244,61 +265,60 @@ class DataSourceDetail extends Component {
     }
     return (
       <React.Fragment>
-        <Row>
-          <Col md={5}>
-            <h2>{this.state.sourceName ? this.state.sourceName : 'Create a new data source'}</h2>
-            <div className="form-group">
-              <label>Title</label>
-              <input value={this.state.sourceName || ''} onChange={this.onSourceNameChange} type="text" className="form-control" placeholder="Enter a title" />
-            </div>
-            <div className="form-group">
-              <label>Data Provider</label>
-              <select value={pathOr('', ['provider'], this.state.selectedProvider)} onChange={this.onProviderChange} className="form-control" id="dataProvider">
-                <option value="">-- Select a data provider --</option>;
-                {this.props.dataProviders.map((dataProvider) => {
-                  if (dataProvider.isActive) {
-                    return <option key={dataProvider.provider} value={dataProvider.provider}>{dataProvider.provider}</option>
-                  }
-                })}
-              </select>
-            </div>
-            {this.state.selectedProvider ?
+        {this.props.loader ? <Loader /> :
+          <Row>
+            <Col md={5}>
+              <h2>{this.state.sourceName ? this.state.sourceName : 'Create a new data source'}</h2>
               <div className="form-group">
-                <label>Resource</label>
-                <select value={this.state.selectedResource} onChange={this.onResourceChange} className="form-control" id="dataSourceResource">
-                  <option value="">-- Select a resource --</option>;
-                  {Object.keys(this.state.selectedProvider.resources).map(resourceKey => {
-                    return <option key={this.state.selectedProvider.resources[resourceKey].name} value={this.state.selectedProvider.resources[resourceKey].name}>{this.state.selectedProvider.resources[resourceKey].label}</option>
+                <label>Title</label>
+                <input value={this.state.sourceName || ''} onChange={this.onSourceNameChange} type="text" className="form-control" placeholder="Enter a title" />
+              </div>
+              <div className="form-group">
+                <label>Data Provider</label>
+                <select value={pathOr('', ['provider'], this.state.selectedProvider)} onChange={this.onProviderChange} className="form-control" id="dataProvider">
+                  <option value="">-- Select a data provider --</option>;
+                  {this.props.dataProviders.map((dataProvider) => {
+                    if (dataProvider.isActive) {
+                      return <option key={dataProvider.provider} value={dataProvider.provider}>{dataProvider.provider}</option>
+                    }
                   })}
                 </select>
               </div>
-            : null
-            }
-            {parameters}
-            {
-              !this.props.match.params.data_source_id && !this.state.newlySavedDataSoucerId ?
-              <button onClick={this.addDataSource} type="submit" className="btn btn-primary mb-2">Add Data Source</button> :
-              <button onClick={this.addDataSource} type="submit" className="btn btn-primary mb-2">Update Data Source</button>
-            }
-          </Col>
-          <Col md={7}>
-            {
-              this.state.data ?
-              <>
-                {this.props.loader ? <Loader /> :
-                <JSONTree
-                  theme={{
-                    tree: ({ style }) => ({
-                      style: { ...style, padding: "1em" },
-                    }),
-                  }}
-                  data={this.state.data}
-                />}
-               </> :
-              null
-            }
-          </Col>
-        </Row>
+              {this.state.selectedProvider ?
+                <div className="form-group">
+                  <label>Resource</label>
+                  <select value={this.state.selectedResource} onChange={this.onResourceChange} className="form-control" id="dataSourceResource">
+                    <option value="">-- Select a resource --</option>;
+                    {Object.keys(this.state.selectedProvider.resources).map(resourceKey => {
+                      return <option key={this.state.selectedProvider.resources[resourceKey].name} value={this.state.selectedProvider.resources[resourceKey].name}>{this.state.selectedProvider.resources[resourceKey].label}</option>
+                    })}
+                  </select>
+                </div>
+              : null
+              }
+              {parameters}
+              {
+                !this.props.match.params.data_source_id && !this.state.newlySavedDataSoucerId ?
+                <button onClick={this.addDataSource} type="submit" className="btn btn-primary mb-2">Add Data Source</button> :
+                <button onClick={this.addDataSource} type="submit" className="btn btn-primary mb-2">Update Data Source</button>
+              }
+            </Col>
+            <Col md={7}>
+              {
+                this.state.data ?
+                  <JSONTree
+                    theme={{
+                      tree: ({ style }) => ({
+                        style: { ...style, padding: "1em" },
+                      }),
+                    }}
+                    data={this.state.data}
+                  /> :
+                null
+              }
+            </Col>
+          </Row>
+        }
       </React.Fragment>
     )
   };

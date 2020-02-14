@@ -9,11 +9,9 @@ const mapStateToProps = (state) => {
 };
 
 const Loader = (props) => {
-  return props.loader ? 
-  <Spinner animation="border" role="status">
+  return <Spinner animation="border" role="status">
     <span className="sr-only">Loading...</span>
-  </Spinner> :
-  null;
+  </Spinner>
 }
 
 export default connect(mapStateToProps)(Loader);
