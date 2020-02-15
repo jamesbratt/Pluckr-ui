@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import PieChartColourSettings from './PieChartColourSettings';
 import { updateDataSet } from '../../actions/dataset';
 import { ChromePicker } from 'react-color';
 import { connect } from 'react-redux';
@@ -64,21 +65,26 @@ class DataSetStyleSettings extends Component {
     return (
       <Row>
         <Col md={4}>
-        <div className="form-group">
-          <label>Data Series Colour</label>
-          <div className="input-group mb-3">
-            <input defaultValue={this.state.seriesColour} type="text" className="form-control" placeholder="Data series colour" aria-label="Data series colour" />
-            <div className="input-group-append">
-              <button onClick={ this.handleClick } className="btn btn-outline-secondary" type="button">Pick a Colour</button>
+          <>
+            <div className="form-group">
+              <label>Data Series Colour</label>
+              <div className="input-group mb-3">
+                <input defaultValue={this.state.seriesColour} type="text" className="form-control" placeholder="Data series colour" aria-label="Data series colour" />
+                <div className="input-group-append">
+                  <button onClick={ this.handleClick } className="btn btn-outline-secondary" type="button">Pick a Colour</button>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-          {
-            this.state.displayColorPicker ? <div style={ popover }>
-            <div style={ cover } onClick={ this.handleClose }/>
-            <ChromePicker color={ this.state.seriesColour } onChangeComplete={ this.handleChange } />
-            </div> : null
-          }
+            {
+              this.state.displayColorPicker ? <div style={ popover }>
+              <div style={ cover } onClick={ this.handleClose }/>
+              <ChromePicker color={ this.state.seriesColour } onChangeComplete={ this.handleChange } />
+              </div> : null
+            }
+          </>
+        </Col>
+        <Col md={8}>
+          <PieChartColourSettings />
         </Col>
       </Row>
     );
