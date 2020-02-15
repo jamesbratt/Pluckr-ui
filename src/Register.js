@@ -7,16 +7,19 @@ import './css/login.css'
 const emailRef = React.createRef();
 const passwordRef = React.createRef();
 const passwordConfirmRef = React.createRef();
+const contactCheckRef = React.createRef();
 
 class Register extends React.Component {
   state = {
     hasRegisted: false,
   }
 
-  register = () => {
+  register = (e) => {
+    e.preventDefault();
     const email = emailRef.current.value;
     const password = passwordRef.current.value;
     const confirm = passwordConfirmRef.current.value;
+    const contact = contactCheckRef.current.checked;
 
     if (password !== confirm) {
       this.props.dispatch(addNotification({ message: 'Password and password confirmation must match', type: 'error' }));
@@ -26,7 +29,7 @@ class Register extends React.Component {
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ username: email, raw_password: password })
+        body: JSON.stringify({ username: email, raw_password: password, contact })
       })
       .then((response) => {
         return response.json();
@@ -52,25 +55,34 @@ class Register extends React.Component {
     }
     return (
       <div className="login-wrapper">
-        <div className="form-register">
+        <form onSubmit={this.register} className="form-register">
           <h1 style={{textAlign: "center"}} className="h3 mb-3 font-weight-normal">Register as a Beta Tester</h1>
           <p>To make Pluckr the best it can be, we need feedback from users. Your beta test account will be active for 30 days, after which your feedback will be requested.</p>
           <div className="form-group">
             <label>Email Address</label>
-            <input ref={emailRef} className="form-control" type="email" placeholder="Please enter your email address" />
+            <input required ref={emailRef} className="form-control" type="email" placeholder="Please enter your email address" />
           </div>
           <div className="form-group">
             <label>Password</label>
-            <input ref={passwordRef} className="form-control" type="password" placeholder="Please enter a password" />
+            <input required ref={passwordRef} className="form-control" type="password" placeholder="Please enter a password" />
           </div>
           <div className="form-group">
             <label>Password Confirmation</label>
-            <input ref={passwordConfirmRef} className="form-control" type="password" placeholder="Confirm your password" />
+            <input required ref={passwordConfirmRef} className="form-control" type="password" placeholder="Confirm your password" />
           </div>
-          <button onClick={this.register} className="btn btn-lg btn-primary" type="submit">Register</button>
+          <div class="form-check">
+            <input required ref={contactCheckRef} class="form-check-input" type="checkbox" />
+            <label class="form-check-label">
+              By ticking this box you are agreeing to be contacted by Pluckr
+            </label>
+            <small class="form-text text-muted">
+              Don't worry, we will not be using your email address to spam you with junk. It is just for gathering user feedback and to contact you regarding your continued usage of Pluckr.
+            </small>
+          </div>
+          <button style={{ marginTop: '1em' }} className="btn btn-lg btn-primary" type="submit">Register</button>
           <p className="text-muted">Already registered? Sign-in <a href="/">here</a></p>
           <p className="text-muted">© Pluckr {new Date().getFullYear()}</p>
-        </div>
+        </form>
       </div>
     )
   }
