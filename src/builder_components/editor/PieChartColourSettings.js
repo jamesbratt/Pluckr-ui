@@ -1,21 +1,46 @@
 import React, { Component } from 'react';
 import { ChromePicker } from 'react-color';
 import { append, clone } from 'ramda';
+import { updateChartColourRange } from './Graph';
+import { connect } from 'react-redux';
+import { updateChart } from '../../actions/chart';
+
+const mapStateToProps = (state) => {
+  return {
+    user: state.user[0],
+    charts: state.charts,
+  };
+};
+
+const mapDispatchToProps = {
+  updateChart,
+}
 
 class PieChartColourSettings extends Component {
   constructor(props) {
     super(props)
+    const initialColours = props.charts.find(chart => chart.id === parseInt(props.chartId)).color_range;
     this.state = {
-      colours: [],
+      colours: initialColours ? initialColours.split(',') : [],
       displayColorPicker: false,
       selectedColour: '#000000',
     }
   }
 
+  update = (colours) => {
+    const { api_key, username } = this.props.user;
+
+    this.props.updateChart(
+      api_key,
+      username,
+      this.props.chartId,
+      [{color_range: colours.join(', ')}],
+      updateChartColourRange,
+    );
+  }
+
   handleChange = (color, event) => {
     this.setState({ selectedColour: color.hex });
-    // const { api_key, username } = this.props.user;
-    // this.props.updateDataSet(api_key, username, this.props.dataSetId, [{color: this.state.seriesColour}]);
   }
 
   handleClick = () => {
@@ -29,12 +54,14 @@ class PieChartColourSettings extends Component {
   addColour = () => {
     const colours = append(this.state.selectedColour, this.state.colours);
     this.setState({colours});
+    this.update(colours);
   }
 
   removeColour = (i) => {
     const colours = clone(this.state.colours);
     colours.splice(i, 1);
     this.setState({colours});
+    this.update(colours);
   }
 
   render() {
@@ -68,7 +95,7 @@ class PieChartColourSettings extends Component {
         </div>
         <ul className="list-group">
           {this.state.colours.map((colour, i) => {
-              return <li key={colour} className="list-group-item">{colour}<button onClick={() => this.removeColour(i)} className="btn btn-sm btn-danger float-right">Remove</button></li>
+              return <li key={i} className="list-group-item">{colour}<button onClick={() => this.removeColour(i)} className="btn btn-sm btn-danger float-right">Remove</button></li>
           })}
         </ul>
       </>
@@ -76,4 +103,7 @@ class PieChartColourSettings extends Component {
   }
 }
 
-export default PieChartColourSettings;
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(PieChartColourSettings);

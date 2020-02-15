@@ -178,6 +178,7 @@ class Chart extends Component {
           pie: {
               allowPointSelect: true,
               cursor: 'pointer',
+              colors: chart.color_range ? chart.color_range.split(',') : null,
               dataLabels: {
                 enabled: true,
                 format: '<b>{point.name}</b>: {point.percentage:.1f} %'

@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import PieChartColourSettings from './PieChartColourSettings';
 import { updateDataSet } from '../../actions/dataset';
 import { ChromePicker } from 'react-color';
 import { connect } from 'react-redux';
@@ -82,9 +81,6 @@ class DataSetStyleSettings extends Component {
               </div> : null
             }
           </>
-        </Col>
-        <Col md={8}>
-          <PieChartColourSettings />
         </Col>
       </Row>
     );
