@@ -71,7 +71,7 @@ const initialState = [
     request: getStripeData,
     resources: STRIPE_RESOURCES,
     isActive: false,
-    isDisabled: true,
+    isDisabled: false,
     icon: stripeLogo,
     auth: true,
   },
