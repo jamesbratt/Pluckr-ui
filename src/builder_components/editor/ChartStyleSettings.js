@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import PieChartColourSettings from './PieChartColourSettings';
 import { updateChartColour } from './Graph';
 import { updateChart } from '../../actions/chart';
 import { ChromePicker } from 'react-color';
@@ -128,6 +129,9 @@ class ChartStyleSettings extends Component {
                 </div> : null
               }
           </>
+        </Col>
+        <Col md={4}>
+          <PieChartColourSettings chartId={this.props.chartId} />
         </Col>
       </Row>
     );

@@ -57,6 +57,17 @@ export const updateDataSeries = (dataSetId, updates) => {
   existingSeries.update(updates);
 }
 
+export const updateChartColourRange = (payload) => {
+  const colors = payload.color_range.split(',');
+  chartInstance.update({
+    plotOptions: {
+      pie: {
+        colors
+      }
+    },
+  })
+}
+
 export const updateChartColour = (payload) => {
 
   chartInstance.update({
@@ -91,20 +102,22 @@ export const updateChartColour = (payload) => {
   });
 
   const xAxis = chartInstance.get('master-x-axis');
-  xAxis.update({
-    labels: {
-      style: {
-          color: payload.color
-      }
-    },
-    title: {
-      style: {
-          color: payload.color
-      }
-    },
-    lineColor: payload.color,
-    tickColor: payload.color,
-  });
+  if (xAxis) {
+    xAxis.update({
+      labels: {
+        style: {
+            color: payload.color
+        }
+      },
+      title: {
+        style: {
+            color: payload.color
+        }
+      },
+      lineColor: payload.color,
+      tickColor: payload.color,
+    });
+  }
 }
 
 export const updateDefaultYaxis = (payload) => {

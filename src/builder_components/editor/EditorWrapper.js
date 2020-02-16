@@ -32,11 +32,11 @@ class EditorWrapper extends React.Component {
         )
     }
   }
-  
+
   render() {
     return (
       <>
-        {this.props.loader ? <Loader /> : 
+        {this.props.loader || this.props.charts.length === 0 ? <Loader /> :
           <Chart {...this.props} />}
       </>
     );
