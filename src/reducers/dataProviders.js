@@ -6,13 +6,14 @@ import { getJiraData, JIRA_RESOURCES } from '../data_sources/Jira';
 import { getStripeData, STRIPE_RESOURCES } from '../data_sources/Stripe';
 import { getFinanceData, FINANCE_RESOURCES } from '../data_sources/Finance';
 import { assocPath } from 'ramda';
-import { GITHUB_REDIRECT, SALESFORCE_REDIRECT, FACEBOOK_REDIRECT, JIRA_REDIRECT, STRIPE_REDIRECT } from '../Constants';
+import { GITHUB_REDIRECT, SALESFORCE_REDIRECT, FACEBOOK_REDIRECT, JIRA_REDIRECT, STRIPE_REDIRECT, WRIKE_REDIRECT } from '../Constants';
 import salesforceLogo from '../img/salesforce-logo.png';
 import githubLogo from '../img/github-logo.png';
 import facebookLogo from '../img/facebook-logo.png';
 import jiraLogo from '../img/jira-logo.png';
 import stripeLogo from '../img/stripe-logo.png';
 import financeLogo from '../img/finance-logo.png';
+import wrikeLogo from '../img/wrike-logo.png';
 
 const initialState = [
   {
@@ -73,6 +74,16 @@ const initialState = [
     isActive: false,
     isDisabled: false,
     icon: stripeLogo,
+    auth: true,
+  },
+  {
+    provider: 'wrike',
+    redirectUrl: WRIKE_REDIRECT,
+    request: () => {},
+    resources: [],
+    isActive: false,
+    isDisabled: false,
+    icon: wrikeLogo,
     auth: true,
   },
 ];

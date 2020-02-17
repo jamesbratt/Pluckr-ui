@@ -12,6 +12,7 @@ export const GITHUB_REDIRECT = 'https://github.com/login/oauth/authorize?client_
 export const FACEBOOK_REDIRECT = 'https://www.facebook.com/v4.0/dialog/oauth?client_id=383901508907652&redirect_uri=' + process.env.REACT_APP_REDIRECT_URI + '/authenticate/facebook&state=test'
 export const JIRA_REDIRECT = 'https://auth.atlassian.com/authorize?audience=api.atlassian.com&client_id=vRq5RE46A8BCPhGJcv16WzqovBvqYAmV&scope=offline_access%20read%3Ajira-user%20read%3Ajira-work&redirect_uri=' + process.env.REACT_APP_REDIRECT_URI + '/authenticate/jira&state=test&response_type=code&prompt=consent';
 export const STRIPE_REDIRECT = 'https://connect.stripe.com/oauth/authorize?response_type=code&client_id=ca_G5CZaJNVr3W8BtcdOt1MdqK3oMXTBjV5&scope=read_only&stripe_landing=login&redirect_uri=' + process.env.REACT_APP_REDIRECT_URI + '/authenticate/stripe';
+export const WRIKE_REDIRECT = 'https://login.wrike.com/oauth2/authorize/v4?client_id=ZRYuPMXo&response_type=code'
 
 export const OPERATOR_VALUES = {
   EQUAL_TO: 'EQUAL_TO',
