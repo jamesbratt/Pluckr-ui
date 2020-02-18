@@ -6,8 +6,9 @@ import { getJiraData, JIRA_RESOURCES } from '../data_sources/Jira';
 import { getStripeData, STRIPE_RESOURCES } from '../data_sources/Stripe';
 import { getFinanceData, FINANCE_RESOURCES } from '../data_sources/Finance';
 import { getWrikeData, WRIKE_RESOURCES } from '../data_sources/Wrike';
+import { getXeroData, XERO_RESOURCES } from '../data_sources/Xero';
 import { assocPath } from 'ramda';
-import { GITHUB_REDIRECT, SALESFORCE_REDIRECT, FACEBOOK_REDIRECT, JIRA_REDIRECT, STRIPE_REDIRECT, WRIKE_REDIRECT } from '../Constants';
+import { XERO_REDIRECT, GITHUB_REDIRECT, SALESFORCE_REDIRECT, FACEBOOK_REDIRECT, JIRA_REDIRECT, STRIPE_REDIRECT, WRIKE_REDIRECT } from '../Constants';
 import salesforceLogo from '../img/salesforce-logo.png';
 import githubLogo from '../img/github-logo.png';
 import facebookLogo from '../img/facebook-logo.png';
@@ -15,6 +16,7 @@ import jiraLogo from '../img/jira-logo.png';
 import stripeLogo from '../img/stripe-logo.png';
 import financeLogo from '../img/finance-logo.png';
 import wrikeLogo from '../img/wrike-logo.png';
+import xeroLogo from '../img/xero-logo.png';
 
 const initialState = [
   {
@@ -85,6 +87,16 @@ const initialState = [
     isActive: false,
     isDisabled: false,
     icon: wrikeLogo,
+    auth: true,
+  },
+  {
+    provider: 'xero',
+    redirectUrl: XERO_REDIRECT,
+    request: getXeroData,
+    resources: XERO_RESOURCES,
+    isActive: false,
+    isDisabled: false,
+    icon: xeroLogo,
     auth: true,
   },
 ];
