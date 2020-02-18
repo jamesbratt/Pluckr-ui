@@ -5,6 +5,7 @@ import { getFacebookData, FACEBOOK_RESOURCES } from '../data_sources/Facebook';
 import { getJiraData, JIRA_RESOURCES } from '../data_sources/Jira';
 import { getStripeData, STRIPE_RESOURCES } from '../data_sources/Stripe';
 import { getFinanceData, FINANCE_RESOURCES } from '../data_sources/Finance';
+import { getWrikeData, WRIKE_RESOURCES } from '../data_sources/Wrike';
 import { assocPath } from 'ramda';
 import { GITHUB_REDIRECT, SALESFORCE_REDIRECT, FACEBOOK_REDIRECT, JIRA_REDIRECT, STRIPE_REDIRECT, WRIKE_REDIRECT } from '../Constants';
 import salesforceLogo from '../img/salesforce-logo.png';
@@ -79,8 +80,8 @@ const initialState = [
   {
     provider: 'wrike',
     redirectUrl: WRIKE_REDIRECT,
-    request: () => {},
-    resources: [],
+    request: getWrikeData,
+    resources: WRIKE_RESOURCES,
     isActive: false,
     isDisabled: false,
     icon: wrikeLogo,
