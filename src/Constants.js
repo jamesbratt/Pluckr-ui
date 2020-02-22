@@ -13,7 +13,7 @@ export const FACEBOOK_REDIRECT = 'https://www.facebook.com/v4.0/dialog/oauth?cli
 export const JIRA_REDIRECT = 'https://auth.atlassian.com/authorize?audience=api.atlassian.com&client_id=vRq5RE46A8BCPhGJcv16WzqovBvqYAmV&scope=offline_access%20read%3Ajira-user%20read%3Ajira-work&redirect_uri=' + process.env.REACT_APP_REDIRECT_URI + '/authenticate/jira&state=test&response_type=code&prompt=consent';
 export const STRIPE_REDIRECT = 'https://connect.stripe.com/oauth/authorize?response_type=code&client_id=ca_G5CZaJNVr3W8BtcdOt1MdqK3oMXTBjV5&scope=read_only&stripe_landing=login&redirect_uri=' + process.env.REACT_APP_REDIRECT_URI + '/authenticate/stripe';
 export const WRIKE_REDIRECT = 'https://login.wrike.com/oauth2/authorize/v4?client_id=ZRYuPMXo&response_type=code'
-export const XERO_REDIRECT = 'https://login.xero.com/identity/connect/authorize?response_type=code&client_id=839D0A762C6843558252807D4817B811&redirect_uri=' + process.env.REACT_APP_REDIRECT_URI + '/authenticate/xero&scope=openid offline_access profile email accounting.settings.read';
+export const XERO_REDIRECT = 'https://login.xero.com/identity/connect/authorize?response_type=code&client_id=839D0A762C6843558252807D4817B811&redirect_uri=' + process.env.REACT_APP_REDIRECT_URI + '/authenticate/xero&scope=openid offline_access profile email accounting.settings.read accounting.transactions.read accounting.contacts.read accounting.settings.read';
 
 export const OPERATOR_VALUES = {
   EQUAL_TO: 'EQUAL_TO',
