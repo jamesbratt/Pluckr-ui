@@ -283,6 +283,9 @@ class DataSourceDetail extends Component {
                     }
                   })}
                 </select>
+                <small className="form-text text-muted">
+                  {this.state.selectedProvider ? <a rel="noopener noreferrer" target="_blank" href={this.state.selectedProvider.docs}>Check out the <span style={{ textTransform: 'capitalize' }}>{this.state.selectedProvider.provider}</span> documentation</a> : ''}
+                </small>
               </div>
               {this.state.selectedProvider ?
                 <div className="form-group">

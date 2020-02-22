@@ -9,6 +9,17 @@ import { getWrikeData, WRIKE_RESOURCES } from '../data_sources/Wrike';
 import { getXeroData, XERO_RESOURCES } from '../data_sources/Xero';
 import { assocPath } from 'ramda';
 import { XERO_REDIRECT, GITHUB_REDIRECT, SALESFORCE_REDIRECT, FACEBOOK_REDIRECT, JIRA_REDIRECT, STRIPE_REDIRECT, WRIKE_REDIRECT } from '../Constants';
+
+import {
+  SALESFORCE_DOCS,
+  GITHUB_DOCS,
+  FACEBOOK_DOCS,
+  STRIPE_DOCS,
+  JIRA_DOCS,
+  WRIKE_DOCS,
+  XERO_DOCS,
+} from  '../Constants';
+
 import salesforceLogo from '../img/salesforce-logo.png';
 import githubLogo from '../img/github-logo.png';
 import facebookLogo from '../img/facebook-logo.png';
@@ -28,6 +39,7 @@ const initialState = [
     isDisabled: true,
     icon: facebookLogo,
     auth: true,
+    docs: FACEBOOK_DOCS
   },
   {
     provider: 'financial modeling',
@@ -48,6 +60,7 @@ const initialState = [
     isDisabled: false,
     icon: githubLogo,
     auth: true,
+    docs: GITHUB_DOCS
   },
   {
     provider: 'jira',
@@ -58,6 +71,7 @@ const initialState = [
     isDisabled: false,
     icon: jiraLogo,
     auth: true,
+    docs: JIRA_DOCS
   },
   {
     provider: 'salesforce',
@@ -68,6 +82,7 @@ const initialState = [
     isDisabled: false,
     icon: salesforceLogo,
     auth: true,
+    docs: SALESFORCE_DOCS
   },
   {
     provider: 'stripe',
@@ -78,6 +93,7 @@ const initialState = [
     isDisabled: false,
     icon: stripeLogo,
     auth: true,
+    docs: STRIPE_DOCS
   },
   {
     provider: 'wrike',
@@ -88,6 +104,7 @@ const initialState = [
     isDisabled: false,
     icon: wrikeLogo,
     auth: true,
+    docs: WRIKE_DOCS
   },
   {
     provider: 'xero',
@@ -98,6 +115,7 @@ const initialState = [
     isDisabled: false,
     icon: xeroLogo,
     auth: true,
+    docs: XERO_DOCS
   },
 ];
 
