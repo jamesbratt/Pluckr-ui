@@ -1,17 +1,18 @@
-// export const EASY_OAUTH_REDIRECT = 'https://easyoauth.com/project/login/1';
-// export const EASY_OAUTH_AUTH_ENDPOINT = 'https://easyoauth.com/project/authorise/1/';
-
-// export const STRAVA_REDIRECT = 'https://easyoauth.com/project/login/1';
-// export const STRAVA_AUTH_ENDPOINT = 'https://easyoauth.com/project/authorise/1/';
-
-// export const GITHUB_REDIRECT = 'https://easyoauth.com/project/login/2';
-// export const GITHUB_AUTH_ENDPOINT = 'https://easyoauth.com/project/authorise/2/';
-
 export const SALESFORCE_REDIRECT = 'https://login.salesforce.com/services/oauth2/authorize?response_type=code&client_id=3MVG9tzQRhEbH_K3xwzvYEwgSPo59l0Wo1d55C46uZyF0V3jd7PrgQ1DKfbV7xhV8I4.zxOvHJMY.qQXKfFz6&redirect_uri='+ process.env.REACT_APP_REDIRECT_URI +'/authenticate/salesforce&scope=full%20refresh_token';
 export const GITHUB_REDIRECT = 'https://github.com/login/oauth/authorize?client_id=5e1960289e1bb322b2c6&redirect_uri=' + process.env.REACT_APP_REDIRECT_URI + '/authenticate/github&scope=read,repo';
 export const FACEBOOK_REDIRECT = 'https://www.facebook.com/v4.0/dialog/oauth?client_id=383901508907652&redirect_uri=' + process.env.REACT_APP_REDIRECT_URI + '/authenticate/facebook&state=test'
 export const JIRA_REDIRECT = 'https://auth.atlassian.com/authorize?audience=api.atlassian.com&client_id=vRq5RE46A8BCPhGJcv16WzqovBvqYAmV&scope=offline_access%20read%3Ajira-user%20read%3Ajira-work&redirect_uri=' + process.env.REACT_APP_REDIRECT_URI + '/authenticate/jira&state=test&response_type=code&prompt=consent';
 export const STRIPE_REDIRECT = 'https://connect.stripe.com/oauth/authorize?response_type=code&client_id=ca_G5CZaJNVr3W8BtcdOt1MdqK3oMXTBjV5&scope=read_only&stripe_landing=login&redirect_uri=' + process.env.REACT_APP_REDIRECT_URI + '/authenticate/stripe';
+export const WRIKE_REDIRECT = 'https://login.wrike.com/oauth2/authorize/v4?client_id=ZRYuPMXo&response_type=code'
+export const XERO_REDIRECT = 'https://login.xero.com/identity/connect/authorize?response_type=code&client_id=839D0A762C6843558252807D4817B811&redirect_uri=' + process.env.REACT_APP_REDIRECT_URI + '/authenticate/xero&scope=openid offline_access profile email accounting.settings.read accounting.transactions.read accounting.contacts.read accounting.settings.read';
+
+export const SALESFORCE_DOCS = 'https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/';
+export const GITHUB_DOCS = 'https://developer.github.com/v3/';
+export const FACEBOOK_DOCS = 'https://developers.facebook.com/docs';
+export const STRIPE_DOCS = 'https://stripe.com/docs/api';
+export const JIRA_DOCS = 'https://developer.atlassian.com/cloud/jira/platform/rest/v3/?utm_source=%2Fcloud%2Fjira%2Fplatform%2Frest&utm_medium=302';
+export const WRIKE_DOCS = 'https://developers.wrike.com/documentation/api/overview';
+export const XERO_DOCS = 'https://developer.xero.com/documentation/';
 
 export const OPERATOR_VALUES = {
   EQUAL_TO: 'EQUAL_TO',
