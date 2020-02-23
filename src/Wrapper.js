@@ -7,6 +7,7 @@ import Nav from 'react-bootstrap/Nav';
 import ChartConfigHoc from './ChartConfigHoc';
 import EditorWrapper from './builder_components/editor/EditorWrapper';
 import TemplateList from './builder_components/templates/TemplateList';
+import DeleteAccount from './builder_components/account/DeleteAccount';
 import DataSourceList from './builder_components/data_sources/DataSourceList';
 import DataSourceDetail from './builder_components/data_sources/DataSourceDetail';
 import { Link, Route, Redirect } from "react-router-dom";
@@ -77,6 +78,7 @@ class Wrapper extends Component {
               <Link className="nav-link" to="/charts/templates">Templates</Link>
             </Nav>
             <Nav>
+              <Link className="nav-link" to="/account">Account for {this.props.user[0].username}</Link>
               <Nav.Link onClick={this.logout}>Log Out</Nav.Link>
             </Nav>
           </Navbar.Collapse>
@@ -87,6 +89,11 @@ class Wrapper extends Component {
               exact
               path={'/charts'}
               render={() => <Charts />}
+            />
+            <Route
+              exact
+              path={'/account'}
+              render={() => <DeleteAccount />}
             />
             <Route
               exact
