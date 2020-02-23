@@ -41,6 +41,7 @@ class App extends Component {
             <Route exact path="/" component={Login} />
             <Route exact path="/register" component={Register} />
             <Route path="/charts" component={Wrapper} />
+            <Route path="/account" component={Wrapper} />
             <Route path="/authenticate" component={Auth} />
           </Switch>
         </Router>
