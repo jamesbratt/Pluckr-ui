@@ -50,14 +50,14 @@ class Register extends React.Component {
     if (this.state.hasRegisted) {
       return <Redirect to={{
         pathname: '/',
-        state: { alert: 'Awesome! You are now registered for 30 days as a beta tester. You can now sign-in to Pluckr and get started!' }
+        state: { alert: 'Awesome! You are now registered as a beta tester. You can now sign-in to Pluckr and get started!' }
       }} />
     }
     return (
       <div className="login-wrapper">
         <form onSubmit={this.register} className="form-register">
           <h1 style={{textAlign: "center"}} className="h3 mb-3 font-weight-normal">Register as a Beta Tester</h1>
-          <p>To make Pluckr the best it can be, we need feedback from users. Your beta test account will be active for 30 days, after which your feedback will be requested.</p>
+          <p>To make Pluckr the best it can be, user feedback is crucial! Once you have been using Pluckr for a while your feedback will be requested.</p>
           <div className="form-group">
             <label>Email Address</label>
             <input required ref={emailRef} className="form-control" type="email" placeholder="Please enter your email address" />
