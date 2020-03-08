@@ -10,7 +10,22 @@ export const FINANCE_RESOURCES = {
     name: 'historical',
     label: 'Historical Stock Price',
     parameters: [
-        { name: 'company', type: DATA_TYPES.string },
+        {
+          name: 'company',
+          type: DATA_TYPES.list,
+          options: [
+            { value: 'GOOG', label: 'Alphabet Inc.' },
+            { value: 'AMZN', label: 'Amazon.com Inc.' },
+            { value: 'AAPL', label: 'Apple Inc.' },
+            { value: 'BP', label: 'BP p.l.c.' },
+            { value: 'CSCO', label: 'Cisco Systems Inc.' },
+            { value: 'FB', label: 'Facebook Inc.' },
+            { value: 'GM', label: 'General Motors Company' },
+            { value: 'NVDA', label: 'NVIDIA Corporation' },
+            { value: 'MSFT', label: 'Microsoft' },
+            { value: 'ORCL', label: 'Oracle Corporation' }
+          ]
+        },
         { name: 'from', type: DATA_TYPES.date, transform: ConvertToIso, useVariables: true },
         { name: 'to', type: DATA_TYPES.date, transform: ConvertToIso, useVariables: false },
     ]

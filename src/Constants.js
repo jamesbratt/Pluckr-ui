@@ -13,6 +13,7 @@ export const STRIPE_DOCS = 'https://stripe.com/docs/api';
 export const JIRA_DOCS = 'https://developer.atlassian.com/cloud/jira/platform/rest/v3/?utm_source=%2Fcloud%2Fjira%2Fplatform%2Frest&utm_medium=302';
 export const WRIKE_DOCS = 'https://developers.wrike.com/documentation/api/overview';
 export const XERO_DOCS = 'https://developer.xero.com/documentation/';
+export const FINANCE_DOCS = 'https://financialmodelingprep.com/developer/docs/';
 
 export const OPERATOR_VALUES = {
   EQUAL_TO: 'EQUAL_TO',
