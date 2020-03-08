@@ -51,6 +51,7 @@ export const DATA_TYPES = {
   int: 'integer',
   string: 'string',
   list: 'list',
+  picker: 'picker',
 };
 
 export const OPERATION_FUNCTIONS = [
