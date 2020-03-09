@@ -245,10 +245,24 @@ class DataSourceDetail extends Component {
                 </div>
               </React.Fragment>
             );
-            case DATA_TYPES.list:
+            case DATA_TYPES.picker:
               return (
                 <React.Fragment key={parameterField.name}>
                   <Picker pickedItems={this.state.parameterValues} callBack={this.onParameterChange} label={parameterField.name} items={this.state.selectedProvider.resources[this.state.selectedResource].fields} />
+                </React.Fragment>
+              );
+            case DATA_TYPES.list:
+              return (
+                <React.Fragment key={parameterField.name}>
+                  <div className="form-group">
+                    <label>{parameterField.name}</label>
+                    <select name={parameterField.name} defaultValue={val} onChange={this.onParameterChange} className="form-control">
+                      <option value="">-- Select {parameterField.name} --</option>;
+                      {parameterField.options.map((option) => {
+                        return <option key={option.value} value={option.value}>{option.label}</option>
+                      })}
+                    </select>
+                  </div>
                 </React.Fragment>
               );
           default:

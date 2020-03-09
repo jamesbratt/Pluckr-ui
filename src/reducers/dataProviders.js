@@ -18,6 +18,7 @@ import {
   JIRA_DOCS,
   WRIKE_DOCS,
   XERO_DOCS,
+  FINANCE_DOCS,
 } from  '../Constants';
 
 import salesforceLogo from '../img/salesforce-logo.png';
@@ -50,6 +51,7 @@ const initialState = [
     isDisabled: false,
     icon: financeLogo,
     auth: false,
+    docs: FINANCE_DOCS,
   },
   {
     provider: 'github',

@@ -66,7 +66,7 @@ export const SALESFORCE_RESOURCES = {
       'Website',
     ],
     parameters: [
-      { name: 'fields', type: DATA_TYPES.list },
+      { name: 'fields', type: DATA_TYPES.picker },
       { name: 'from', type: DATA_TYPES.date, transform: ConvertToIso, useVariables: true },
       { name: 'to', type: DATA_TYPES.date, transform: ConvertToIso, useVariables: false },
     ]
@@ -110,7 +110,7 @@ export const SALESFORCE_RESOURCES = {
       'Type',
     ],
     parameters: [
-      { name: 'fields', type: DATA_TYPES.list },
+      { name: 'fields', type: DATA_TYPES.picker },
       { name: 'from', type: DATA_TYPES.date, transform: ConvertToIso, useVariables: true },
       { name: 'to', type: DATA_TYPES.date, transform: ConvertToIso, useVariables: false },
     ]
@@ -160,7 +160,7 @@ export const SALESFORCE_RESOURCES = {
       'Type',
     ],
     parameters: [
-      { name: 'fields', type: DATA_TYPES.list },
+      { name: 'fields', type: DATA_TYPES.picker },
       { name: 'from', type: DATA_TYPES.date, transform: ConvertToIso, useVariables: true },
       { name: 'to', type: DATA_TYPES.date, transform: ConvertToIso, useVariables: false },
     ]
@@ -226,7 +226,7 @@ export const SALESFORCE_RESOURCES = {
       'Title',
     ],
     parameters: [
-      { name: 'fields', type: DATA_TYPES.list },
+      { name: 'fields', type: DATA_TYPES.picker },
       { name: 'from', type: DATA_TYPES.date, transform: ConvertToIso, useVariables: true },
       { name: 'to', type: DATA_TYPES.date, transform: ConvertToIso, useVariables: false },
     ]
@@ -297,7 +297,7 @@ export const SALESFORCE_RESOURCES = {
       'YearStarted',
     ],
     parameters: [
-      { name: 'fields', type: DATA_TYPES.list },
+      { name: 'fields', type: DATA_TYPES.picker },
       { name: 'from', type: DATA_TYPES.date, transform: ConvertToIso, useVariables: true },
       { name: 'to', type: DATA_TYPES.date, transform: ConvertToIso, useVariables: false },
     ]
@@ -341,7 +341,7 @@ export const SALESFORCE_RESOURCES = {
       'Type',
     ],
     parameters: [
-      { name: 'fields', type: DATA_TYPES.list },
+      { name: 'fields', type: DATA_TYPES.picker },
       { name: 'from', type: DATA_TYPES.date, transform: ConvertToIso, useVariables: true },
       { name: 'to', type: DATA_TYPES.date, transform: ConvertToIso, useVariables: false },
     ]
