@@ -9,6 +9,7 @@ import user from './user';
 import loader from './loader';
 import notification from './notification';
 import template from './template';
+import dashboards from './dashboards';
 
 const chartConfigReducers = combineReducers({
   charts,
@@ -20,6 +21,7 @@ const chartConfigReducers = combineReducers({
   loader,
   notification,
   template,
+  dashboards,
 });
  
 export default chartConfigReducers;
