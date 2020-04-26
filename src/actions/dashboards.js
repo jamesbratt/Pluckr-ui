@@ -1,4 +1,3 @@
-import { updateChartInstance } from '../builder_components/editor/Graph';
 import { setLoader } from './index';
 import { addNotification } from './notification';
 
@@ -66,7 +65,8 @@ export const createDashboard = (apiKey, username, name) => {
           'Authorization': `ApiKey ${username}:${apiKey}`
       },
     }).then((response) => {
-        dispatch(addDashboard(response.data))
+        dispatch(addDashboard(response.data));
+        return response.data;
       })
       .catch(error => dispatch(addNotification({ message: error, type: 'error' })));
   }

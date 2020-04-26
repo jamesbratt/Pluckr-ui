@@ -8,6 +8,7 @@ import ChartConfigHoc from './ChartConfigHoc';
 import EditorWrapper from './builder_components/editor/EditorWrapper';
 import TemplateList from './builder_components/templates/TemplateList';
 import DashboardList from './builder_components/dashboards/DashboardList';
+import EditDashboard from './builder_components/dashboards/EditDashboard'
 import DeleteAccount from './builder_components/account/DeleteAccount';
 import DataSourceList from './builder_components/data_sources/DataSourceList';
 import DataSourceDetail from './builder_components/data_sources/DataSourceDetail';
@@ -97,6 +98,9 @@ class Wrapper extends Component {
               path={'/dashboards'}
               render={() => <DashboardList />}
             />
+
+            <Route path={`/dashboards/:id`} component={EditDashboard} />
+
             <Route
               exact
               path={'/account'}
