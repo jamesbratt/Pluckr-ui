@@ -9,6 +9,7 @@ import EditorWrapper from './builder_components/editor/EditorWrapper';
 import TemplateList from './builder_components/templates/TemplateList';
 import DashboardList from './builder_components/dashboards/DashboardList';
 import EditDashboard from './builder_components/dashboards/EditDashboard'
+import ViewDashboard from './builder_components/dashboards/ViewDashboard';
 import DeleteAccount from './builder_components/account/DeleteAccount';
 import DataSourceList from './builder_components/data_sources/DataSourceList';
 import DataSourceDetail from './builder_components/data_sources/DataSourceDetail';
@@ -99,7 +100,8 @@ class Wrapper extends Component {
               render={() => <DashboardList />}
             />
 
-            <Route path={`/dashboards/:id`} component={EditDashboard} />
+            <Route path={`/dashboards/:id/edit`} component={EditDashboard} />
+            <Route path={`/dashboards/:id/view`} component={ViewDashboard} />
 
             <Route
               exact

@@ -101,7 +101,7 @@ class DashboardList extends Component {
                   {dashboards.map((dashboard) => {
                     return (
                       <tr key={dashboard.id}>
-                        <td><Link to={`/dashboards/${dashboard.id}`}>{dashboard.name}</Link></td>
+                        <td><Link to={`/dashboards/${dashboard.id}/edit`}>{dashboard.name}</Link></td>
                         <td width="40">
                           <button onClick={() => this.removeDashboard(dashboard.id)} className="btn btn-link table-btn float-right"><i className="fa fa-trash" /></button>
                         </td>
@@ -123,7 +123,7 @@ class DashboardList extends Component {
       };
 
       if(this.state.hasCreated) {
-        content = <Redirect to={`/dashboards/${this.state.hasCreated.id}`} />;
+        content = <Redirect to={`/dashboards/${this.state.hasCreated.id}/edit`} />;
       };
 
       return (
