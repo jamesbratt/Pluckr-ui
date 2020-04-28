@@ -68,8 +68,8 @@ class EditDashboard extends Component {
     }
 
     checkIsMember = (chartid) => {
-      const match = this.props.members.find(member => parseInt(member.chart.split('/')[4]) === chartid);
-      return match ? parseInt(match.chart.split('/')[4]) : null;
+      const match = this.props.members.find(member => member.chart.id === chartid);
+      return match ? match.chart.id : null;
     }
 
     render() {
@@ -93,7 +93,7 @@ class EditDashboard extends Component {
             <div className="col-md-6">
               <h5>Charts added to your dashboard</h5>
               {charts.length === 0 || members.length === 0 ? <p>Try adding some charts</p> : members.map(member => {
-                  const chartId = member.chart.split('/')[4];
+                  const chartId = member.chart.id;
                   const chartName = charts.find(chart => chart.id === parseInt(chartId)).name;
                   return <li key={member.id} className="list-group-item">
                     {chartName}
