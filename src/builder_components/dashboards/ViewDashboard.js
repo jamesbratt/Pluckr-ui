@@ -1,16 +1,14 @@
 import React, { Component } from 'react';
-import Loader from '../../Loader';
+import Visualisation from './Visualisation';
 
 import { connect } from 'react-redux';
 import { fetchCharts } from '../../actions/chart';
 import { createMember, deleteMember, fetchMembers } from '../../actions/members';
-import { Link } from "react-router-dom";
 
 const mapStateToProps = (state) => {
   return {
     user: state.user[0],
-    charts: state.charts,
-    members: state.members,
+    dashboards: state.dashboards,
     loader: state.loader,
   };
 };
@@ -25,10 +23,18 @@ const mapDispatchToProps = {
 class ViewDashboard extends Component {
 
     render() {
+      const { id } = this.props.match.params;
+      const dashboard = this.props.dashboards.find(dashboard => dashboard.id === parseInt(id));
       return (
-        <React.Fragment>
-          {`Dashboard with ID ${this.props.match.params.id}`}
-        </React.Fragment>
+        <div className="row">
+          <div className="col-md-12">
+            <div className="table-wrapper">
+              <h2>{`Dashboard with ID ${id}`}</h2>
+              {dashboard.charts.sort((a, b) => a.order - b.order)
+                  .map(chart => <Visualisation config={chart} />)}
+            </div>
+          </div>
+        </div>
       )
     }
 }

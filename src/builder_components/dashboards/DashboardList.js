@@ -95,6 +95,7 @@ class DashboardList extends Component {
                   <tr>
                     <th>Name</th>
                     <th></th>
+                    <th></th>
                   </tr>
                 </thead>
                 <tbody>
@@ -102,6 +103,7 @@ class DashboardList extends Component {
                     return (
                       <tr key={dashboard.id}>
                         <td><Link to={`/dashboards/${dashboard.id}/edit`}>{dashboard.name}</Link></td>
+                        <td width="50"><Link to={`/dashboards/${dashboard.id}/view`}>View</Link></td>
                         <td width="40">
                           <button onClick={() => this.removeDashboard(dashboard.id)} className="btn btn-link table-btn float-right"><i className="fa fa-trash" /></button>
                         </td>
