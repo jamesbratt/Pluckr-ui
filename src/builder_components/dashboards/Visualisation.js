@@ -4,6 +4,9 @@ import axios from "axios";
 import { executeOperations } from '../../data_parsing/parse';
 import { connect } from 'react-redux';
 import { providers } from '../../ProviderConstants';
+import { defineChartConfig } from '../editor/Graph';
+
+const Highcharts = require('highcharts');
 
 const fetchDataSets = async (chartId, username, apiKey) => {
 
@@ -107,11 +110,63 @@ class Visualisation extends Component {
   };
 
   fetchData = async (id, user, apiKey) => {
+    const { chart } = this.props.config;
     const datasets = await fetchDataSets(id, user, apiKey);
     const datasetsProcessed = await transformData(datasets, user, apiKey);
 
-    console.log(datasetsProcessed);
-    return datasetsProcessed;
+    const chartConfig = defineChartConfig(chart);
+    chartConfig['series'] = [];
+    datasetsProcessed.forEach((dataset) => {
+
+      let series = null;
+
+      const { y_axis_title, y_axis_enabled, y_axis_is_opposite } = dataset;
+
+      if (y_axis_title && y_axis_enabled) {
+        const axis = {
+          title: {
+              text: y_axis_title,
+              style: {
+                color: chart.color
+            }
+          },
+          opposite: y_axis_is_opposite,
+          gridLineWidth: 0,
+          minorGridLineWidth: 0,
+          labels: {
+            style: {
+                color: chart.color
+            }
+          },
+          lineColor: chart.color,
+          tickColor: chart.color,
+        };
+
+        series = {
+          name: dataset.name,
+          type: chart.series_type,
+          data: dataset.data,
+          color: dataset.color ? dataset.color : null,
+          yAxis: axis,
+        }
+      } else {
+        series = {
+          name: dataset.name,
+          type: chart.series_type,
+          data: dataset.data,
+          color: dataset.color ? dataset.color : null,
+          yAxis: 0,
+        };
+      }
+
+      chartConfig.series.push(series);
+    })
+
+    Highcharts.chart(
+      `viz-${chart.id}`,
+      chartConfig
+    );
+
   }
 
   componentDidMount() {
@@ -122,9 +177,9 @@ class Visualisation extends Component {
   }
 
   render() {
-    const { id } = this.props.config;
+    const { id } = this.props.config.chart;
     return (
-      <div id={`viz-${id}`}></div>
+      <div style={{ width: '1000px', height: '400px' }} id={`viz-${id}`}></div>
     )
   }
 }

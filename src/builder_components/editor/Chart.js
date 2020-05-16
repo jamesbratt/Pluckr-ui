@@ -8,7 +8,7 @@ import Dropdown from 'react-bootstrap/Dropdown';
 import AddDataSet from '../datasets/AddDataSet';
 import { addNotification } from '../../actions/notification';
 import { createDataSet } from '../../actions/dataset';
-import { addDataSeries, destroyChart, getChart, setChart } from './Graph';
+import { addDataSeries, destroyChart, getChart, setChart, defineChartConfig } from './Graph';
 import { connect } from 'react-redux';
 import { Route, Redirect } from "react-router-dom";
 
@@ -105,89 +105,7 @@ class Chart extends Component {
     const chart = this.props.charts.find(chart => chart.id === parseInt(id));
 
     if (chart) {
-      const chartConfig = {
-        title: {
-          text: chart.name,
-          type: chart.series_type,
-          style: {
-            color: chart.color,
-          }
-        },
-        chart: {
-          backgroundColor: chart.background_color ? chart.background_color : null
-        },
-        legend: {
-          align: 'left',
-          verticalAlign: 'top',
-          itemStyle: {
-            color: chart.color
-          },
-        },
-        exporting: {
-          buttons: {
-            contextButton: {
-              enabled: false
-            },
-          }
-        }
-      };
-
-      if (chart.chart_type !== 'pie') {
-        chartConfig['xAxis'] = {
-          type: chart.chart_type,
-          id: 'master-x-axis',
-          visible: chart.x_axis_enabled,
-          title: {
-            text: chart.x_axis_title,
-            style: {
-              color: chart.color
-            }
-          },
-          labels: {
-            style: {
-                color: chart.color || null
-            }
-          },
-          lineColor: chart.color,
-          tickColor: chart.color,
-        };
-
-        chartConfig['yAxis'] = {
-          title: {
-            text: chart.y_axis_title,
-            style: {
-              color: chart.color
-            }
-          },
-          gridLineWidth: 0,
-          minorGridLineWidth: 0,
-          lineColor: chart.color,
-          tickColor: chart.color,
-          labels: {
-            style: {
-                color: chart.color
-            }
-          },
-        };
-      } else {
-        chartConfig['tooltip'] = {
-          pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
-        };
-
-        chartConfig['plotOptions'] = {
-          pie: {
-              allowPointSelect: true,
-              cursor: 'pointer',
-              colors: chart.color_range ? chart.color_range.split(',') : null,
-              dataLabels: {
-                enabled: true,
-                format: '<b>{point.name}</b>: {point.percentage:.1f} %'
-              },
-              showInLegend: true
-          }
-        };
-      }
-
+      const chartConfig = defineChartConfig(chart);
       const chartInstance = Highcharts.chart(
         `chart-${chart.id}`,
         chartConfig
