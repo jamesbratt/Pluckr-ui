@@ -179,7 +179,7 @@ class Visualisation extends Component {
   render() {
     const { id } = this.props.config.chart;
     return (
-      <div style={{ width: '1000px', height: '400px' }} id={`viz-${id}`}></div>
+      <div style={{ height: '400px' }} id={`viz-${id}`}></div>
     )
   }
 }
