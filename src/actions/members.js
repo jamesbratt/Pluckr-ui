@@ -1,5 +1,6 @@
 import { setLoader } from './index';
 import { addNotification } from './notification';
+import { fetchDashboards } from './dashboards';
 
 import axios from "axios";
 
@@ -71,6 +72,7 @@ export const createMember = (apiKey, username, dashboardId, chartId, order) => {
       },
     }).then((response) => {
         dispatch(addMember(response.data));
+        dispatch(fetchDashboards(apiKey, username));
       })
       .catch(error => dispatch(addNotification({ message: error, type: 'error' })));
   }
@@ -89,7 +91,8 @@ export const deleteMember = (apiKey, username, memberId) => {
     };
     return axios(options)
       .then(() => {
-        dispatch(removeMember(memberId))
+        dispatch(removeMember(memberId));
+        dispatch(fetchDashboards(apiKey, username));
       })
       .catch(error => dispatch(addNotification({ message: error, type: 'error' })));
   }

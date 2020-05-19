@@ -10,6 +10,7 @@ const mapStateToProps = (state) => {
   return {
     user: state.user[0],
     charts: state.charts,
+    dashboards: state.dashboards,
     members: state.members,
     loader: state.loader,
   };
@@ -74,6 +75,9 @@ class EditDashboard extends Component {
 
     render() {
       const { charts, members } = this.props;
+      const { id } = this.props.match.params;
+      const dashboard = this.props.dashboards.find(dashboard => dashboard.id === parseInt(id));
+
       const availableCharts = charts.filter(chart => chart.id !== this.checkIsMember(chart.id)).map(chart => {
         return <li key={chart.id} className="list-group-item">
           {chart.name}
@@ -104,6 +108,7 @@ class EditDashboard extends Component {
               })}
             </div>
           </div>
+          <Link to={`/dashboards/${id}/view`}>View Dashboard</Link>
         </div>
       );
 
@@ -113,6 +118,12 @@ class EditDashboard extends Component {
 
       return (
         <React.Fragment>
+          <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item"><Link to={`/dashboards`}>Back to Dashboards</Link></li>
+              <li class="breadcrumb-item active" aria-current="page">{dashboard ? dashboard.name : '...'}</li>
+            </ol>
+          </nav>
           {content}
         </React.Fragment>
       )

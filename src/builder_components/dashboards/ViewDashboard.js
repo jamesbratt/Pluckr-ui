@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Visualisation from './Visualisation';
 
+import { Link } from "react-router-dom";
 import { connect } from 'react-redux';
 import { fetchCharts } from '../../actions/chart';
 import { createMember, deleteMember, fetchMembers } from '../../actions/members';
@@ -42,15 +43,25 @@ class ViewDashboard extends Component {
     render() {
       const { id } = this.props.match.params;
       const dashboard = this.props.dashboards.find(dashboard => dashboard.id === parseInt(id));
-      const charts = dashboard.charts.sort((a, b) => a.order - b.order)
-        .map(chart => <Visualisation config={chart} />);
+      const charts = dashboard ? dashboard.charts.sort((a, b) => a.order - b.order)
+        .map(chart => <Visualisation config={chart} />) : [];
 
       const rows = this.generateRows(charts, 2);
 
       return (
-        <div className="row">
-          <div className="col-md-12">
-              <h2>{`Dashboard with ID ${id}`}</h2>
+        <>
+          <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item"><Link to={`/dashboards`}>Back to Dashboards</Link></li>
+              <li class="breadcrumb-item active" aria-current="page">{dashboard ? dashboard.name : '...'}</li>
+            </ol>
+          </nav>
+          <div className="row">
+            <div className="col-md-12">
+              <div className="editor-header">
+                <h2 style={{ display: 'inline-block' }}>{`Dashboard with ID ${id}`}</h2>
+                <Link className="float-right" to={`/dashboards/${id}/edit`}>Edit Dashboard</Link>
+              </div>
               {rows.map((row) => (
                 <div className="row">
                 {
@@ -60,8 +71,9 @@ class ViewDashboard extends Component {
                 }
                 </div>
               ))}
+            </div>
           </div>
-        </div>
+        </>
       )
     }
 }
