@@ -78,6 +78,27 @@ export const createMember = (apiKey, username, dashboardId, chartId, order) => {
   }
 }
 
+export const updateMembers = (apiKey, username, payload) => {
+
+  const foo = { ...payload, chart: { pk: payload.chart } }
+
+  return dispatch => {
+
+    axios.post(`${process.env.REACT_APP_PLUCKR_API_URI}/api/v1/members/`,
+    JSON.stringify(payload),
+    {
+      headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `ApiKey ${username}:${apiKey}`
+      },
+    }).then((response) => {
+        dispatch(addMember(response.data));
+        dispatch(fetchDashboards(apiKey, username));
+      })
+      .catch(error => dispatch(addNotification({ message: error, type: 'error' })));
+  }
+}
+
 export const deleteMember = (apiKey, username, memberId) => {
 
   return dispatch => {

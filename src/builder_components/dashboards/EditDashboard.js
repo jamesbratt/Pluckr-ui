@@ -3,8 +3,23 @@ import Loader from '../../Loader';
 
 import { connect } from 'react-redux';
 import { fetchCharts } from '../../actions/chart';
-import { createMember, deleteMember, fetchMembers } from '../../actions/members';
+import { createMember, deleteMember, fetchMembers, receiveMember } from '../../actions/members';
 import { Link } from "react-router-dom";
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+
+// a little function to help us with reordering the result
+const reorder = (list, startIndex, endIndex) => {
+  const result = Array.from(list);
+  const [removed] = result.splice(startIndex, 1);
+  result.splice(endIndex, 0, removed);
+
+  return result.map((r, i) => ({ ...r, order: i }));
+};
+
+const getListStyle = isDraggingOver => ({
+  background: isDraggingOver ? "#AD4198" : "#99449F",
+  padding: 0,
+});
 
 const mapStateToProps = (state) => {
   return {
@@ -21,6 +36,7 @@ const mapDispatchToProps = {
   fetchMembers,
   deleteMember,
   createMember,
+  receiveMember,
 };
 
 class EditDashboard extends Component {
@@ -73,6 +89,21 @@ class EditDashboard extends Component {
       return match ? match.chart.id : null;
     }
 
+    onDragEnd = (result) => {
+      // dropped outside the list
+      if (!result.destination) {
+        return;
+      }
+
+      const items = reorder(
+        this.props.members,
+        result.source.index,
+        result.destination.index
+      );
+
+      this.props.receiveMember(items);
+    }
+
     render() {
       const { charts, members } = this.props;
       const { id } = this.props.match.params;
@@ -96,16 +127,40 @@ class EditDashboard extends Component {
             </div>
             <div className="col-md-6">
               <h5>Charts added to your dashboard</h5>
-              {charts.length === 0 || members.length === 0 ? <p>Try adding some charts</p> : members.map(member => {
-                  const chartId = member.chart.id;
-                  const chartName = charts.find(chart => chart.id === parseInt(chartId)).name;
-                  return <li key={member.id} className="list-group-item">
-                    {chartName}
-                    <div key={member.id} className="operation-actions float-right">
-                      <button onClick={() => this.deleteMember(member.id)} style={{ marginLeft: '1em' }} className="btn btn-sm btn-link table-btn"><i className="fa fa-trash" /></button>
-                    </div>
-                  </li>
-              })}
+              <DragDropContext onDragEnd={this.onDragEnd}>
+                <Droppable droppableId="droppable">
+                  {(provided, snapshot) => (
+                    <ul
+                      {...provided.droppableProps}
+                      ref={provided.innerRef}
+                      style={getListStyle(snapshot.isDraggingOver)}
+                    >
+                      {charts.length === 0 || members.length === 0 ? <p>Try adding some charts</p> : members.map((member, index) => {
+                        const chartId = member.chart.id;
+                        const chartName = charts.find(chart => chart.id === parseInt(chartId)).name;
+                        return (
+                          <Draggable key={member.id.toString()} draggableId={member.id.toString()} index={index}>
+                            {(provided, snapshot) => (
+                              <li
+                                className="list-group-item"
+                                ref={provided.innerRef}
+                                {...provided.draggableProps}
+                                {...provided.dragHandleProps}
+                              >
+                                {chartName}
+                                <div key={member.id} className="operation-actions float-right">
+                                  <button onClick={() => this.deleteMember(member.id)} style={{ marginLeft: '1em' }} className="btn btn-sm btn-link table-btn"><i className="fa fa-trash" /></button>
+                                </div>
+                              </li>
+                            )}
+                          </Draggable>
+                        )
+                      })}
+                      {provided.placeholder}
+                    </ul>
+                  )}
+                </Droppable>
+              </DragDropContext>
             </div>
           </div>
           <Link to={`/dashboards/${id}/view`}>View Dashboard</Link>
