@@ -3,7 +3,7 @@ import Loader from '../../Loader';
 
 import { connect } from 'react-redux';
 import { fetchCharts } from '../../actions/chart';
-import { createMember, deleteMember, fetchMembers, receiveMember } from '../../actions/members';
+import { createMember, deleteMember, fetchMembers, receiveMember, updateMembers } from '../../actions/members';
 import { Link } from "react-router-dom";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
@@ -15,11 +15,6 @@ const reorder = (list, startIndex, endIndex) => {
 
   return result.map((r, i) => ({ ...r, order: i }));
 };
-
-const getListStyle = isDraggingOver => ({
-  background: isDraggingOver ? "#AD4198" : "#99449F",
-  padding: 0,
-});
 
 const mapStateToProps = (state) => {
   return {
@@ -37,6 +32,7 @@ const mapDispatchToProps = {
   deleteMember,
   createMember,
   receiveMember,
+  updateMembers,
 };
 
 class EditDashboard extends Component {
@@ -90,7 +86,9 @@ class EditDashboard extends Component {
     }
 
     onDragEnd = (result) => {
-      // dropped outside the list
+      const user = this.props.user.username;
+      const apiKey = this.props.user.api_key;
+
       if (!result.destination) {
         return;
       }
@@ -100,8 +98,8 @@ class EditDashboard extends Component {
         result.source.index,
         result.destination.index
       );
-
       this.props.receiveMember(items);
+      this.props.updateMembers(apiKey, user, items);
     }
 
     render() {
@@ -109,7 +107,7 @@ class EditDashboard extends Component {
       const { id } = this.props.match.params;
       const dashboard = this.props.dashboards.find(dashboard => dashboard.id === parseInt(id));
 
-      const availableCharts = charts.filter(chart => chart.id !== this.checkIsMember(chart.id)).map(chart => {
+      const availableCharts = charts.filter(chart => chart.id !== this.checkIsMember(chart.id) && !chart.is_published).map(chart => {
         return <li key={chart.id} className="list-group-item">
           {chart.name}
           <div key={chart.id} className="operation-actions float-right">
@@ -133,7 +131,6 @@ class EditDashboard extends Component {
                     <ul
                       {...provided.droppableProps}
                       ref={provided.innerRef}
-                      style={getListStyle(snapshot.isDraggingOver)}
                     >
                       {charts.length === 0 || members.length === 0 ? <p>Try adding some charts</p> : members.map((member, index) => {
                         const chartId = member.chart.id;
@@ -163,6 +160,7 @@ class EditDashboard extends Component {
               </DragDropContext>
             </div>
           </div>
+          <hr />
           <Link to={`/dashboards/${id}/view`}>View Dashboard</Link>
         </div>
       );

@@ -80,20 +80,19 @@ export const createMember = (apiKey, username, dashboardId, chartId, order) => {
 
 export const updateMembers = (apiKey, username, payload) => {
 
-  const foo = { ...payload, chart: { pk: payload.chart } }
+  const formatPayload = payload.map(p => ({ ...p, chart: { pk: p.chart.id } }));
 
   return dispatch => {
 
-    axios.post(`${process.env.REACT_APP_PLUCKR_API_URI}/api/v1/members/`,
-    JSON.stringify(payload),
+    axios.put(`${process.env.REACT_APP_PLUCKR_API_URI}/api/v1/members/`,
+    JSON.stringify({ objects: formatPayload }),
     {
       headers: {
           'Content-Type': 'application/json',
           'Authorization': `ApiKey ${username}:${apiKey}`
       },
     }).then((response) => {
-        dispatch(addMember(response.data));
-        dispatch(fetchDashboards(apiKey, username));
+        dispatch(receiveMember(response.data.objects));
       })
       .catch(error => dispatch(addNotification({ message: error, type: 'error' })));
   }
