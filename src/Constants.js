@@ -178,4 +178,10 @@ export const OPERATION_FUNCTIONS = [
     help: 'Executes a specified operation if the value of the specified key contains the specified substring value',
     accepts: ['DATA_KEY', 'VALUE', 'FUNCTION']
   },
+  {
+    name: 'SUM',
+    label: 'Sum',
+    help: 'Sum the values of a specific key in a list.',
+    accepts: ['DATA_KEY']
+  },
 ];

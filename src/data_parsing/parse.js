@@ -186,6 +186,21 @@ const pluck = (node, data, ast) => {
   throw new Error('PLUCK can only be executed on a data structure with keys');
 }
 
+const sum = (node, data, ast) => {
+  if (Array.isArray(data)) {
+    const args = ast.filter(childNode => childNode.parent === node.id);
+    const targetKey = args.find(arg => arg.name === 'DATA_KEY');
+    const keyToTarget = targetKey.value;
+
+    const valueTotal = data.reduce((acc, current) => {
+      return acc + current[keyToTarget];
+    }, 0);
+
+    return valueTotal;
+  }
+  throw new Error('SUM can only be executed on a list of items');
+}
+
 const filterWhere = (node, data, ast) => {
   if (Array.isArray(data)) {
     const args = ast.filter(childNode => childNode.parent === node.id);
@@ -436,6 +451,12 @@ const executeFunction = (node, data, ast) => {
         );
     case 'CONTAINS':
         return contains(
+          node,
+          data,
+          ast,
+        );
+      case 'SUM':
+        return sum(
           node,
           data,
           ast,
