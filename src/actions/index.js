@@ -38,7 +38,7 @@ export const fetchUser = (username, password) => {
     })
     .then(json => {
       localStorage.setItem('pluckr_token', JSON.stringify(json));
-      dispatch(receiveUser(json))
+      dispatch(receiveUser(json));
     })
     .catch(error => dispatch(addNotification({ message: error.message, type: 'error' })));
   }

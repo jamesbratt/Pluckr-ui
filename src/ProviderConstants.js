@@ -6,6 +6,8 @@ import { getStripeData, STRIPE_RESOURCES } from './data_sources/Stripe';
 import { getFinanceData, FINANCE_RESOURCES } from './data_sources/Finance';
 import { getWrikeData, WRIKE_RESOURCES } from './data_sources/Wrike';
 import { getXeroData, XERO_RESOURCES } from './data_sources/Xero';
+import { getWhoData, WHO_RESOURCES } from './data_sources/Who';
+
 
 import salesforceLogo from './img/salesforce-logo.png';
 import githubLogo from './img/github-logo.png';
@@ -15,6 +17,7 @@ import stripeLogo from './img/stripe-logo.png';
 import financeLogo from './img/finance-logo.png';
 import wrikeLogo from './img/wrike-logo.png';
 import xeroLogo from './img/xero-logo.png';
+import whoLogo from './img/who-logo.png';
 
 export const SALESFORCE_REDIRECT = 'https://login.salesforce.com/services/oauth2/authorize?response_type=code&client_id=3MVG9tzQRhEbH_K3xwzvYEwgSPo59l0Wo1d55C46uZyF0V3jd7PrgQ1DKfbV7xhV8I4.zxOvHJMY.qQXKfFz6&redirect_uri='+ process.env.REACT_APP_REDIRECT_URI +'/authenticate/salesforce&scope=full%20refresh_token';
 export const GITHUB_REDIRECT = 'https://github.com/login/oauth/authorize?client_id=5e1960289e1bb322b2c6&redirect_uri=' + process.env.REACT_APP_REDIRECT_URI + '/authenticate/github&scope=read,repo';
@@ -32,6 +35,7 @@ export const JIRA_DOCS = 'https://developer.atlassian.com/cloud/jira/platform/re
 export const WRIKE_DOCS = 'https://developers.wrike.com/documentation/api/overview';
 export const XERO_DOCS = 'https://developer.xero.com/documentation/';
 export const FINANCE_DOCS = 'https://iexcloud.io/docs/api/';
+export const WHO_DOCS = 'https://www.who.int/data/gho/info/gho-odata-api';
 
 export const providers = [
   {
@@ -55,6 +59,17 @@ export const providers = [
     icon: financeLogo,
     auth: false,
     docs: FINANCE_DOCS,
+  },
+  {
+    provider: 'world health organisation',
+    redirectUrl: null,
+    request: getWhoData,
+    resources: WHO_RESOURCES,
+    isActive: true,
+    isDisabled: false,
+    icon: whoLogo,
+    auth: false,
+    docs: WHO_DOCS,
   },
   {
     provider: 'github',
