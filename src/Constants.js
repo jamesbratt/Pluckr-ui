@@ -65,6 +65,12 @@ export const OPERATION_FUNCTIONS = [
     accepts: ['DATA_KEY', 'OPERATOR', 'VALUE_SELECT']
   },
   {
+    name: 'TO_STRING',
+    label: 'Convert To String',
+    help: 'Convert a non-string value such as a number to a string',
+    accepts: ['DATA_KEY']
+  },
+  {
     name: 'TARGET',
     label: 'Target',
     help: 'Specify a key and perform an operation on it. This will return only the result of the operation performed.',

@@ -201,6 +201,17 @@ const sum = (node, data, ast) => {
   throw new Error('SUM can only be executed on a list of items');
 }
 
+const converToString = (node, data, ast) => {
+  if ((typeof data === 'function' || (typeof data === 'object' && !!data)) && !Array.isArray(data)) {
+    const args = ast.filter(childNode => childNode.parent === node.id);
+    const target = args.find(arg => arg.name === 'DATA_KEY');
+    const keyToTarget = target.value;
+
+    return { ...data, [keyToTarget]: data[keyToTarget].toString() };
+  }
+  throw new Error('TO_STRING can only be executed on a data structure with keys');
+}
+
 const filterWhere = (node, data, ast) => {
   if (Array.isArray(data)) {
     const args = ast.filter(childNode => childNode.parent === node.id);
@@ -444,23 +455,29 @@ const executeFunction = (node, data, ast) => {
         ast,
       );
     case 'ADD_STATIC_KEY':
-        return addStaticKey(
-          node,
-          data,
-          ast,
-        );
+      return addStaticKey(
+        node,
+        data,
+        ast,
+      );
     case 'CONTAINS':
-        return contains(
-          node,
-          data,
-          ast,
-        );
-      case 'SUM':
-        return sum(
-          node,
-          data,
-          ast,
-        );
+      return contains(
+        node,
+        data,
+        ast,
+      );
+    case 'SUM':
+      return sum(
+        node,
+        data,
+        ast,
+      );
+    case 'TO_STRING':
+      return converToString(
+        node,
+        data,
+        ast,
+      );
     default:
       console.error('Something bad has gone wrong');
   }

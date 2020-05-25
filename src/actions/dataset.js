@@ -25,6 +25,13 @@ export const patchDataset = (datasetId, payload) => {
   }
 }
 
+export const setDataSets = (payload) => {
+  return {
+    type: 'SET_DATASETS',
+    payload
+  }
+}
+
 export const updateDataSet = (
   apiKey,
   username,
@@ -88,6 +95,7 @@ export const createDataSet = (
       return response.json();
     })
     .then(json => {
+      json['rawData'] = data;
       json['data'] = data;
       dispatch(
         addDataset(
@@ -173,18 +181,18 @@ export const runDataSet = (
     const rawData = currentDataSet.sources.length === 1 ?
       sources.data.find(
         source => source.id === currentDataSet.sources[0].id,
-      ).rawData :
+      ).data :
       currentDataSet.sources.reduce((acc, curr) => {
         const data = sources.data.find(
           source => source.id === curr.id,
-        ).rawData;
+        ).data;
         acc.push(data);
         return acc;
       }, []);
 
     // Having to clone the source data here as for some reason
     // the highcharts api is mutating the raw data in the sources store
-    const clonedData = clone(rawData);
+    const clonedData = clone(currentDataSet.rawData);
 
     try {
       data = executeOperations(

@@ -5,12 +5,50 @@ import Col from 'react-bootstrap/Col';
 import JSONTree from 'react-json-tree';
 import DateSelector from './DateSelector';
 import Loader from '../../Loader';
+import axios from "axios";
 
 import { pathOr } from 'ramda';
 import { DATA_TYPES } from '../../Constants';
 import { connect } from 'react-redux';
 import { createDataSource, fetchDataSources, setLoader } from '../../actions';
 import { addNotification } from '../../actions/notification';
+
+const fetchDataSource = async (apiKey, username, datasourceId, dataProviders) => {
+    const options = {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `ApiKey ${username}:${apiKey}`
+      },
+      url: `${process.env.REACT_APP_PLUCKR_API_URI}/api/v1/datasource/${datasourceId}`,
+    };
+
+    try {
+      const response = await axios(options)
+      const dataSource = response.data;
+      const provider = dataProviders.find(dataProvider => dataProvider.provider === response.data.provider);
+
+      try {
+        const rawData = await provider.request(
+          dataSource.resource,
+          JSON.parse(dataSource.params),
+          username,
+          apiKey,
+          dataSource.id
+        );
+
+        dataSource.rawData = rawData.data;
+
+        return dataSource;
+
+      } catch(error) {
+        throw Error(`Error from data provider: ${error.message}`);
+      }
+
+    } catch(error) {
+      throw Error(error.error.message);
+    }
+}
 
 const mapStateToProps = (state) => {
   return {
@@ -26,6 +64,7 @@ const mapDispatchToProps = {
   createDataSource,
   fetchDataSources,
   addNotification,
+  fetchDataSource,
 }
 
 class DataSourceDetail extends Component {
@@ -44,52 +83,42 @@ class DataSourceDetail extends Component {
     };
   }
 
-  componentDidMount() {
-    const { sources, dataProviders } = this.props;
-    const sourcesLoaded = this.props.sources.filter(source => source.chart === parseInt(this.props.match.params.id))
-    const { api_key, username } = this.props.user;
-    if (sourcesLoaded.length === 0) {
-      this.props.fetchDataSources(
+  getDataSource = async (api_key, username) => {
+
+    try {
+      const source = await fetchDataSource(
         api_key,
         username,
-        this.props.match.params.id,
+        this.props.match.params.data_source_id,
+        this.props.dataProviders,
       );
-    } else {
-      if(this.props.match.params.data_source_id) {
-        const dataSource = sources.find(source => source.id === parseInt(this.props.match.params.data_source_id));
-        const selectedProvider = dataProviders.find(
-          dataProvider => dataProvider.provider === dataSource.provider,
-        );
-        this.setState({
-          sourceName: dataSource.name,
-          data: dataSource.rawData,
-          selectedProvider,
-          selectedResource: dataSource.resource,
-          parameterFields: selectedProvider.resources[dataSource.resource].parameters,
-          parameterValues: typeof dataSource.params === 'string' ? JSON.parse(dataSource.params) : dataSource.params,
-        })
-      }
-    }
-  };
 
-  componentDidUpdate(prevProps) {
-    const { sources, dataProviders } = this.props;
-    const sourcesLoaded = this.props.sources.filter(source => source.chart === parseInt(this.props.match.params.id));
-    const prevSourcesLoaded = prevProps.sources.filter(source => source.chart === parseInt(this.props.match.params.id));
-
-    if(this.props.match.params.data_source_id && sourcesLoaded.length !== prevSourcesLoaded.length) {
-      const dataSource = sources.find(source => source.id === parseInt(this.props.match.params.data_source_id));
-      const selectedProvider = dataProviders.find(
-        dataProvider => dataProvider.provider === dataSource.provider,
+      const selectedProvider = this.props.dataProviders.find(
+        dataProvider => dataProvider.provider === source.provider,
       );
+
       this.setState({
-        sourceName: dataSource.name,
-        data: dataSource.rawData,
+        sourceName: source.name,
+        data: source.rawData,
         selectedProvider,
-        selectedResource: dataSource.resource,
-        parameterFields: selectedProvider.resources[dataSource.resource].parameters,
-        parameterValues: typeof dataSource.params === 'string' ? JSON.parse(dataSource.params) : dataSource.params,
-      })
+        selectedResource: source.resource,
+        parameterFields: selectedProvider.resources[source.resource].parameters,
+        parameterValues: typeof source.params === 'string' ? JSON.parse(source.params) : source.params,
+      });
+
+    } catch(error) {
+      this.props.addNotification({ message: error, type: 'error' })
+    }
+
+    this.props.setLoader(false);
+  }
+
+  componentDidMount() {
+    const { api_key, username } = this.props.user;
+    const sourceIdToEdit = this.props.match.params.data_source_id;
+
+    if (sourceIdToEdit) {
+      this.getDataSource(api_key, username, sourceIdToEdit);
     }
   };
 

@@ -19,7 +19,7 @@ import { setDataProviders, setLoader } from './actions';
 import { getToken } from './utils/Helpers';
 
 const DataSourceListWrapped = ChartConfigHoc(DataSourceList);
-const DataSourceDetailWrapped = ChartConfigHoc(DataSourceDetail);
+// const DataSourceDetailWrapped = ChartConfigHoc(DataSourceDetail);
 const ChartEditorWrapped = ChartConfigHoc(EditorWrapper);
 
 const mapStateToProps = state => {
@@ -115,8 +115,8 @@ class Wrapper extends Component {
             />
             <Route path={`/charts/:id/chart`} component={ChartEditorWrapped} />
             <Route path={`/charts/:id/data-sources`} component={DataSourceListWrapped} />
-            <Route path={`/charts/:id/create-data-source`} component={DataSourceDetailWrapped} />
-            <Route path={`/charts/:id/edit-data-source/:data_source_id`} component={DataSourceDetailWrapped} />
+            <Route path={`/charts/:id/create-data-source`} component={DataSourceDetail} />
+            <Route path={`/charts/:id/edit-data-source/:data_source_id`} component={DataSourceDetail} />
             <Modal show={this.state.providerModalShow} onHide={this.closeProviderModal}>
               <Modal.Header closeButton>
                 <Modal.Title>Connect to a data provider</Modal.Title>
