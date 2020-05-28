@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import axios from "axios";
+import Loader from '../../Loader';
 
 import { executeOperations } from '../../data_parsing/parse';
 import { connect } from 'react-redux';
@@ -16,7 +17,6 @@ const fetchDataSets = async (chartId, username, apiKey) => {
   };
 
   try {
-
     const datasets = await axios({
       method: 'GET',
       headers,
@@ -35,7 +35,9 @@ const fetchDataSets = async (chartId, username, apiKey) => {
           username,
           apiKey,
           source.id
-        ).catch((error) => {});
+        ).catch((error) => {
+          throw Error(error);
+        });
       });
 
       return Promise.all(rawData).then(responses => {
@@ -54,7 +56,7 @@ const fetchDataSets = async (chartId, username, apiKey) => {
     });
 
   } catch(error) {
-
+    throw Error(error);
   }
 }
 
@@ -66,22 +68,23 @@ const transformData = async (datasets, username, apiKey) => {
   };
 
   const transformedData = datasets.map(async (dataset) => {
-    const operations = await axios({
-      method: 'GET',
-      headers,
-      url: `${process.env.REACT_APP_PLUCKR_API_URI}/api/v1/operation/?dataset=${dataset.id}`,
-    });
-
-    const processedOperations = operations.data.objects.map(operation => {
-      return {
-        ...operation,
-        ast: JSON.parse(operation.ast),
-      };
-    }).sort(function(a, b) {
-      return a.sort_order - b.sort_order;
-    });
 
     try {
+      const operations = await axios({
+        method: 'GET',
+        headers,
+        url: `${process.env.REACT_APP_PLUCKR_API_URI}/api/v1/operation/?dataset=${dataset.id}`,
+      });
+
+      const processedOperations = operations.data.objects.map(operation => {
+        return {
+          ...operation,
+          ast: JSON.parse(operation.ast),
+        };
+      }).sort(function(a, b) {
+        return a.sort_order - b.sort_order;
+      });
+
       const data = executeOperations(
         dataset.data,
         dataset,
@@ -94,7 +97,7 @@ const transformData = async (datasets, username, apiKey) => {
       };
 
     } catch(error) {
-        console.error(error);
+      throw Error(error);
     };
   });
 
@@ -106,67 +109,75 @@ const transformData = async (datasets, username, apiKey) => {
 class Visualisation extends Component {
 
   state = {
-    viz: null,
+    isLoading: true,
+    error: null,
   };
 
   fetchData = async (id, user, apiKey) => {
     const { chart } = this.props.config;
-    const datasets = await fetchDataSets(id, user, apiKey);
-    const datasetsProcessed = await transformData(datasets, user, apiKey);
 
-    const chartConfig = defineChartConfig(chart);
-    chartConfig['series'] = [];
-    datasetsProcessed.forEach((dataset) => {
+    try {
+      const datasets = await fetchDataSets(id, user, apiKey);
+      const datasetsProcessed = await transformData(datasets, user, apiKey);
 
-      let series = null;
+      const chartConfig = defineChartConfig(chart);
+      chartConfig['series'] = [];
+      datasetsProcessed.forEach((dataset) => {
 
-      const { y_axis_title, y_axis_enabled, y_axis_is_opposite } = dataset;
+        let series = null;
 
-      if (y_axis_title && y_axis_enabled) {
-        const axis = {
-          title: {
-              text: y_axis_title,
+        const { y_axis_title, y_axis_enabled, y_axis_is_opposite } = dataset;
+
+        if (y_axis_title && y_axis_enabled) {
+          const axis = {
+            title: {
+                text: y_axis_title,
+                style: {
+                  color: chart.color
+              }
+            },
+            opposite: y_axis_is_opposite,
+            gridLineWidth: 0,
+            minorGridLineWidth: 0,
+            labels: {
               style: {
-                color: chart.color
-            }
-          },
-          opposite: y_axis_is_opposite,
-          gridLineWidth: 0,
-          minorGridLineWidth: 0,
-          labels: {
-            style: {
-                color: chart.color
-            }
-          },
-          lineColor: chart.color,
-          tickColor: chart.color,
-        };
+                  color: chart.color
+              }
+            },
+            lineColor: chart.color,
+            tickColor: chart.color,
+          };
 
-        series = {
-          name: dataset.name,
-          type: chart.series_type,
-          data: dataset.data,
-          color: dataset.color ? dataset.color : null,
-          yAxis: axis,
+          series = {
+            name: dataset.name,
+            type: chart.series_type,
+            data: dataset.data,
+            color: dataset.color ? dataset.color : null,
+            yAxis: axis,
+          }
+        } else {
+          series = {
+            name: dataset.name,
+            type: chart.series_type,
+            data: dataset.data,
+            color: dataset.color ? dataset.color : null,
+            yAxis: 0,
+          };
         }
-      } else {
-        series = {
-          name: dataset.name,
-          type: chart.series_type,
-          data: dataset.data,
-          color: dataset.color ? dataset.color : null,
-          yAxis: 0,
-        };
-      }
 
-      chartConfig.series.push(series);
-    })
+        chartConfig.series.push(series);
+      })
 
-    Highcharts.chart(
-      `viz-${chart.id}`,
-      chartConfig
-    );
+      Highcharts.chart(
+        `viz-${chart.id}`,
+        chartConfig
+      );
 
+      this.setState({ isLoading: false });
+
+    } catch(error) {
+      this.setState({ isLoading: false, error: error.message });
+    }
   }
 
   componentDidMount() {
@@ -179,7 +190,11 @@ class Visualisation extends Component {
   render() {
     const { id } = this.props.config.chart;
     return (
-      <div style={{ height: '400px' }} id={`viz-${id}`}></div>
+      <>
+        {this.state.isLoading ? <Loader /> : null}
+        {this.state.error || null}
+        <div id={`viz-${id}`}></div>
+      </>
     )
   }
 }

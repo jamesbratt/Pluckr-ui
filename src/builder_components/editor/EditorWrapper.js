@@ -3,7 +3,7 @@ import Loader from '../../Loader';
 import Chart from './Chart';
 import axios from "axios";
 
-import { createDataSet, setDataSets } from '../../actions/dataset';
+import { setDataSets } from '../../actions/dataset';
 import { setLoader } from '../../actions';
 import { providers } from '../../ProviderConstants';
 import { executeOperations } from '../../data_parsing/parse';
