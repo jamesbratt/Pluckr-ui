@@ -1,4 +1,4 @@
-import { assoc, assocPath, pathOr } from 'ramda';
+import { assoc, pathOr } from 'ramda';
 import executeRule from './rules';
 
 const constructSeries = (node, data, ast) => {

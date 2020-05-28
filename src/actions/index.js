@@ -1,5 +1,4 @@
 import { assocPath } from 'ramda';
-import executeDataUpdates from '../data_parsing/execute';
 import { getTokenId } from '../utils/Helpers';
 import { addNotification } from './notification';
 import axios from "axios";
