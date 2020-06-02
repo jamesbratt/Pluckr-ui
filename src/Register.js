@@ -8,6 +8,7 @@ const usernameRef = React.createRef();
 const passwordRef = React.createRef();
 const passwordConfirmRef = React.createRef();
 const contactCheckRef = React.createRef();
+const emailRef = React.createRef();
 
 class Register extends React.Component {
   state = {
@@ -20,6 +21,7 @@ class Register extends React.Component {
     const password = passwordRef.current.value;
     const confirm = passwordConfirmRef.current.value;
     const contact = contactCheckRef.current.checked;
+    const email = emailRef.current.value;
 
     if (password !== confirm) {
       this.props.dispatch(addNotification({ message: 'Password and password confirmation must match', type: 'error' }));
@@ -29,7 +31,7 @@ class Register extends React.Component {
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ username, raw_password: password, contact })
+        body: JSON.stringify({ username, raw_password: password, contact, email_address: email })
       })
       .then((response) => {
         return response.json();
@@ -60,7 +62,11 @@ class Register extends React.Component {
           <p>To make Pluckr the best it can be, user feedback is crucial! Once you have been using Pluckr for a while your feedback will be requested.</p>
           <div className="form-group">
             <label>Username</label>
-            <input required ref={usernameRef} className="form-control" type="text" placeholder="Please enter a username" />
+            <input name="userame" required ref={usernameRef} className="form-control" type="text" placeholder="Please enter a username" />
+          </div>
+          <div className="form-group">
+            <label>Email Address</label>
+            <input name="email" required ref={emailRef} className="form-control" type="email" placeholder="Please enter your email address" />
           </div>
           <div className="form-group">
             <label>Password</label>
