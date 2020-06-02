@@ -119,7 +119,7 @@ export const fetchDataSources = (apiKey, username, chartId) => {
     })
       .then(response => response.json())
       .then(json => {
-        const dataSources = json.objects;
+        const dataSources = json.objects.map(source => ({ ...source, params: JSON.parse(source.params) }));
         dispatch(
           receiveDataSources(
             dataSources

@@ -42,9 +42,9 @@ class Login extends Component {
               {this.props.location.state ? <Alert variant='success'>{this.props.location.state.alert}</Alert> : null}
               <h1 style={{textAlign: "center"}} className="h3 font-weight-normal">Sign-in to Pluckr</h1>
               <label className="sr-only">Username</label>
-              <input ref={this.usernameRef} type="text" name="username" className="form-control" placeholder="Email Address" required="" autofocus="" />
+              <input ref={this.usernameRef} type="text" name="username" className="form-control" placeholder="Enter your username" required="" autofocus="" />
               <label className="sr-only">Password</label>
-              <input ref={this.passwordRef} type="password" id="inputPassword" className="form-control" placeholder="Password" name="password" required="" />
+              <input ref={this.passwordRef} type="password" id="inputPassword" className="form-control" placeholder="Enter your password" name="password" required="" />
               <button className="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
               <p className="text-muted">Not registered? Register <a href="/register">here</a></p>
               <p className="text-muted">© Pluckr {new Date().getFullYear()}</p>

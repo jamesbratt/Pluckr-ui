@@ -4,7 +4,7 @@ import { Redirect } from "react-router-dom";
 import { addNotification } from './actions/notification';
 import './css/login.css'
 
-const emailRef = React.createRef();
+const usernameRef = React.createRef();
 const passwordRef = React.createRef();
 const passwordConfirmRef = React.createRef();
 const contactCheckRef = React.createRef();
@@ -16,7 +16,7 @@ class Register extends React.Component {
 
   register = (e) => {
     e.preventDefault();
-    const email = emailRef.current.value;
+    const username = usernameRef.current.value;
     const password = passwordRef.current.value;
     const confirm = passwordConfirmRef.current.value;
     const contact = contactCheckRef.current.checked;
@@ -29,7 +29,7 @@ class Register extends React.Component {
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ username: email, raw_password: password, contact })
+        body: JSON.stringify({ username, raw_password: password, contact })
       })
       .then((response) => {
         return response.json();
@@ -59,8 +59,8 @@ class Register extends React.Component {
           <h1 style={{textAlign: "center"}} className="h3 mb-3 font-weight-normal">Register as a Beta Tester</h1>
           <p>To make Pluckr the best it can be, user feedback is crucial! Once you have been using Pluckr for a while your feedback will be requested.</p>
           <div className="form-group">
-            <label>Email Address</label>
-            <input required ref={emailRef} className="form-control" type="email" placeholder="Please enter your email address" />
+            <label>Username</label>
+            <input required ref={usernameRef} className="form-control" type="text" placeholder="Please enter a username" />
           </div>
           <div className="form-group">
             <label>Password</label>

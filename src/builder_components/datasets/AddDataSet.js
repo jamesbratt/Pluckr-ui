@@ -12,7 +12,7 @@ const getRawData = async (dataSources, username, apiKey) => {
     const provider = providers.find(provider => provider.provider === source.provider);
     return provider.request(
       source.resource,
-      JSON.parse(source.params),
+      source.params,
       username,
       apiKey,
       source.id
