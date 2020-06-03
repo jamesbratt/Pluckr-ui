@@ -2,9 +2,32 @@ import React from 'react';
 import { createDataSet } from '../../actions/dataset';
 import { addNotification } from '../../actions/notification';
 import { connect } from 'react-redux';
+import { providers } from '../../ProviderConstants';
 
 const dataSetNameRef = React.createRef();
 const dataSetSourceRef = React.createRef();
+
+const getRawData = async (dataSources, username, apiKey) => {
+  const rawData = dataSources.map((source) => {
+    const provider = providers.find(provider => provider.provider === source.provider);
+    return provider.request(
+      source.resource,
+      source.params,
+      username,
+      apiKey,
+      source.id
+    ).catch((error) => {});
+  });
+
+  return Promise.all(rawData).then(responses => {
+    const rawData = responses.length > 1 ? responses.reduce((acc, curr) => {
+      acc.push(curr.data);
+      return acc;
+    }, []) : responses[0].data;
+
+    return rawData;
+  });
+}
 
 const mapStateToProps = (state) => {
   return {
@@ -33,7 +56,7 @@ const mapDispatchToProps = (dispatch) => {
 
 const AddDataSet = (props) => {
 
-  const add = () => {
+  const add = async () => {
     const { value } = dataSetNameRef.current;
     const { options } = dataSetSourceRef.current;
     if(value) {
@@ -44,18 +67,19 @@ const AddDataSet = (props) => {
         }
       }
 
-      const rawData = selectedOptions.length === 1 ?
-        props.sources.find(
-          source => source.id === parseInt(selectedOptions[0].pk),
-        ).rawData :
-        selectedOptions.reduce((acc, curr) => {
-          const data = props.sources.find(
-            source => source.id === parseInt(curr.pk),
-          ).rawData;
-          acc.push(data);
-          return acc;
-        }, [])
-  
+      const sources = selectedOptions.reduce((acc, curr) => {
+        const data = props.sources.find(
+          source => source.id === parseInt(curr.pk),
+        );
+        acc.push(data);
+        return acc;
+      }, []);
+
+      const user = props.user.username;
+      const apiKey = props.user.api_key;
+
+      const rawData = await getRawData(sources, user, apiKey);
+
       props.add(
         dataSetNameRef.current.value,
         props.chartId,
@@ -66,7 +90,7 @@ const AddDataSet = (props) => {
     } else {
       props.addNotification({ message: 'Fill out all required dataset fields', type: 'error' });
     }
-  } 
+  }
 
   return (
     <React.Fragment>

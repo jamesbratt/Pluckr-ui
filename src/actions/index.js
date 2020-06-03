@@ -1,5 +1,4 @@
 import { assocPath } from 'ramda';
-import executeDataUpdates from '../data_parsing/execute';
 import { getTokenId } from '../utils/Helpers';
 import { addNotification } from './notification';
 import axios from "axios";
@@ -38,7 +37,7 @@ export const fetchUser = (username, password) => {
     })
     .then(json => {
       localStorage.setItem('pluckr_token', JSON.stringify(json));
-      dispatch(receiveUser(json))
+      dispatch(receiveUser(json));
     })
     .catch(error => dispatch(addNotification({ message: error.message, type: 'error' })));
   }
@@ -80,6 +79,13 @@ export const receiveDataSources = (data) => {
   }
 };
 
+export const receiveSingleDataSource = (data) => {
+  return {
+    type: 'RECEIVE_SINGLE_DATA_SOURCE',
+    data
+  }
+};
+
 export const deleteDataSource = (apiKey, username, datasourceId) => {
 
   return dispatch => {
@@ -113,24 +119,13 @@ export const fetchDataSources = (apiKey, username, chartId) => {
     })
       .then(response => response.json())
       .then(json => {
-        const dataSources = json.objects;
-        if (dataSources.length > 0) {
-          executeDataUpdates(
-            dataSources,
-            dataProviders,
-            username,
-            apiKey,
-            chartId,
-            dispatch,
-          );
-        } else {
-          dispatch(
-            receiveDataSources(
-              dataSources
-            )
-          );
-          dispatch(setLoader(false));
-        }
+        const dataSources = json.objects.map(source => ({ ...source, params: JSON.parse(source.params) }));
+        dispatch(
+          receiveDataSources(
+            dataSources
+          )
+        );
+        dispatch(setLoader(false));
       })
       .catch(error => {
         dispatch(addNotification({ message: error.message, type: 'error' }));
@@ -196,32 +191,6 @@ export const createDataSource = (
           properties,
         )
       );
-
-      // If a source is being updated, then perform data
-      // update and execution based on new source config
-      if (id) {
-        const { dataProviders } = getState();
-        const updatedSource = {
-          id: response.data.id,
-          name: response.data.name,
-          chart: response.data.chart,
-          provider: response.data.provider,
-          resource: response.data.resource,
-          params: response.data.params,
-          rawData: rawData.data,
-          properties: properties,
-        };
-        executeDataUpdates(
-          [updatedSource],
-          dataProviders,
-          username,
-          apiKey,
-          chartId,
-          dispatch,
-          true,
-          rawData,
-        );
-      }
 
       return Promise.resolve(response.data.id);
     })

@@ -111,7 +111,7 @@ class TemplateList extends Component {
                               <th></th>
                               <th>Name</th>
                               <th>Chart Type</th>
-                              <th>Series Type</th>
+                              <th>Published By</th>
                               <th></th>
                               <th></th>
                             </tr>
@@ -125,7 +125,7 @@ class TemplateList extends Component {
                                   </td>
                                   <td>{template.name}</td>
                                   <td className="capitalize">{template.chart_type}</td>
-                                  <td className="capitalize">{template.series_type}</td>
+                                  <td>{template.publisher}</td>
                                   <td width="40">
                                     <button onClick={() => this.install(template.id)} className="btn btn-link table-btn float-right"><i className="fa fa-download" /></button>
                                   </td>

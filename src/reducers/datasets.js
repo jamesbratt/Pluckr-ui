@@ -16,6 +16,9 @@ const datasets = (state = [], action) => {
       }
     }
 
+    case 'SET_DATASETS':
+      return action.payload;
+
     case 'REMOVE_DATASET':
       return state.filter(dataset => dataset.id !== action.datasetId);
 

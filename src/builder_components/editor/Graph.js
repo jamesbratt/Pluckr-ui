@@ -2,6 +2,93 @@ import { assocPath, clone } from 'ramda';
 
 let chartInstance = null;
 
+export const defineChartConfig = (chart) => {
+  const chartConfig = {
+    title: {
+      text: chart.name,
+      type: chart.series_type,
+      style: {
+        color: chart.color,
+      }
+    },
+    chart: {
+      backgroundColor: chart.background_color ? chart.background_color : null
+    },
+    legend: {
+      align: 'left',
+      verticalAlign: 'top',
+      itemStyle: {
+        color: chart.color
+      },
+    },
+    exporting: {
+      buttons: {
+        contextButton: {
+          enabled: false
+        },
+      }
+    }
+  };
+
+  if (chart.chart_type !== 'pie') {
+    chartConfig['xAxis'] = {
+      type: chart.chart_type,
+      id: 'master-x-axis',
+      visible: chart.x_axis_enabled,
+      title: {
+        text: chart.x_axis_title,
+        style: {
+          color: chart.color
+        }
+      },
+      labels: {
+        style: {
+            color: chart.color || null
+        }
+      },
+      lineColor: chart.color,
+      tickColor: chart.color,
+    };
+
+    chartConfig['yAxis'] = {
+      title: {
+        text: chart.y_axis_title,
+        style: {
+          color: chart.color
+        }
+      },
+      gridLineWidth: 0,
+      minorGridLineWidth: 0,
+      lineColor: chart.color,
+      tickColor: chart.color,
+      labels: {
+        style: {
+            color: chart.color
+        }
+      },
+    };
+  } else {
+    chartConfig['tooltip'] = {
+      pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+    };
+
+    chartConfig['plotOptions'] = {
+      pie: {
+          allowPointSelect: true,
+          cursor: 'pointer',
+          colors: chart.color_range ? chart.color_range.split(',') : null,
+          dataLabels: {
+            enabled: true,
+            format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+          },
+          showInLegend: true
+      }
+    };
+  }
+
+  return chartConfig;
+}
+
 export const setChart = (instance) => {
   chartInstance = instance;
 };

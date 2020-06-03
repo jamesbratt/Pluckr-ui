@@ -1,17 +1,17 @@
 import { getToken, injectParametersIntoEndpoint, proxyRequest, ConvertToIso, generateQueryString } from '../utils/Helpers';
 import { DATA_TYPES } from '../Constants';
 
-const FINANCE_URI = 'https://financialmodelingprep.com/api/v3';
+const FINANCE_URI = 'https://cloud.iexapis.com/stable';
 const INTEGRATION_TYPE = 'finance';
 
 export const FINANCE_RESOURCES = {
   historical: {
-    endpoint: '/historical-price-full/{company}',
+    endpoint: '/stock/{symbol}/chart/{range}',
     name: 'historical',
     label: 'Historical Stock Price',
     parameters: [
         {
-          name: 'company',
+          name: 'symbol',
           type: DATA_TYPES.list,
           options: [
             { value: 'GOOG', label: 'Alphabet Inc.' },
@@ -26,8 +26,22 @@ export const FINANCE_RESOURCES = {
             { value: 'ORCL', label: 'Oracle Corporation' }
           ]
         },
-        { name: 'from', type: DATA_TYPES.date, transform: ConvertToIso, useVariables: true },
-        { name: 'to', type: DATA_TYPES.date, transform: ConvertToIso, useVariables: false },
+        {
+          name: 'range',
+          type: DATA_TYPES.list,
+          options: [
+            { value: '5y', label: 'Five years' },
+            { value: '2y', label: 'Two years' },
+            { value: '1y', label: 'One year' },
+            { value: 'ytd', label: 'Year-to-date' },
+            { value: '6m', label: 'Six months' },
+            { value: '3m', label: 'Three months' },
+            { value: '1m', label: 'One month' },
+            // { value: '1mm', label: 'NVIDIA Corporation' },
+            { value: '5d', label: 'Five Days' },
+            // { value: 'ORCL', label: 'Oracle Corporation' }
+          ]
+        },
     ]
   },
 };

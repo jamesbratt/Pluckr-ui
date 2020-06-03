@@ -5,12 +5,51 @@ import Col from 'react-bootstrap/Col';
 import JSONTree from 'react-json-tree';
 import DateSelector from './DateSelector';
 import Loader from '../../Loader';
+import axios from "axios";
 
+import { Link } from "react-router-dom";
 import { pathOr } from 'ramda';
 import { DATA_TYPES } from '../../Constants';
 import { connect } from 'react-redux';
 import { createDataSource, fetchDataSources, setLoader } from '../../actions';
 import { addNotification } from '../../actions/notification';
+
+const fetchDataSource = async (apiKey, username, datasourceId, dataProviders) => {
+    const options = {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `ApiKey ${username}:${apiKey}`
+      },
+      url: `${process.env.REACT_APP_PLUCKR_API_URI}/api/v1/datasource/${datasourceId}`,
+    };
+
+    try {
+      const response = await axios(options)
+      const dataSource = response.data;
+      const provider = dataProviders.find(dataProvider => dataProvider.provider === response.data.provider);
+
+      try {
+        const rawData = await provider.request(
+          dataSource.resource,
+          JSON.parse(dataSource.params),
+          username,
+          apiKey,
+          dataSource.id
+        );
+
+        dataSource.rawData = rawData.data;
+
+        return dataSource;
+
+      } catch(error) {
+        throw Error(`Error from data provider: ${error.message}`);
+      }
+
+    } catch(error) {
+      throw Error(error.error.message);
+    }
+}
 
 const mapStateToProps = (state) => {
   return {
@@ -26,6 +65,7 @@ const mapDispatchToProps = {
   createDataSource,
   fetchDataSources,
   addNotification,
+  fetchDataSource,
 }
 
 class DataSourceDetail extends Component {
@@ -44,52 +84,44 @@ class DataSourceDetail extends Component {
     };
   }
 
-  componentDidMount() {
-    const { sources, dataProviders } = this.props;
-    const sourcesLoaded = this.props.sources.filter(source => source.chart === parseInt(this.props.match.params.id))
-    const { api_key, username } = this.props.user;
-    if (sourcesLoaded.length === 0) {
-      this.props.fetchDataSources(
+  getDataSource = async (api_key, username) => {
+
+    this.props.setLoader(true);
+
+    try {
+      const source = await fetchDataSource(
         api_key,
         username,
-        this.props.match.params.id,
+        this.props.match.params.data_source_id,
+        this.props.dataProviders,
       );
-    } else {
-      if(this.props.match.params.data_source_id) {
-        const dataSource = sources.find(source => source.id === parseInt(this.props.match.params.data_source_id));
-        const selectedProvider = dataProviders.find(
-          dataProvider => dataProvider.provider === dataSource.provider,
-        );
-        this.setState({
-          sourceName: dataSource.name,
-          data: dataSource.rawData,
-          selectedProvider,
-          selectedResource: dataSource.resource,
-          parameterFields: selectedProvider.resources[dataSource.resource].parameters,
-          parameterValues: typeof dataSource.params === 'string' ? JSON.parse(dataSource.params) : dataSource.params,
-        })
-      }
-    }
-  };
 
-  componentDidUpdate(prevProps) {
-    const { sources, dataProviders } = this.props;
-    const sourcesLoaded = this.props.sources.filter(source => source.chart === parseInt(this.props.match.params.id));
-    const prevSourcesLoaded = prevProps.sources.filter(source => source.chart === parseInt(this.props.match.params.id));
-
-    if(this.props.match.params.data_source_id && sourcesLoaded.length !== prevSourcesLoaded.length) {
-      const dataSource = sources.find(source => source.id === parseInt(this.props.match.params.data_source_id));
-      const selectedProvider = dataProviders.find(
-        dataProvider => dataProvider.provider === dataSource.provider,
+      const selectedProvider = this.props.dataProviders.find(
+        dataProvider => dataProvider.provider === source.provider,
       );
+
       this.setState({
-        sourceName: dataSource.name,
-        data: dataSource.rawData,
+        sourceName: source.name,
+        data: source.rawData,
         selectedProvider,
-        selectedResource: dataSource.resource,
-        parameterFields: selectedProvider.resources[dataSource.resource].parameters,
-        parameterValues: typeof dataSource.params === 'string' ? JSON.parse(dataSource.params) : dataSource.params,
-      })
+        selectedResource: source.resource,
+        parameterFields: selectedProvider.resources[source.resource].parameters,
+        parameterValues: typeof source.params === 'string' ? JSON.parse(source.params) : source.params,
+      });
+
+      this.props.setLoader(false);
+
+    } catch(error) {
+      this.props.addNotification({ message: error, type: 'error' })
+    }
+  }
+
+  componentDidMount() {
+    const { api_key, username } = this.props.user;
+    const sourceIdToEdit = this.props.match.params.data_source_id;
+
+    if (sourceIdToEdit) {
+      this.getDataSource(api_key, username, sourceIdToEdit);
     }
   };
 
@@ -278,65 +310,73 @@ class DataSourceDetail extends Component {
       })
     }
     return (
-      <React.Fragment>
-        {this.props.loader ? <Loader /> :
-          <Row>
-            <Col md={5}>
-              <h2>{this.state.sourceName ? this.state.sourceName : 'Create a new data source'}</h2>
-              <div className="form-group">
-                <label>Title</label>
-                <input value={this.state.sourceName || ''} onChange={this.onSourceNameChange} type="text" className="form-control" placeholder="Enter a title" />
-              </div>
-              <div className="form-group">
-                <label>Data Provider</label>
-                <select value={pathOr('', ['provider'], this.state.selectedProvider)} onChange={this.onProviderChange} className="form-control" id="dataProvider">
-                  <option value="">-- Select a data provider --</option>;
-                  {this.props.dataProviders.map((dataProvider) => {
-                    if (dataProvider.isActive) {
-                      return <option key={dataProvider.provider} value={dataProvider.provider}>{dataProvider.provider}</option>
-                    }
-                  })}
-                </select>
-                <small className="form-text text-muted">
-                  {this.state.selectedProvider ? <a rel="noopener noreferrer" target="_blank" href={this.state.selectedProvider.docs}>Check out the <span style={{ textTransform: 'capitalize' }}>{this.state.selectedProvider.provider}</span> documentation</a> : ''}
-                </small>
-              </div>
-              {this.state.selectedProvider ?
+      <>
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item"><Link to={`/charts/${this.props.match.params.id}/data-sources`}>Back to Data Sources</Link></li>
+            <li class="breadcrumb-item active" aria-current="page">{this.state.sourceName ? this.state.sourceName : 'Create New'}</li>
+          </ol>
+        </nav>
+        <div className="table-wrapper">
+          {this.props.loader ? <Loader /> :
+            <Row>
+              <Col md={5}>
+                <h2>{this.state.sourceName ? this.state.sourceName : 'Create a new data source'}</h2>
                 <div className="form-group">
-                  <label>Resource</label>
-                  <select value={this.state.selectedResource} onChange={this.onResourceChange} className="form-control" id="dataSourceResource">
-                    <option value="">-- Select a resource --</option>;
-                    {Object.keys(this.state.selectedProvider.resources).map(resourceKey => {
-                      return <option key={this.state.selectedProvider.resources[resourceKey].name} value={this.state.selectedProvider.resources[resourceKey].name}>{this.state.selectedProvider.resources[resourceKey].label}</option>
+                  <label>Title</label>
+                  <input value={this.state.sourceName || ''} onChange={this.onSourceNameChange} type="text" className="form-control" placeholder="Enter a title" />
+                </div>
+                <div className="form-group">
+                  <label>Data Provider</label>
+                  <select value={pathOr('', ['provider'], this.state.selectedProvider)} onChange={this.onProviderChange} className="form-control" id="dataProvider">
+                    <option value="">-- Select a data provider --</option>;
+                    {this.props.dataProviders.map((dataProvider) => {
+                      if (dataProvider.isActive) {
+                        return <option key={dataProvider.provider} value={dataProvider.provider}>{dataProvider.provider}</option>
+                      }
                     })}
                   </select>
+                  <small className="form-text text-muted">
+                    {this.state.selectedProvider ? <a rel="noopener noreferrer" target="_blank" href={this.state.selectedProvider.docs}>Check out the <span style={{ textTransform: 'capitalize' }}>{this.state.selectedProvider.provider}</span> documentation</a> : ''}
+                  </small>
                 </div>
-              : null
-              }
-              {parameters}
-              {
-                !this.props.match.params.data_source_id && !this.state.newlySavedDataSoucerId ?
-                <button onClick={this.addDataSource} type="submit" className="btn btn-primary mb-2">Add Data Source</button> :
-                <button onClick={this.addDataSource} type="submit" className="btn btn-primary mb-2">Update Data Source</button>
-              }
-            </Col>
-            <Col md={7}>
-              {
-                this.state.data ?
-                  <JSONTree
-                    theme={{
-                      tree: ({ style }) => ({
-                        style: { ...style, padding: "1em" },
-                      }),
-                    }}
-                    data={this.state.data}
-                  /> :
-                null
-              }
-            </Col>
-          </Row>
-        }
-      </React.Fragment>
+                {this.state.selectedProvider ?
+                  <div className="form-group">
+                    <label>Resource</label>
+                    <select value={this.state.selectedResource} onChange={this.onResourceChange} className="form-control" id="dataSourceResource">
+                      <option value="">-- Select a resource --</option>;
+                      {Object.keys(this.state.selectedProvider.resources).map(resourceKey => {
+                        return <option key={this.state.selectedProvider.resources[resourceKey].name} value={this.state.selectedProvider.resources[resourceKey].name}>{this.state.selectedProvider.resources[resourceKey].label}</option>
+                      })}
+                    </select>
+                  </div>
+                : null
+                }
+                {parameters}
+                {
+                  !this.props.match.params.data_source_id && !this.state.newlySavedDataSoucerId ?
+                  <button onClick={this.addDataSource} type="submit" className="btn btn-primary mb-2">Add Data Source</button> :
+                  <button onClick={this.addDataSource} type="submit" className="btn btn-primary mb-2">Update Data Source</button>
+                }
+              </Col>
+              <Col md={7}>
+                {
+                  this.state.data ?
+                    <JSONTree
+                      theme={{
+                        tree: ({ style }) => ({
+                          style: { ...style, padding: "1em" },
+                        }),
+                      }}
+                      data={this.state.data}
+                    /> :
+                  null
+                }
+              </Col>
+            </Row>
+          }
+        </div>
+      </>
     )
   };
 };

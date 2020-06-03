@@ -4,6 +4,20 @@ const sources = (state = { data: [] }, action) => {
   switch (action.type) {
     case 'RECEIVE_DATA_SOURCES':
       return { data: action.data };
+    case 'RECEIVE_SINGLE_DATA_SOURCE': {
+      const { id } = action.data;
+      const exists = state.data.find(source => source.id === id);
+      if (!exists) {
+        return { data: prepend(action.data, state.data) };
+      } else {
+        return { data: state.data.map((source) => {
+          if (source.id === id) {
+            return action.data;
+          }
+          return source;
+        }) };
+      }
+    }
     case 'DELETE_DATA_SOURCE':
       return { data: state.data.filter(datasource => datasource.id !== parseInt(action.datasourceId)) };
     case 'ADD_SOURCE':

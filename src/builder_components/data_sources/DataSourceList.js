@@ -44,11 +44,13 @@ class DataSourceList extends Component {
   componentDidUpdate(prevProps) {
     if (this.props.match.params.id !== prevProps.match.params.id) {
       const { api_key, username } = this.props.user;
-      this.props.fetchDataSources(
-        api_key,
-        username,
-        this.props.match.params.id,
-      )
+      if (this.props.sources.length === 0) {
+        this.props.fetchDataSources(
+          api_key,
+          username,
+          this.props.match.params.id,
+        )
+      }
     }
   };
 
