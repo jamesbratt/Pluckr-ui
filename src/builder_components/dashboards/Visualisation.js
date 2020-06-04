@@ -151,7 +151,6 @@ class Visualisation extends Component {
             tickColor: chart.color,
           };
 
-          chartConfig['yAxis'] = [];
           chartConfig.yAxis.push(axis);
 
           series = {
