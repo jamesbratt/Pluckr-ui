@@ -128,6 +128,8 @@ class Visualisation extends Component {
 
         const { y_axis_title, y_axis_enabled, y_axis_is_opposite } = dataset;
 
+        const yAxisId = `${dataset.id}-yaxis`;
+
         if (y_axis_title && y_axis_enabled) {
           const axis = {
             title: {
@@ -137,6 +139,7 @@ class Visualisation extends Component {
               }
             },
             opposite: y_axis_is_opposite,
+            id: yAxisId,
             gridLineWidth: 0,
             minorGridLineWidth: 0,
             labels: {
@@ -148,12 +151,15 @@ class Visualisation extends Component {
             tickColor: chart.color,
           };
 
+          chartConfig['yAxis'] = [];
+          chartConfig.yAxis.push(axis);
+
           series = {
             name: dataset.name,
             type: chart.series_type,
             data: dataset.data,
             color: dataset.color ? dataset.color : null,
-            yAxis: axis,
+            yAxis: yAxisId,
           }
         } else {
           series = {
