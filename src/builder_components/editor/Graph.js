@@ -50,7 +50,7 @@ export const defineChartConfig = (chart) => {
       tickColor: chart.color,
     };
 
-    chartConfig['yAxis'] = {
+    chartConfig['yAxis'] = [{
       title: {
         text: chart.y_axis_title,
         style: {
@@ -66,7 +66,7 @@ export const defineChartConfig = (chart) => {
             color: chart.color
         }
       },
-    };
+    }];
   } else {
     chartConfig['tooltip'] = {
       pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
