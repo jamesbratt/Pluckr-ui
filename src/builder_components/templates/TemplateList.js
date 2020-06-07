@@ -3,7 +3,6 @@ import Table from 'react-bootstrap/Table';
 import DataProviderTable from '../dataproviders/DataProviderTable';
 import Loader from '../../Loader';
 import { connect } from 'react-redux';
-import { Redirect } from "react-router-dom";
 import { addChart, deleteChart } from '../../actions/chart';
 import { setLoader } from '../../actions'
 import { addNotification } from '../../actions/notification';
@@ -33,12 +32,6 @@ const mapDispatchToProps = {
 }
 
 class TemplateList extends Component {
-    constructor(props) {
-      super(props);
-      this.state = {
-        hasInstalled: null,
-      }
-    }
 
     componentDidMount() {
       const username = this.props.user.username;
@@ -82,11 +75,7 @@ class TemplateList extends Component {
       .then(response => {
         if(!response.error) {
           this.props.addChart(response.chart);
-          this.setState({ hasInstalled: response.chart })
-          this.props.addNotification({ message: 'Template has successfully been installed', type: 'success' });
-          this.setState({
-            hasInstalled: response.chart,
-          });
+          this.props.addNotification({ message: `Template has successfully been installed`, type: 'success' });
         } else {
           this.props.addNotification({ message: response.error.message, type: 'error' });
         }
@@ -96,57 +85,52 @@ class TemplateList extends Component {
 
     render() {
       return (
-        <>
-          {
-            this.state.hasInstalled ? <Redirect to={`/charts/${this.state.hasInstalled.id}/data-sources`} /> :
-                <div className="row">
-                  <div className="col-md-8">
-                    <div className="table-wrapper">
-                      {this.props.loader ? <Loader /> :
-                      <>
-                        <div className="table-header"><h2>Chart Templates</h2></div>
-                        <Table bordered hover>
-                          <thead>
-                            <tr>
-                              <th></th>
-                              <th>Name</th>
-                              <th>Chart Type</th>
-                              <th>Published By</th>
-                              <th></th>
-                              <th></th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {this.props.templates.map((template) => {
-                              return (
-                                <tr key={template.id}>
-                                  <td width="40">
-                                    <i className={ICON_MAPPER[template.series_type]} />
-                                  </td>
-                                  <td>{template.name}</td>
-                                  <td className="capitalize">{template.chart_type}</td>
-                                  <td>{template.publisher}</td>
-                                  <td width="40">
-                                    <button onClick={() => this.install(template.id)} className="btn btn-link table-btn float-right"><i className="fa fa-download" /></button>
-                                  </td>
-                                  <td width="40">
-                                    <button onClick={() => this.removeChart(template.id)} className="btn btn-link table-btn float-right"><i className="fa fa-trash" /></button>
-                                  </td>
-                                </tr>
-                              )
-                            })}
-                          </tbody>
-                        </Table>
-                        {this.props.templates.length === 0 ? <p className="lead">There are no templates available</p> : null}
-                      </>}
-                    </div>
-                  </div>
-                  <div className="col-md-4">
-                    <DataProviderTable />
-                  </div>
-                </div>
-          }
-        </>
+        <div className="row">
+          <div className="col-md-8">
+            <div className="table-wrapper">
+              {this.props.loader ? <Loader /> :
+              <>
+                <div className="table-header"><h2>Chart Templates</h2></div>
+                <Table bordered hover>
+                  <thead>
+                    <tr>
+                      <th></th>
+                      <th>Name</th>
+                      <th>Chart Type</th>
+                      <th>Published By</th>
+                      <th></th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {this.props.templates.map((template) => {
+                      return (
+                        <tr key={template.id}>
+                          <td width="40">
+                            <i className={ICON_MAPPER[template.series_type]} />
+                          </td>
+                          <td>{template.name}</td>
+                          <td className="capitalize">{template.chart_type}</td>
+                          <td>{template.publisher}</td>
+                          <td width="40">
+                            <button onClick={() => this.install(template.id)} className="btn btn-link table-btn float-right"><i className="fa fa-download" /></button>
+                          </td>
+                          <td width="40">
+                            <button onClick={() => this.removeChart(template.id)} className="btn btn-link table-btn float-right"><i className="fa fa-trash" /></button>
+                          </td>
+                        </tr>
+                      )
+                    })}
+                  </tbody>
+                </Table>
+                {this.props.templates.length === 0 ? <p className="lead">There are no templates available</p> : null}
+              </>}
+            </div>
+          </div>
+          <div className="col-md-4">
+            <DataProviderTable />
+          </div>
+        </div>
       )
     }
 }

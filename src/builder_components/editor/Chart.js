@@ -203,7 +203,7 @@ class Chart extends Component {
       {this.props.loader ? <Loader /> :
         <div className="clearfix">
           <div className="editor-header">
-            {chart ? <h2 style={{ display: 'inline-block' }}>{chart.name}</h2> : null}
+            {chart ? <h4 style={{ display: 'inline-block' }}>{chart.name}</h4> : null}
             <div className="float-right export-btns">
               <button onClick={() => this.publish(id)} className="btn btn-success">Publish as Template</button>
               <button onClick={this.print} className="btn btn-secondary">Print</button>

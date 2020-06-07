@@ -121,7 +121,7 @@ export const providers = [
     request: getWrikeData,
     resources: WRIKE_RESOURCES,
     isActive: false,
-    isDisabled: false,
+    isDisabled: true,
     icon: wrikeLogo,
     auth: true,
     docs: WRIKE_DOCS
@@ -132,7 +132,7 @@ export const providers = [
     request: getXeroData,
     resources: XERO_RESOURCES,
     isActive: false,
-    isDisabled: false,
+    isDisabled: true,
     icon: xeroLogo,
     auth: true,
     docs: XERO_DOCS
