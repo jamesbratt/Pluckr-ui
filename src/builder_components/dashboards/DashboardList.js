@@ -89,7 +89,7 @@ class DashboardList extends Component {
               </div>
 
               {dashboards.length === 0 ?
-                <div className="sad-face"><img src={sadFace} alt=""/><p style={{ textAlign: 'center' }} className="lead">You have no dashboards yet, get building!</p></div> :
+                <div className="sad-face"><p style={{ textAlign: 'center' }} className="lead">You have no dashboards yet, get building!</p></div> :
                 <Table bordered hover>
                 <thead>
                   <tr>

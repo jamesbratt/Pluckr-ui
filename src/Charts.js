@@ -102,7 +102,7 @@ class Charts extends Component {
                 </div>
 
                 {charts.length === 0 ?
-                  <div className="sad-face"><img src={sadFace} alt=""/><p style={{ textAlign: 'center' }} className="lead">You have no charts yet, get building!</p></div> :
+                  <div className="sad-face"><p style={{ textAlign: 'center' }} className="lead">You have no charts yet, get building!</p></div> :
                   <Table bordered hover>
                   <thead>
                     <tr>
