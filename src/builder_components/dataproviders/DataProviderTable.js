@@ -28,7 +28,7 @@ const DataProviderTable = ({ dataProviders }) => {
           </tbody>
         </Table>
         <hr />
-        <button className="btn btn-primary">Connect an API</button>
+        <button className="btn btn-primary">Create a Data Provider</button>
       </div>
     );
 }
