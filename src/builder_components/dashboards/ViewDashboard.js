@@ -68,7 +68,7 @@ class ViewDashboard extends Component {
               <div className="row">
               {
                 row.map((col) => (
-                  <div className="col-md-6"><div className="table-wrapper">{ col }</div></div>
+                  <div className="col-md-6"><div className="chart-wrapper">{ col }</div></div>
                 ))
               }
               </div>

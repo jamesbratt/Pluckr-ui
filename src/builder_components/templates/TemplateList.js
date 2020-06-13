@@ -10,7 +10,7 @@ import { fetchTemplates } from '../../actions/template';
 
 const ICON_MAPPER = {
   line: 'fa fa-line-chart',
-  bar: 'fa fa-bar-chart',
+  column: 'fa fa-bar-chart',
   pie: 'fa fa-pie-chart',
 };
 
