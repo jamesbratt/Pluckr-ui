@@ -171,6 +171,14 @@ export const updateChartColour = (payload) => {
     },
   })
 
+  chartInstance.series.forEach(series => {
+    series.update({
+      dataLabels: {
+        color: payload.color
+      },
+    })
+  })
+
   chartInstance.yAxis.forEach(yAxis => {
     yAxis.update({
       labels: {
@@ -334,6 +342,9 @@ export const addDataSeries = (datasetId, title, data, chartType, dataset, chart 
       data: clonedData,
       color: dataset.color ? dataset.color : null,
       yAxis: yAxisId,
+      dataLabels: {
+        color: dataset.chart.color
+      },
     };
 
   } else {
@@ -344,6 +355,9 @@ export const addDataSeries = (datasetId, title, data, chartType, dataset, chart 
       data: clonedData,
       color: dataset.color ? dataset.color : null,
       yAxis: existingYaxis ? yAxisId : 0,
+      dataLabels: {
+        color: dataset.chart.color
+      },
     };
   }
 

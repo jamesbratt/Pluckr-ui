@@ -159,6 +159,9 @@ class Visualisation extends Component {
             data: dataset.data,
             color: dataset.color ? dataset.color : null,
             yAxis: yAxisId,
+            dataLabels: {
+              color: chart.color
+            },
           }
         } else {
           series = {
@@ -167,6 +170,9 @@ class Visualisation extends Component {
             data: dataset.data,
             color: dataset.color ? dataset.color : null,
             yAxis: 0,
+            dataLabels: {
+              color: chart.color
+            },
           };
         }
 
@@ -196,7 +202,7 @@ class Visualisation extends Component {
     const { id } = this.props.config.chart;
     return (
       <>
-        {this.state.isLoading ? <Loader /> : null}
+        {this.state.isLoading ? <div style={{padding: '1em'}} ><Loader /></div> : null}
         {this.state.error || null}
         <div id={`viz-${id}`}></div>
       </>
