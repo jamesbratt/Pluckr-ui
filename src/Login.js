@@ -46,7 +46,7 @@ class Login extends Component {
               <label className="sr-only">Password</label>
               <input ref={this.passwordRef} type="password" id="inputPassword" className="form-control" placeholder="Enter your password" name="password" required="" />
               <button className="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
-              <p className="text-muted">Not registered? Register <a href="/register">here</a></p>
+              <p className="text-muted"><a rel="noopener noreferrer" target="_blank" href="https://pluckr.io/become-a-beta-tester/">Become a Beta Tester</a></p>
               <p className="text-muted">© Pluckr {new Date().getFullYear()}</p>
             </form>
           </div>
