@@ -39,7 +39,7 @@ class App extends Component {
         <Router>
           <Switch>
             <Route exact path="/" component={Login} />
-            <Route exact path="/register" component={Register} />
+            {/* <Route exact path="/register" component={Register} /> */}
             <Route path="/charts" component={Wrapper} />
             <Route path="/dashboards" component={Wrapper} />
             <Route path="/account" component={Wrapper} />
