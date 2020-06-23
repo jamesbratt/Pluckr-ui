@@ -1,7 +1,13 @@
 import { assoc, pathOr } from 'ramda';
 import executeRule from './rules';
+import { OPERATION_FUNCTIONS } from '../Constants';
 
 const constructSeries = (node, data, ast) => {
+  const operationAcceptedParameters = OPERATION_FUNCTIONS.find(f => f.name === node.value).accepts;
+  if (ast.length < operationAcceptedParameters.length) {
+    return data;
+  };
+
   if (Array.isArray(data)) {
     const args = ast.filter(childNode => childNode.parent === node.id);
     const xaxis = args.find(arg => arg.name === 'XAXIS');
@@ -22,6 +28,11 @@ const constructSeries = (node, data, ast) => {
 }
 
 const constructPieSeries = (node, data, ast) => {
+  const operationAcceptedParameters = OPERATION_FUNCTIONS.find(f => f.name === node.value).accepts;
+  if (ast.length < operationAcceptedParameters.length) {
+    return data;
+  };
+
   if (Array.isArray(data)) {
     const args = ast.filter(childNode => childNode.parent === node.id);
     const name = args.find(arg => arg.name === 'NAME');
@@ -49,6 +60,11 @@ const sortNumericalXaxis = (node, data, ast) => {
 }
 
 const forEvery = (node, data, ast) => {
+  const operationAcceptedParameters = OPERATION_FUNCTIONS.find(f => f.name === node.value).accepts;
+  if (ast.length < operationAcceptedParameters.length) {
+    return data;
+  };
+
   if (Array.isArray(data)) {
     const arg = ast.find(childNode => childNode.parent === node.id);
     return data.map(dataPoint => {
@@ -59,6 +75,11 @@ const forEvery = (node, data, ast) => {
 }
 
 const target = (node, data, ast) => {
+  const operationAcceptedParameters = OPERATION_FUNCTIONS.find(f => f.name === node.value).accepts;
+  if (ast.length < operationAcceptedParameters.length) {
+    return data;
+  };
+
   if ((typeof data === 'function' || (typeof data === 'object' && !!data)) && !Array.isArray(data)) {
     const args = ast.filter(childNode => childNode.parent === node.id);
     const target = args.find(arg => arg.name === 'DATA_KEY');
@@ -71,6 +92,11 @@ const target = (node, data, ast) => {
 }
 
 const contains = (node, data, ast) => {
+  const operationAcceptedParameters = OPERATION_FUNCTIONS.find(f => f.name === node.value).accepts;
+  if (ast.length < operationAcceptedParameters.length) {
+    return data;
+  };
+
   if ((typeof data === 'function' || (typeof data === 'object' && !!data)) && !Array.isArray(data)) {
     const args = ast.filter(childNode => childNode.parent === node.id);
     const target = args.find(arg => arg.name === 'DATA_KEY').value;
@@ -87,6 +113,11 @@ const contains = (node, data, ast) => {
 }
 
 const updateKey = (node, data, ast) => {
+  const operationAcceptedParameters = OPERATION_FUNCTIONS.find(f => f.name === node.value).accepts;
+  if (ast.length < operationAcceptedParameters.length) {
+    return data;
+  };
+
   if ((typeof data === 'function' || (typeof data === 'object' && !!data)) && !Array.isArray(data)) {
     const args = ast.filter(childNode => childNode.parent === node.id);
     const target = args.find(arg => arg.name === 'DATA_KEY');
@@ -101,6 +132,11 @@ const updateKey = (node, data, ast) => {
 }
 
 const targetByIndex = (node, data, ast) => {
+  const operationAcceptedParameters = OPERATION_FUNCTIONS.find(f => f.name === node.value).accepts;
+  if (ast.length < operationAcceptedParameters.length) {
+    return data;
+  };
+
   if (Array.isArray(data)) {
     const args = ast.filter(childNode => childNode.parent === node.id);
     const target = args.find(arg => arg.name === 'DATA_INDEX');
@@ -115,6 +151,11 @@ const targetByIndex = (node, data, ast) => {
 }
 
 const addKey = (node, data, ast) => {
+  const operationAcceptedParameters = OPERATION_FUNCTIONS.find(f => f.name === node.value).accepts;
+  if (ast.length < operationAcceptedParameters.length) {
+    return data;
+  };
+
   if ((typeof data === 'function' || (typeof data === 'object' && !!data)) && !Array.isArray(data)) {
     const args = ast.filter(childNode => childNode.parent === node.id);
     const newKey = args.find(arg => arg.name === 'NEW_DATA_KEY');
@@ -127,6 +168,11 @@ const addKey = (node, data, ast) => {
 }
 
 const addStaticKey = (node, data, ast) => {
+  const operationAcceptedParameters = OPERATION_FUNCTIONS.find(f => f.name === node.value).accepts;
+  if (ast.length < operationAcceptedParameters.length) {
+    return data;
+  };
+
   if ((typeof data === 'function' || (typeof data === 'object' && !!data)) && !Array.isArray(data)) {
     const args = ast.filter(childNode => childNode.parent === node.id);
     const newKey = args.find(arg => arg.name === 'NEW_DATA_KEY').value;
@@ -145,6 +191,11 @@ const concatenate = (node, data, ast) => {
 }
 
 const groupBy = (node, data, ast) => {
+  const operationAcceptedParameters = OPERATION_FUNCTIONS.find(f => f.name === node.value).accepts;
+  if (ast.length < operationAcceptedParameters.length) {
+    return data;
+  };
+
   if (Array.isArray(data)) {
     const args = ast.filter(childNode => childNode.parent === node.id);
     const keyToGroupBy = args.find(arg => arg.name === 'DATA_KEY');
@@ -176,6 +227,11 @@ const groupBy = (node, data, ast) => {
 }
 
 const pluck = (node, data, ast) => {
+  const operationAcceptedParameters = OPERATION_FUNCTIONS.find(f => f.name === node.value).accepts;
+  if (ast.length < operationAcceptedParameters.length) {
+    return data;
+  };
+
   if ((typeof data === 'function' || (typeof data === 'object' && !!data)) && !Array.isArray(data)) {
     const args = ast.filter(childNode => childNode.parent === node.id);
     const target = args.find(arg => arg.name === 'DATA_KEY');
@@ -187,6 +243,11 @@ const pluck = (node, data, ast) => {
 }
 
 const sum = (node, data, ast) => {
+  const operationAcceptedParameters = OPERATION_FUNCTIONS.find(f => f.name === node.value).accepts;
+  if (ast.length < operationAcceptedParameters.length) {
+    return data;
+  };
+
   if (Array.isArray(data)) {
     const args = ast.filter(childNode => childNode.parent === node.id);
     const targetKey = args.find(arg => arg.name === 'DATA_KEY');
@@ -202,6 +263,11 @@ const sum = (node, data, ast) => {
 }
 
 const converToString = (node, data, ast) => {
+  const operationAcceptedParameters = OPERATION_FUNCTIONS.find(f => f.name === node.value).accepts;
+  if (ast.length < operationAcceptedParameters.length) {
+    return data;
+  };
+
   if ((typeof data === 'function' || (typeof data === 'object' && !!data)) && !Array.isArray(data)) {
     const args = ast.filter(childNode => childNode.parent === node.id);
     const target = args.find(arg => arg.name === 'DATA_KEY');
@@ -213,6 +279,11 @@ const converToString = (node, data, ast) => {
 }
 
 const filterWhere = (node, data, ast) => {
+  const operationAcceptedParameters = OPERATION_FUNCTIONS.find(f => f.name === node.value).accepts;
+  if (ast.length < operationAcceptedParameters.length) {
+    return data;
+  };
+
   if (Array.isArray(data)) {
     const args = ast.filter(childNode => childNode.parent === node.id);
     const leftOperand = args.find(arg => arg.name === 'DATA_KEY');
@@ -225,6 +296,11 @@ const filterWhere = (node, data, ast) => {
 }
 
 const multiplyBy = (node, data, ast) => {
+  const operationAcceptedParameters = OPERATION_FUNCTIONS.find(f => f.name === node.value).accepts;
+  if (ast.length < operationAcceptedParameters.length) {
+    return data;
+  };
+
   if (!isNaN(data)) {
     let dataPoint = data;
     const args = ast.filter(childNode => childNode.parent === node.id);
@@ -235,6 +311,11 @@ const multiplyBy = (node, data, ast) => {
 }
 
 const divideBy = (node, data, ast) => {
+  const operationAcceptedParameters = OPERATION_FUNCTIONS.find(f => f.name === node.value).accepts;
+  if (ast.length < operationAcceptedParameters.length) {
+    return data;
+  };
+
   if (!isNaN(data)) {
     let dataPoint = data;
     const args = ast.filter(childNode => childNode.parent === node.id);
@@ -245,6 +326,11 @@ const divideBy = (node, data, ast) => {
 }
 
 const add = (node, data, ast) => {
+  const operationAcceptedParameters = OPERATION_FUNCTIONS.find(f => f.name === node.value).accepts;
+  if (ast.length < operationAcceptedParameters.length) {
+    return data;
+  };
+
   if (!isNaN(data)) {
     let dataPoint = data;
     const args = ast.filter(childNode => childNode.parent === node.id);
@@ -255,6 +341,11 @@ const add = (node, data, ast) => {
 }
 
 const subtract = (node, data, ast) => {
+  const operationAcceptedParameters = OPERATION_FUNCTIONS.find(f => f.name === node.value).accepts;
+  if (ast.length < operationAcceptedParameters.length) {
+    return data;
+  };
+
   if (!isNaN(data)) {
     let dataPoint = data;
     const args = ast.filter(childNode => childNode.parent === node.id);
@@ -299,6 +390,11 @@ const listReverse = (node, data, ast) => {
 }
 
 const getMonth = (node, data, ast) => {
+  const operationAcceptedParameters = OPERATION_FUNCTIONS.find(f => f.name === node.value).accepts;
+  if (ast.length < operationAcceptedParameters.length) {
+    return data;
+  };
+
   const args = ast.filter(childNode => childNode.parent === node.id);
   const dateKey = args.find(arg => arg.name === 'DATA_KEY');
   const dateKeyValue = data[dateKey.value];
