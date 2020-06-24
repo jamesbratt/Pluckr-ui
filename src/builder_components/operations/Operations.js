@@ -98,7 +98,7 @@ class Operations extends Component {
       this.props.dispatch(
         runDataSet(
           parseInt(this.props.dataSetId),
-          () => {},
+          addDataSeries,
           '',
         )
       )
@@ -325,6 +325,7 @@ class Operations extends Component {
                 isEdit = {this.state.operationEdit}
                 dataSetId = {this.props.dataSetId}
                 parent={syntaxNode.parent}
+                activeAst={this.state.operationAst}
               />
             );
           case "NEW_DATA_KEY":

@@ -3,8 +3,9 @@ import executeRule from './rules';
 import { OPERATION_FUNCTIONS } from '../Constants';
 
 const constructSeries = (node, data, ast) => {
+  const params = ast.filter(childNode => childNode.parent === node.id && childNode.value);
   const operationAcceptedParameters = OPERATION_FUNCTIONS.find(f => f.name === node.value).accepts;
-  if (ast.length < operationAcceptedParameters.length) {
+  if (params.length !== operationAcceptedParameters.length) {
     return data;
   };
 
@@ -28,8 +29,9 @@ const constructSeries = (node, data, ast) => {
 }
 
 const constructPieSeries = (node, data, ast) => {
+  const params = ast.filter(childNode => childNode.parent === node.id && childNode.value);
   const operationAcceptedParameters = OPERATION_FUNCTIONS.find(f => f.name === node.value).accepts;
-  if (ast.length < operationAcceptedParameters.length) {
+  if (params.length !== operationAcceptedParameters.length) {
     return data;
   };
 
@@ -60,8 +62,9 @@ const sortNumericalXaxis = (node, data, ast) => {
 }
 
 const forEvery = (node, data, ast) => {
+  const params = ast.filter(childNode => childNode.parent === node.id && childNode.value);
   const operationAcceptedParameters = OPERATION_FUNCTIONS.find(f => f.name === node.value).accepts;
-  if (ast.length < operationAcceptedParameters.length) {
+  if (params.length !== operationAcceptedParameters.length) {
     return data;
   };
 
@@ -75,8 +78,9 @@ const forEvery = (node, data, ast) => {
 }
 
 const target = (node, data, ast) => {
+  const params = ast.filter(childNode => childNode.parent === node.id && childNode.value);
   const operationAcceptedParameters = OPERATION_FUNCTIONS.find(f => f.name === node.value).accepts;
-  if (ast.length < operationAcceptedParameters.length) {
+  if (params.length !== operationAcceptedParameters.length) {
     return data;
   };
 
@@ -92,8 +96,9 @@ const target = (node, data, ast) => {
 }
 
 const contains = (node, data, ast) => {
+  const params = ast.filter(childNode => childNode.parent === node.id && childNode.value);
   const operationAcceptedParameters = OPERATION_FUNCTIONS.find(f => f.name === node.value).accepts;
-  if (ast.length < operationAcceptedParameters.length) {
+  if (params.length !== operationAcceptedParameters.length) {
     return data;
   };
 
@@ -113,8 +118,9 @@ const contains = (node, data, ast) => {
 }
 
 const updateKey = (node, data, ast) => {
+  const params = ast.filter(childNode => childNode.parent === node.id && childNode.value);
   const operationAcceptedParameters = OPERATION_FUNCTIONS.find(f => f.name === node.value).accepts;
-  if (ast.length < operationAcceptedParameters.length) {
+  if (params.length !== operationAcceptedParameters.length) {
     return data;
   };
 
@@ -132,8 +138,9 @@ const updateKey = (node, data, ast) => {
 }
 
 const targetByIndex = (node, data, ast) => {
+  const params = ast.filter(childNode => childNode.parent === node.id && childNode.value);
   const operationAcceptedParameters = OPERATION_FUNCTIONS.find(f => f.name === node.value).accepts;
-  if (ast.length < operationAcceptedParameters.length) {
+  if (params.length !== operationAcceptedParameters.length) {
     return data;
   };
 
@@ -151,8 +158,9 @@ const targetByIndex = (node, data, ast) => {
 }
 
 const addKey = (node, data, ast) => {
+  const params = ast.filter(childNode => childNode.parent === node.id && childNode.value);
   const operationAcceptedParameters = OPERATION_FUNCTIONS.find(f => f.name === node.value).accepts;
-  if (ast.length < operationAcceptedParameters.length) {
+  if (params.length !== operationAcceptedParameters.length) {
     return data;
   };
 
@@ -168,8 +176,9 @@ const addKey = (node, data, ast) => {
 }
 
 const addStaticKey = (node, data, ast) => {
+  const params = ast.filter(childNode => childNode.parent === node.id && childNode.value);
   const operationAcceptedParameters = OPERATION_FUNCTIONS.find(f => f.name === node.value).accepts;
-  if (ast.length < operationAcceptedParameters.length) {
+  if (params.length !== operationAcceptedParameters.length) {
     return data;
   };
 
@@ -191,8 +200,9 @@ const concatenate = (node, data, ast) => {
 }
 
 const groupBy = (node, data, ast) => {
+  const params = ast.filter(childNode => childNode.parent === node.id && childNode.value);
   const operationAcceptedParameters = OPERATION_FUNCTIONS.find(f => f.name === node.value).accepts;
-  if (ast.length < operationAcceptedParameters.length) {
+  if (params.length !== operationAcceptedParameters.length) {
     return data;
   };
 
@@ -227,8 +237,9 @@ const groupBy = (node, data, ast) => {
 }
 
 const pluck = (node, data, ast) => {
+  const params = ast.filter(childNode => childNode.parent === node.id && childNode.value);
   const operationAcceptedParameters = OPERATION_FUNCTIONS.find(f => f.name === node.value).accepts;
-  if (ast.length < operationAcceptedParameters.length) {
+  if (params.length !== operationAcceptedParameters.length) {
     return data;
   };
 
@@ -243,8 +254,9 @@ const pluck = (node, data, ast) => {
 }
 
 const sum = (node, data, ast) => {
+  const params = ast.filter(childNode => childNode.parent === node.id && childNode.value);
   const operationAcceptedParameters = OPERATION_FUNCTIONS.find(f => f.name === node.value).accepts;
-  if (ast.length < operationAcceptedParameters.length) {
+  if (params.length !== operationAcceptedParameters.length) {
     return data;
   };
 
@@ -263,8 +275,9 @@ const sum = (node, data, ast) => {
 }
 
 const converToString = (node, data, ast) => {
+  const params = ast.filter(childNode => childNode.parent === node.id && childNode.value);
   const operationAcceptedParameters = OPERATION_FUNCTIONS.find(f => f.name === node.value).accepts;
-  if (ast.length < operationAcceptedParameters.length) {
+  if (params.length !== operationAcceptedParameters.length) {
     return data;
   };
 
@@ -279,8 +292,9 @@ const converToString = (node, data, ast) => {
 }
 
 const filterWhere = (node, data, ast) => {
+  const params = ast.filter(childNode => childNode.parent === node.id && childNode.value);
   const operationAcceptedParameters = OPERATION_FUNCTIONS.find(f => f.name === node.value).accepts;
-  if (ast.length < operationAcceptedParameters.length) {
+  if (params.length !== operationAcceptedParameters.length) {
     return data;
   };
 
@@ -296,8 +310,9 @@ const filterWhere = (node, data, ast) => {
 }
 
 const multiplyBy = (node, data, ast) => {
+  const params = ast.filter(childNode => childNode.parent === node.id && childNode.value);
   const operationAcceptedParameters = OPERATION_FUNCTIONS.find(f => f.name === node.value).accepts;
-  if (ast.length < operationAcceptedParameters.length) {
+  if (params.length !== operationAcceptedParameters.length) {
     return data;
   };
 
@@ -311,8 +326,9 @@ const multiplyBy = (node, data, ast) => {
 }
 
 const divideBy = (node, data, ast) => {
+  const params = ast.filter(childNode => childNode.parent === node.id && childNode.value);
   const operationAcceptedParameters = OPERATION_FUNCTIONS.find(f => f.name === node.value).accepts;
-  if (ast.length < operationAcceptedParameters.length) {
+  if (params.length !== operationAcceptedParameters.length) {
     return data;
   };
 
@@ -326,8 +342,9 @@ const divideBy = (node, data, ast) => {
 }
 
 const add = (node, data, ast) => {
+  const params = ast.filter(childNode => childNode.parent === node.id && childNode.value);
   const operationAcceptedParameters = OPERATION_FUNCTIONS.find(f => f.name === node.value).accepts;
-  if (ast.length < operationAcceptedParameters.length) {
+  if (params.length !== operationAcceptedParameters.length) {
     return data;
   };
 
@@ -341,8 +358,9 @@ const add = (node, data, ast) => {
 }
 
 const subtract = (node, data, ast) => {
+  const params = ast.filter(childNode => childNode.parent === node.id && childNode.value);
   const operationAcceptedParameters = OPERATION_FUNCTIONS.find(f => f.name === node.value).accepts;
-  if (ast.length < operationAcceptedParameters.length) {
+  if (params.length !== operationAcceptedParameters.length) {
     return data;
   };
 
@@ -390,8 +408,9 @@ const listReverse = (node, data, ast) => {
 }
 
 const getMonth = (node, data, ast) => {
+  const params = ast.filter(childNode => childNode.parent === node.id && childNode.value);
   const operationAcceptedParameters = OPERATION_FUNCTIONS.find(f => f.name === node.value).accepts;
-  if (ast.length < operationAcceptedParameters.length) {
+  if (params.length !== operationAcceptedParameters.length) {
     return data;
   };
 

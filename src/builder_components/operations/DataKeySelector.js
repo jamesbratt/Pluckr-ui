@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { clone } from 'ramda';
 import { executeOperations } from '../../data_parsing/parse';
+import { addNotification } from '../../actions/notification';
 
 const DataKeySelector = (props) => {
 
@@ -9,12 +10,33 @@ const DataKeySelector = (props) => {
   const [currentData, setCurrentData] = useState(null);
 
   useEffect(() => {
-    const operations = props.isEdit ? props.operations.filter(operation => operation.sort_order <= props.isEdit.sort_order) : props.operations;
+    // If we are editing an existing operation then we have some work to do...
+    // We effectively need to set a break point at this specific node when
+    // executing operations. This yields the correct data keys to list in the selectbox.
+    const operations = props.isEdit ? props.operations.map(operation => {
 
+      // If the operation is the one we are editing, then
+      // we don't want to use the saved ast... we want the ast that
+      // is currently held in state and is changing as the operation is modified
+      if (props.isEdit.id === operation.id) {
+        return {
+          ...operation,
+          ast: props.activeAst,
+        };
+      }
+      return operation;
+
+    // We only want to execute operations up until the operation we are currently editing
+    // else the only keys available will be what is left after all operations have completed
+    }).filter(operation => operation.sort_order < props.isEdit.sort_order) : props.operations;
+
+    // We must get even more granular with what part of the operation gets
+    // executed. So we remove all ast entries beyond the parent of this current ast node.
+    // Again, this ensures that we have the correct keys available at that exact point in the operation
     const updatedOperations = operations.map(operation => {
       const ast = [];
       for (let node of operation.ast) {
-        if (node.id === props.parent || props.parent === 'root') {
+        if (node.id === props.parent) {
           break
         };
         ast.push(node);
@@ -26,13 +48,18 @@ const DataKeySelector = (props) => {
       }
     });
 
-    const data = executeOperations(
-      clone(props.dataset.rawData),
-      props.dataset,
-      updatedOperations,
-    );
+    // Execute operations to the point that this current ast node is hit
+    try {
+      const data = executeOperations(
+        clone(props.dataset.rawData),
+        props.dataset,
+        updatedOperations,
+      );
 
-    setCurrentData(data);
+      setCurrentData(data);
+    } catch(error) {
+      props.addNotification({ message: error.message, type: 'error' })
+    }
   }, [props.dataset]);
 
   if (Array.isArray(currentData)) {
@@ -62,6 +89,11 @@ const mapStateToProps = (state, props) => {
   };
 };
 
+const mapDispatchToProps = {
+  addNotification,
+};
+
 export default connect(
-  mapStateToProps
+  mapStateToProps,
+  mapDispatchToProps
 )(DataKeySelector);
