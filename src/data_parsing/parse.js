@@ -3,12 +3,6 @@ import executeRule from './rules';
 import { OPERATION_FUNCTIONS } from '../Constants';
 
 const constructSeries = (node, data, ast) => {
-  const params = ast.filter(childNode => childNode.parent === node.id && childNode.value);
-  const operationAcceptedParameters = OPERATION_FUNCTIONS.find(f => f.name === node.value).accepts;
-  if (params.length !== operationAcceptedParameters.length) {
-    return data;
-  };
-
   if (Array.isArray(data)) {
     const args = ast.filter(childNode => childNode.parent === node.id);
     const xaxis = args.find(arg => arg.name === 'XAXIS');
@@ -29,12 +23,6 @@ const constructSeries = (node, data, ast) => {
 }
 
 const constructPieSeries = (node, data, ast) => {
-  const params = ast.filter(childNode => childNode.parent === node.id && childNode.value);
-  const operationAcceptedParameters = OPERATION_FUNCTIONS.find(f => f.name === node.value).accepts;
-  if (params.length !== operationAcceptedParameters.length) {
-    return data;
-  };
-
   if (Array.isArray(data)) {
     const args = ast.filter(childNode => childNode.parent === node.id);
     const name = args.find(arg => arg.name === 'NAME');
@@ -62,12 +50,6 @@ const sortNumericalXaxis = (node, data, ast) => {
 }
 
 const forEvery = (node, data, ast) => {
-  const params = ast.filter(childNode => childNode.parent === node.id && childNode.value);
-  const operationAcceptedParameters = OPERATION_FUNCTIONS.find(f => f.name === node.value).accepts;
-  if (params.length !== operationAcceptedParameters.length) {
-    return data;
-  };
-
   if (Array.isArray(data)) {
     const arg = ast.find(childNode => childNode.parent === node.id);
     return data.map(dataPoint => {
@@ -78,12 +60,6 @@ const forEvery = (node, data, ast) => {
 }
 
 const target = (node, data, ast) => {
-  const params = ast.filter(childNode => childNode.parent === node.id && childNode.value);
-  const operationAcceptedParameters = OPERATION_FUNCTIONS.find(f => f.name === node.value).accepts;
-  if (params.length !== operationAcceptedParameters.length) {
-    return data;
-  };
-
   if ((typeof data === 'function' || (typeof data === 'object' && !!data)) && !Array.isArray(data)) {
     const args = ast.filter(childNode => childNode.parent === node.id);
     const target = args.find(arg => arg.name === 'DATA_KEY');
@@ -96,12 +72,6 @@ const target = (node, data, ast) => {
 }
 
 const contains = (node, data, ast) => {
-  const params = ast.filter(childNode => childNode.parent === node.id && childNode.value);
-  const operationAcceptedParameters = OPERATION_FUNCTIONS.find(f => f.name === node.value).accepts;
-  if (params.length !== operationAcceptedParameters.length) {
-    return data;
-  };
-
   if ((typeof data === 'function' || (typeof data === 'object' && !!data)) && !Array.isArray(data)) {
     const args = ast.filter(childNode => childNode.parent === node.id);
     const target = args.find(arg => arg.name === 'DATA_KEY').value;
@@ -118,12 +88,6 @@ const contains = (node, data, ast) => {
 }
 
 const updateKey = (node, data, ast) => {
-  const params = ast.filter(childNode => childNode.parent === node.id && childNode.value);
-  const operationAcceptedParameters = OPERATION_FUNCTIONS.find(f => f.name === node.value).accepts;
-  if (params.length !== operationAcceptedParameters.length) {
-    return data;
-  };
-
   if ((typeof data === 'function' || (typeof data === 'object' && !!data)) && !Array.isArray(data)) {
     const args = ast.filter(childNode => childNode.parent === node.id);
     const target = args.find(arg => arg.name === 'DATA_KEY');
@@ -138,12 +102,6 @@ const updateKey = (node, data, ast) => {
 }
 
 const targetByIndex = (node, data, ast) => {
-  const params = ast.filter(childNode => childNode.parent === node.id && childNode.value);
-  const operationAcceptedParameters = OPERATION_FUNCTIONS.find(f => f.name === node.value).accepts;
-  if (params.length !== operationAcceptedParameters.length) {
-    return data;
-  };
-
   if (Array.isArray(data)) {
     const args = ast.filter(childNode => childNode.parent === node.id);
     const target = args.find(arg => arg.name === 'DATA_INDEX');
@@ -158,12 +116,6 @@ const targetByIndex = (node, data, ast) => {
 }
 
 const addKey = (node, data, ast) => {
-  const params = ast.filter(childNode => childNode.parent === node.id && childNode.value);
-  const operationAcceptedParameters = OPERATION_FUNCTIONS.find(f => f.name === node.value).accepts;
-  if (params.length !== operationAcceptedParameters.length) {
-    return data;
-  };
-
   if ((typeof data === 'function' || (typeof data === 'object' && !!data)) && !Array.isArray(data)) {
     const args = ast.filter(childNode => childNode.parent === node.id);
     const newKey = args.find(arg => arg.name === 'NEW_DATA_KEY');
@@ -176,12 +128,6 @@ const addKey = (node, data, ast) => {
 }
 
 const addStaticKey = (node, data, ast) => {
-  const params = ast.filter(childNode => childNode.parent === node.id && childNode.value);
-  const operationAcceptedParameters = OPERATION_FUNCTIONS.find(f => f.name === node.value).accepts;
-  if (params.length !== operationAcceptedParameters.length) {
-    return data;
-  };
-
   if ((typeof data === 'function' || (typeof data === 'object' && !!data)) && !Array.isArray(data)) {
     const args = ast.filter(childNode => childNode.parent === node.id);
     const newKey = args.find(arg => arg.name === 'NEW_DATA_KEY').value;
@@ -200,12 +146,6 @@ const concatenate = (node, data, ast) => {
 }
 
 const groupBy = (node, data, ast) => {
-  const params = ast.filter(childNode => childNode.parent === node.id && childNode.value);
-  const operationAcceptedParameters = OPERATION_FUNCTIONS.find(f => f.name === node.value).accepts;
-  if (params.length !== operationAcceptedParameters.length) {
-    return data;
-  };
-
   if (Array.isArray(data)) {
     const args = ast.filter(childNode => childNode.parent === node.id);
     const keyToGroupBy = args.find(arg => arg.name === 'DATA_KEY');
@@ -237,12 +177,6 @@ const groupBy = (node, data, ast) => {
 }
 
 const pluck = (node, data, ast) => {
-  const params = ast.filter(childNode => childNode.parent === node.id && childNode.value);
-  const operationAcceptedParameters = OPERATION_FUNCTIONS.find(f => f.name === node.value).accepts;
-  if (params.length !== operationAcceptedParameters.length) {
-    return data;
-  };
-
   if ((typeof data === 'function' || (typeof data === 'object' && !!data)) && !Array.isArray(data)) {
     const args = ast.filter(childNode => childNode.parent === node.id);
     const target = args.find(arg => arg.name === 'DATA_KEY');
@@ -254,12 +188,6 @@ const pluck = (node, data, ast) => {
 }
 
 const sum = (node, data, ast) => {
-  const params = ast.filter(childNode => childNode.parent === node.id && childNode.value);
-  const operationAcceptedParameters = OPERATION_FUNCTIONS.find(f => f.name === node.value).accepts;
-  if (params.length !== operationAcceptedParameters.length) {
-    return data;
-  };
-
   if (Array.isArray(data)) {
     const args = ast.filter(childNode => childNode.parent === node.id);
     const targetKey = args.find(arg => arg.name === 'DATA_KEY');
@@ -275,12 +203,6 @@ const sum = (node, data, ast) => {
 }
 
 const converToString = (node, data, ast) => {
-  const params = ast.filter(childNode => childNode.parent === node.id && childNode.value);
-  const operationAcceptedParameters = OPERATION_FUNCTIONS.find(f => f.name === node.value).accepts;
-  if (params.length !== operationAcceptedParameters.length) {
-    return data;
-  };
-
   if ((typeof data === 'function' || (typeof data === 'object' && !!data)) && !Array.isArray(data)) {
     const args = ast.filter(childNode => childNode.parent === node.id);
     const target = args.find(arg => arg.name === 'DATA_KEY');
@@ -292,12 +214,6 @@ const converToString = (node, data, ast) => {
 }
 
 const filterWhere = (node, data, ast) => {
-  const params = ast.filter(childNode => childNode.parent === node.id && childNode.value);
-  const operationAcceptedParameters = OPERATION_FUNCTIONS.find(f => f.name === node.value).accepts;
-  if (params.length !== operationAcceptedParameters.length) {
-    return data;
-  };
-
   if (Array.isArray(data)) {
     const args = ast.filter(childNode => childNode.parent === node.id);
     const leftOperand = args.find(arg => arg.name === 'DATA_KEY');
@@ -310,12 +226,6 @@ const filterWhere = (node, data, ast) => {
 }
 
 const multiplyBy = (node, data, ast) => {
-  const params = ast.filter(childNode => childNode.parent === node.id && childNode.value);
-  const operationAcceptedParameters = OPERATION_FUNCTIONS.find(f => f.name === node.value).accepts;
-  if (params.length !== operationAcceptedParameters.length) {
-    return data;
-  };
-
   if (!isNaN(data)) {
     let dataPoint = data;
     const args = ast.filter(childNode => childNode.parent === node.id);
@@ -326,12 +236,6 @@ const multiplyBy = (node, data, ast) => {
 }
 
 const divideBy = (node, data, ast) => {
-  const params = ast.filter(childNode => childNode.parent === node.id && childNode.value);
-  const operationAcceptedParameters = OPERATION_FUNCTIONS.find(f => f.name === node.value).accepts;
-  if (params.length !== operationAcceptedParameters.length) {
-    return data;
-  };
-
   if (!isNaN(data)) {
     let dataPoint = data;
     const args = ast.filter(childNode => childNode.parent === node.id);
@@ -342,12 +246,6 @@ const divideBy = (node, data, ast) => {
 }
 
 const add = (node, data, ast) => {
-  const params = ast.filter(childNode => childNode.parent === node.id && childNode.value);
-  const operationAcceptedParameters = OPERATION_FUNCTIONS.find(f => f.name === node.value).accepts;
-  if (params.length !== operationAcceptedParameters.length) {
-    return data;
-  };
-
   if (!isNaN(data)) {
     let dataPoint = data;
     const args = ast.filter(childNode => childNode.parent === node.id);
@@ -358,12 +256,6 @@ const add = (node, data, ast) => {
 }
 
 const subtract = (node, data, ast) => {
-  const params = ast.filter(childNode => childNode.parent === node.id && childNode.value);
-  const operationAcceptedParameters = OPERATION_FUNCTIONS.find(f => f.name === node.value).accepts;
-  if (params.length !== operationAcceptedParameters.length) {
-    return data;
-  };
-
   if (!isNaN(data)) {
     let dataPoint = data;
     const args = ast.filter(childNode => childNode.parent === node.id);
@@ -408,12 +300,6 @@ const listReverse = (node, data, ast) => {
 }
 
 const getMonth = (node, data, ast) => {
-  const params = ast.filter(childNode => childNode.parent === node.id && childNode.value);
-  const operationAcceptedParameters = OPERATION_FUNCTIONS.find(f => f.name === node.value).accepts;
-  if (params.length !== operationAcceptedParameters.length) {
-    return data;
-  };
-
   const args = ast.filter(childNode => childNode.parent === node.id);
   const dateKey = args.find(arg => arg.name === 'DATA_KEY');
   const dateKeyValue = data[dateKey.value];
@@ -441,94 +327,114 @@ const getMonth = (node, data, ast) => {
   throw new Error("Invalid date format");
 }
 
+// Validates whether expected operation parameters are provided
+const validate = function(fn) {
+  return function() {
+    const node = arguments[0];
+    const data = arguments[1];
+    const ast = arguments[2];
+
+    const params = ast.filter(childNode => childNode.parent === node.id && childNode.value);
+    const operationAcceptedParameters = OPERATION_FUNCTIONS.find(f => f.name === node.value).accepts;
+    if (params.length !== operationAcceptedParameters.length) {
+
+      // Failed validation so don't perform operation
+      // TODO think about perhaps giving feedback
+      return data;
+    };
+
+    return fn.apply(this, arguments);
+  };
+};
+
 const executeFunction = (node, data, ast) => {
   switch (node.value) {
     case 'CONSTRUCT_SERIES':
-      return constructSeries(
+      return validate(constructSeries)(
         node,
         data,
         ast
       );
     case 'CONSTRUCT_PIE_SERIES':
-      return constructPieSeries(
+      return validate(constructPieSeries)(
         node,
         data,
         ast
       );
     case 'SORT_NUMERICAL_XAXIS':
-      return sortNumericalXaxis(
+      return validate(sortNumericalXaxis)(
         node,
         data,
         ast
       );
     case 'FILTER_WHERE':
-      return filterWhere(
+      return validate(filterWhere)(
         node,
         data,
         ast
       );
     case 'FOR_EVERY_ITEM':
-      return forEvery(
+      return validate(forEvery)(
         node,
         data,
         ast,
       );
     case 'TARGET':
-      return target(
+      return validate(target)(
         node,
         data,
         ast,
       );
     case 'UPDATE_KEY':
-      return updateKey(
+      return validate(updateKey)(
         node,
         data,
         ast,
       );
     case 'TARGET_BY_INDEX':
-      return targetByIndex(
+      return validate(targetByIndex)(
         node,
         data,
         ast,
       );
     case 'GROUP_BY':
-      return groupBy(
+      return validate(groupBy)(
         node,
         data,
         ast,
       );
     case 'ADD_KEY':
-      return addKey(
+      return validate(addKey)(
         node,
         data,
         ast,
       );
     case 'PLUCK':
-      return pluck(
+      return validate(pluck)(
         node,
         data,
         ast,
       );
     case 'MULTIPLY_BY':
-      return multiplyBy(
+      return validate(multiplyBy)(
         node,
         data,
         ast,
       );
     case 'DIVIDE_BY':
-      return divideBy(
+      return validate(divideBy)(
         node,
         data,
         ast,
       );
     case 'ADD':
-      return add(
+      return validate(add)(
         node,
         data,
         ast,
       );
     case 'SUBTRACT':
-      return subtract(
+      return validate(subtract)(
         node,
         data,
         ast,
@@ -546,7 +452,7 @@ const executeFunction = (node, data, ast) => {
         ast,
       );
     case 'GET_MONTH':
-      return getMonth(
+      return validate(getMonth)(
         node,
         data,
         ast,
@@ -570,25 +476,25 @@ const executeFunction = (node, data, ast) => {
         ast,
       );
     case 'ADD_STATIC_KEY':
-      return addStaticKey(
+      return validate(addStaticKey)(
         node,
         data,
         ast,
       );
     case 'CONTAINS':
-      return contains(
+      return validate(contains)(
         node,
         data,
         ast,
       );
     case 'SUM':
-      return sum(
+      return validate(sum)(
         node,
         data,
         ast,
       );
     case 'TO_STRING':
-      return converToString(
+      return validate(converToString)(
         node,
         data,
         ast,

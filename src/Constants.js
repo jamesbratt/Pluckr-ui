@@ -50,7 +50,7 @@ export const OPERATION_FUNCTIONS = [
     name: 'CONSTRUCT_PIE_SERIES',
     label: 'Construct Pie Chart Series',
     help: 'Pick keys that will represent a pie chart segment, the value of which will be calculated as a percentage of the total numeration value (applicable to pie/donut charts only).',
-    accepts: ['NAME', 'VALUE']
+    accepts: ['NAME', 'PIE_VALUE']
   },
   {
     name: 'FOR_EVERY_ITEM',

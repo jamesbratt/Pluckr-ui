@@ -317,6 +317,8 @@ class Operations extends Component {
           case "DATA_KEY":
           case 'XAXIS':
           case 'YAXIS':
+          case 'PIE_VALUE':
+          case 'NAME':
             return (
               <DataKeySelector
                 value={syntaxNode.value}
@@ -329,7 +331,6 @@ class Operations extends Component {
               />
             );
           case "NEW_DATA_KEY":
-          case 'NAME':
           case 'VALUE':
             return (
               <React.Fragment key={syntaxNode.id}>
