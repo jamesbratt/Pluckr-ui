@@ -1,5 +1,6 @@
 import { assoc, pathOr } from 'ramda';
 import executeRule from './rules';
+import { OPERATION_FUNCTIONS } from '../Constants';
 
 const constructSeries = (node, data, ast) => {
   if (Array.isArray(data)) {
@@ -326,94 +327,114 @@ const getMonth = (node, data, ast) => {
   throw new Error("Invalid date format");
 }
 
+// Validates whether expected operation parameters are provided
+const validate = function(fn) {
+  return function() {
+    const node = arguments[0];
+    const data = arguments[1];
+    const ast = arguments[2];
+
+    const params = ast.filter(childNode => childNode.parent === node.id && childNode.value);
+    const operationAcceptedParameters = OPERATION_FUNCTIONS.find(f => f.name === node.value).accepts;
+    if (params.length !== operationAcceptedParameters.length) {
+
+      // Failed validation so don't perform operation
+      // TODO think about perhaps giving feedback
+      return data;
+    };
+
+    return fn.apply(this, arguments);
+  };
+};
+
 const executeFunction = (node, data, ast) => {
   switch (node.value) {
     case 'CONSTRUCT_SERIES':
-      return constructSeries(
+      return validate(constructSeries)(
         node,
         data,
         ast
       );
     case 'CONSTRUCT_PIE_SERIES':
-      return constructPieSeries(
+      return validate(constructPieSeries)(
         node,
         data,
         ast
       );
     case 'SORT_NUMERICAL_XAXIS':
-      return sortNumericalXaxis(
+      return validate(sortNumericalXaxis)(
         node,
         data,
         ast
       );
     case 'FILTER_WHERE':
-      return filterWhere(
+      return validate(filterWhere)(
         node,
         data,
         ast
       );
     case 'FOR_EVERY_ITEM':
-      return forEvery(
+      return validate(forEvery)(
         node,
         data,
         ast,
       );
     case 'TARGET':
-      return target(
+      return validate(target)(
         node,
         data,
         ast,
       );
     case 'UPDATE_KEY':
-      return updateKey(
+      return validate(updateKey)(
         node,
         data,
         ast,
       );
     case 'TARGET_BY_INDEX':
-      return targetByIndex(
+      return validate(targetByIndex)(
         node,
         data,
         ast,
       );
     case 'GROUP_BY':
-      return groupBy(
+      return validate(groupBy)(
         node,
         data,
         ast,
       );
     case 'ADD_KEY':
-      return addKey(
+      return validate(addKey)(
         node,
         data,
         ast,
       );
     case 'PLUCK':
-      return pluck(
+      return validate(pluck)(
         node,
         data,
         ast,
       );
     case 'MULTIPLY_BY':
-      return multiplyBy(
+      return validate(multiplyBy)(
         node,
         data,
         ast,
       );
     case 'DIVIDE_BY':
-      return divideBy(
+      return validate(divideBy)(
         node,
         data,
         ast,
       );
     case 'ADD':
-      return add(
+      return validate(add)(
         node,
         data,
         ast,
       );
     case 'SUBTRACT':
-      return subtract(
+      return validate(subtract)(
         node,
         data,
         ast,
@@ -431,7 +452,7 @@ const executeFunction = (node, data, ast) => {
         ast,
       );
     case 'GET_MONTH':
-      return getMonth(
+      return validate(getMonth)(
         node,
         data,
         ast,
@@ -455,25 +476,25 @@ const executeFunction = (node, data, ast) => {
         ast,
       );
     case 'ADD_STATIC_KEY':
-      return addStaticKey(
+      return validate(addStaticKey)(
         node,
         data,
         ast,
       );
     case 'CONTAINS':
-      return contains(
+      return validate(contains)(
         node,
         data,
         ast,
       );
     case 'SUM':
-      return sum(
+      return validate(sum)(
         node,
         data,
         ast,
       );
     case 'TO_STRING':
-      return converToString(
+      return validate(converToString)(
         node,
         data,
         ast,

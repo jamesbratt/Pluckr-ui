@@ -9,6 +9,7 @@ import { providers } from '../../ProviderConstants';
 import { executeOperations } from '../../data_parsing/parse';
 import { connect } from 'react-redux';
 import { fetchCharts } from '../../actions/chart';
+import { clone } from 'ramda';
 
 const fetchDataSets = async (chartId, username, apiKey) => {
 
@@ -85,7 +86,7 @@ const transformData = async (datasets, username, apiKey) => {
 
     try {
       const data = executeOperations(
-        dataset.rawData,
+        clone(dataset.rawData),
         dataset,
         processedOperations,
       );

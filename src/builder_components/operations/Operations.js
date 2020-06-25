@@ -4,6 +4,7 @@ import OperationConfiguration from './OperationConfiguration';
 import DatasetPreview from '../DatasetPreview';
 import InfoButton from '../InfoButton';
 import ValueSelector from './ValueSelector';
+import DataKeySelector from './DataKeySelector';
 import { GenerateGuid } from '../../utils/Helpers';
 import { createOperation, deleteOperation, updateOperationAst, fetchOperations } from '../../actions';
 import { runDataSet } from '../../actions/dataset';
@@ -97,7 +98,7 @@ class Operations extends Component {
       this.props.dispatch(
         runDataSet(
           parseInt(this.props.dataSetId),
-          () => {},
+          addDataSeries,
           '',
         )
       )
@@ -314,10 +315,22 @@ class Operations extends Component {
               </React.Fragment>
             );
           case "DATA_KEY":
-          case "NEW_DATA_KEY":
           case 'XAXIS':
           case 'YAXIS':
+          case 'PIE_VALUE':
           case 'NAME':
+            return (
+              <DataKeySelector
+                value={syntaxNode.value}
+                onChange={this.onAstNodeValueSelected}
+                id={syntaxNode.id}
+                isEdit = {this.state.operationEdit}
+                dataSetId = {this.props.dataSetId}
+                parent={syntaxNode.parent}
+                activeAst={this.state.operationAst}
+              />
+            );
+          case "NEW_DATA_KEY":
           case 'VALUE':
             return (
               <React.Fragment key={syntaxNode.id}>
