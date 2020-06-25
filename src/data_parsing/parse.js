@@ -26,7 +26,7 @@ const constructPieSeries = (node, data, ast) => {
   if (Array.isArray(data)) {
     const args = ast.filter(childNode => childNode.parent === node.id);
     const name = args.find(arg => arg.name === 'NAME');
-    const value = args.find(arg => arg.name === 'VALUE');
+    const value = args.find(arg => arg.name === 'PIE_VALUE');
 
     const valueTotal = data.reduce((acc, current) => {
       return acc + current[value.value];
