@@ -86,6 +86,7 @@ class Operations extends Component {
 
   updateOperation = () => {
     const { api_key, username } = this.props.user;
+    const chart = this.props.charts.find(chart => chart.id === this.props.chartId);
     this.props.dispatch(
       updateOperationAst(
         api_key,
@@ -99,7 +100,7 @@ class Operations extends Component {
         runDataSet(
           parseInt(this.props.dataSetId),
           addDataSeries,
-          '',
+          chart.series_type,
         )
       )
    });
