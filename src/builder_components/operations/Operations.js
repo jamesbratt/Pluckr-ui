@@ -9,7 +9,7 @@ import { GenerateGuid } from '../../utils/Helpers';
 import { createOperation, deleteOperation, updateOperationAst, fetchOperations } from '../../actions';
 import { runDataSet } from '../../actions/dataset';
 import { connect } from 'react-redux';
-import { OPERATION_FUNCTIONS, OPERATORS } from '../../Constants';
+import { OPERATION_FUNCTIONS, OPERATORS, MATH_SYMBOLS } from '../../Constants';
 import { difference } from 'ramda';
 import { addDataSeries } from '../editor/Graph';
 
@@ -86,6 +86,7 @@ class Operations extends Component {
 
   updateOperation = () => {
     const { api_key, username } = this.props.user;
+    const chart = this.props.charts.find(chart => chart.id === this.props.chartId);
     this.props.dispatch(
       updateOperationAst(
         api_key,
@@ -99,7 +100,7 @@ class Operations extends Component {
         runDataSet(
           parseInt(this.props.dataSetId),
           addDataSeries,
-          '',
+          chart.series_type,
         )
       )
    });
@@ -298,6 +299,15 @@ class Operations extends Component {
               <select key={syntaxNode.id} defaultValue={syntaxNode.value} id={syntaxNode.id} onChange={this.onAstNodeValueSelected} className="form-control mb-2 mr-sm-2">
                 <option value={null} hidden>-- Select an Operator --</option>
                 {OPERATORS.map(operator => {
+                  return <option key={operator.value} value={operator.value}>{operator.label}</option>;
+                })}
+              </select>
+            );
+          case 'SYMBOL':
+            return (
+              <select key={syntaxNode.id} defaultValue={syntaxNode.value} id={syntaxNode.id} onChange={this.onAstNodeValueSelected} className="form-control mb-2 mr-sm-2">
+                <option value={null} hidden>-- Select a Symbol --</option>
+                {MATH_SYMBOLS.map(operator => {
                   return <option key={operator.value} value={operator.value}>{operator.label}</option>;
                 })}
               </select>

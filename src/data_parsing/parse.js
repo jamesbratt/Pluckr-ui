@@ -1,5 +1,6 @@
 import { assoc, pathOr } from 'ramda';
 import executeRule from './rules';
+import { executeBasicCalculation } from './maths';
 import { OPERATION_FUNCTIONS } from '../Constants';
 
 const constructSeries = (node, data, ast) => {
@@ -223,6 +224,19 @@ const filterWhere = (node, data, ast) => {
     return data.filter(item => executeRule(item[leftOperand.value], operator.value, rightOperand.value.value, rightOperand.value.type));
   }
   throw new Error('FILTER_WHERE can only be executed on a list of items');
+}
+
+const calculate = (node, data, ast) => {
+  if ((typeof data === 'function' || (typeof data === 'object' && !!data)) && !Array.isArray(data)) {
+    const args = ast.filter(childNode => childNode.parent === node.id);
+    const operands = args.filter(arg => arg.name === 'DATA_KEY');
+    const symbol = args.find(arg => arg.name === 'SYMBOL');
+    const leftOperand = operands[0];
+    const rightOperand = operands[1];
+
+    return executeBasicCalculation(parseInt(data[leftOperand.value]), symbol.value, parseInt(data[rightOperand.value]));
+  }
+  throw new Error('CALCULATE can only be executed on a data structure with keys');
 }
 
 const multiplyBy = (node, data, ast) => {
@@ -495,6 +509,12 @@ const executeFunction = (node, data, ast) => {
       );
     case 'TO_STRING':
       return validate(converToString)(
+        node,
+        data,
+        ast,
+      );
+    case 'CALCULATE':
+      return validate(calculate)(
         node,
         data,
         ast,
