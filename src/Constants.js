@@ -9,6 +9,13 @@ export const OPERATOR_VALUES = {
   LESS_THAN_OR_EQUAL_TO: 'LESS_THAN_OR_EQUAL_TO',
 };
 
+export const MATH_SYMBOLS_VALUES = {
+  ADDITION: 'PLUS',
+  SUBTRACTION: 'MINUS',
+  MULTIPICATION: 'MULTIPLY BY',
+  DIVISION: 'DIVIDE BY',
+};
+
 export const VARIABLES = [
   { label: 'Current Month Beginning', value: 'CURRENT_MONTH_BEGINNING' },
   { label: 'Last 30 days', value: 'LAST_30_DAYS' },
@@ -19,11 +26,18 @@ export const VARIABLES = [
 
 export const OPERATORS = [
   { label: 'is equal to', value: OPERATOR_VALUES.EQUAL_TO },
-  { label: 'is not equal to', value: OPERATOR_VALUES.NOT_EQUAL_TO  },
-  { label: 'is greater than', value: OPERATOR_VALUES.GREATER_THAN  },
-  { label: 'is less than', value: OPERATOR_VALUES.LESS_THAN  },
-  { label: 'is greater than or equal to', value: OPERATOR_VALUES.GREATER_THAN_OR_EQUAL_TO  },
-  { label: 'is less than or equal to', value: OPERATOR_VALUES.LESS_THAN_OR_EQUAL_TO  },
+  { label: 'is not equal to', value: OPERATOR_VALUES.NOT_EQUAL_TO },
+  { label: 'is greater than', value: OPERATOR_VALUES.GREATER_THAN },
+  { label: 'is less than', value: OPERATOR_VALUES.LESS_THAN },
+  { label: 'is greater than or equal to', value: OPERATOR_VALUES.GREATER_THAN_OR_EQUAL_TO },
+  { label: 'is less than or equal to', value: OPERATOR_VALUES.LESS_THAN_OR_EQUAL_TO },
+];
+
+export const MATH_SYMBOLS = [
+  { label: 'plus', value: MATH_SYMBOLS_VALUES.ADDITION },
+  { label: 'minus', value: MATH_SYMBOLS_VALUES.SUBTRACTION  },
+  { label: 'multiply by', value: MATH_SYMBOLS_VALUES.MULTIPICATION  },
+  { label: 'divide by', value: MATH_SYMBOLS_VALUES.DIVISION },
 ];
 
 export const CHART_TYPES = [
@@ -69,6 +83,12 @@ export const OPERATION_FUNCTIONS = [
     label: 'Convert To String',
     help: 'Convert a non-string value such as a number to a string',
     accepts: ['DATA_KEY']
+  },
+  {
+    name: 'CALCULATE',
+    label: 'Calculate',
+    help: 'Perform basic math calculations',
+    accepts: ['DATA_KEY', 'SYMBOL', 'DATA_KEY']
   },
   {
     name: 'TARGET',
