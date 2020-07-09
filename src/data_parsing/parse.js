@@ -12,11 +12,11 @@ const constructSeries = (node, data, ast) => {
     const xaxisxaxisValue = xaxis.value;
     const yaxisxaxisValue = yaxis.value;
 
-    /*const dataSortedByXaxis = data.sort((a,b) => {
+    const dataSortedByXaxis = data.sort((a,b) => {
       return a[xaxisxaxisValue] - b[xaxisxaxisValue];
-    });*/
+    });
 
-    return data.map(dataPoint => {
+    return dataSortedByXaxis.map(dataPoint => {
       return [dataPoint[xaxisxaxisValue], dataPoint[yaxisxaxisValue]];
     })
   }
