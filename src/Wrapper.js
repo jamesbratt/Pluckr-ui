@@ -15,7 +15,8 @@ import DataSourceList from './builder_components/data_sources/DataSourceList';
 import DataSourceDetail from './builder_components/data_sources/DataSourceDetail';
 import { Link, Route, Redirect } from "react-router-dom";
 import { connect } from 'react-redux';
-import { setDataProviders, setLoader } from './actions';
+import { setLoader } from './actions';
+import { setDataProviders } from './actions/provider';
 import { getToken } from './utils/Helpers';
 
 const DataSourceListWrapped = ChartConfigHoc(DataSourceList);

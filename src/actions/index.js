@@ -350,11 +350,3 @@ export const updateOperationAst = (
       .catch(error => dispatch(addNotification({ message: error.message, type: 'error' })));
   }
 }
-
-// DATA PROVIDERS
-export const setDataProviders = (payload) => {
-  return {
-    type: 'SET_PROVIDERS',
-    payload,
-  }
-};

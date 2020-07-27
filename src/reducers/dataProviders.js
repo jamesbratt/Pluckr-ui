@@ -10,6 +10,10 @@ const dataProviders = (state = providers, action) => {
       })
       return providers;
 
+    case 'CREATE_PROVIDER':
+    case 'EDIT_PROVIDER':
+    case 'DELETE_PROVIDER':
+
     default:
       return state;
   }
