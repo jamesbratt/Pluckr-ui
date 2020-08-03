@@ -1,7 +1,7 @@
 import axios from "axios";
 import { addNotification } from './notification';
 
-export const setDataProviders = (payload) => {
+export const fetchProviders = () => {
   return (dispatch, getState) => {
     const user = getState().user[0];
     const { username, api_key } = user;
@@ -15,27 +15,46 @@ export const setDataProviders = (payload) => {
       url: `${process.env.REACT_APP_PLUCKR_API_URI}/api/v1/provider/`,
     };
     
-    return axios(options)
-      .then((response) => {
-        dispatch({
-          type: 'SET_PROVIDERS',
-          payload,
-        });
-      })
+    axios(options)
+      .then((response) => dispatch(setProviders(response.data.objects)))
       .catch(error => {
         dispatch(addNotification({ message: error, type: 'error' }));
       });
   };
 };
 
-export const createDataProvider = (payload) => {
-  return (dispatch) => {
-    return {
-      type: 'CREATE_PROVIDER',
-      payload,
-    }
+export const createDataProvider = (name, swagger_url) => {
+
+  const payload = {
+    name,
+    swagger_url,
   };
-};
+
+  return (dispatch, getState) => {
+    const user = getState().user[0];
+    const { username, api_key } = user;
+
+    return axios.post(`${process.env.REACT_APP_PLUCKR_API_URI}/api/v1/provider/`,
+    JSON.stringify(payload),
+    {
+      headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `ApiKey ${username}:${api_key}`
+      },
+    }).then((response) => (dispatch({
+        type: 'CREATE_PROVIDER',
+        payload: response.data,
+      })))
+      .catch(error => {
+        dispatch(addNotification({ message: error, type: 'error' }))
+      });
+  }
+}
+
+export const setProviders = (payload) => ({
+  type: 'SETTING_PROVIDERS',
+  payload,
+});
 
 export const editDataProvider = (payload) => {
   return (dispatch) => {
