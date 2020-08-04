@@ -7,7 +7,19 @@ const providers = (state = [], action) => {
 
     case 'CREATE_PROVIDER':
       return append({ provider: action.payload, isEditing: true, swaggerDefinition: action.payload.swagger_definition }, state);
-      
+
+    case 'UPDATE_PROVIDER':
+      return state.map(p => {
+        if (p.provider.id === action.payload.id) {
+          return {
+            ...p,
+            provider: action.payload.data,
+          }
+        }
+
+        return p;
+      });
+
     case 'EDIT_PROVIDER':
       return state.map(p => {
         if (p.provider.id === action.payload) {

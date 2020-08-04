@@ -76,6 +76,29 @@ export const createDataProvider = (name, swagger_url) => {
   }
 }
 
+export const updateDataProvider = (id, payload) => {
+
+  return (dispatch, getState) => {
+    const user = getState().user[0];
+    const { username, api_key } = user;
+
+    return axios.put(`${process.env.REACT_APP_PLUCKR_API_URI}/api/v1/provider/${id}/`,
+    JSON.stringify(payload),
+    {
+      headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `ApiKey ${username}:${api_key}`
+      },
+    }).then((response) => (dispatch({
+        type: 'UPDATE_PROVIDER',
+        payload: { data: response.data, id },
+      })))
+      .catch(error => {
+        dispatch(addNotification({ message: error, type: 'error' }))
+      });
+  }
+}
+
 export const deleteProvider = (id) => {
 
   return (dispatch, getState) => {
