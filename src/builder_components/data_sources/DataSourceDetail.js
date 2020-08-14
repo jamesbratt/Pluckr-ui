@@ -13,6 +13,7 @@ import { DATA_TYPES } from '../../Constants';
 import { connect } from 'react-redux';
 import { createDataSource, fetchDataSources, setLoader } from '../../actions';
 import { addNotification } from '../../actions/notification';
+import { fetchProvider } from '../../actions/provider';
 
 const fetchDataSource = async (apiKey, username, datasourceId, dataProviders) => {
     const options = {
@@ -55,6 +56,7 @@ const mapStateToProps = (state) => {
   return {
     user: state.user[0],
     dataProviders: state.dataProviders,
+    providers: state.providers,
     sources: state.sources.data,
     loader: state.loader,
   };
@@ -66,6 +68,7 @@ const mapDispatchToProps = {
   fetchDataSources,
   addNotification,
   fetchDataSource,
+  fetchProvider,
 }
 
 class DataSourceDetail extends Component {
@@ -178,8 +181,9 @@ class DataSourceDetail extends Component {
 
   onProviderChange = (event) => {
     if (event.target.value) {
-      const selectedProvider = this.props.dataProviders.find(
-        dataProvider => dataProvider.provider === event.target.value
+      this.props.fetchProvider(event.target.value);
+      const selectedProvider = this.props.providers.find(
+        provider => provider.provider.id === parseInt(event.target.value)
       );
 
       this.setState({
@@ -328,25 +332,26 @@ class DataSourceDetail extends Component {
                 </div>
                 <div className="form-group">
                   <label>Data Provider</label>
-                  <select value={pathOr('', ['provider'], this.state.selectedProvider)} onChange={this.onProviderChange} className="form-control" id="dataProvider">
+                  <select value={pathOr('', ['provider', 'id'], this.state.selectedProvider)} onChange={this.onProviderChange} className="form-control" id="dataProvider">
                     <option value="">-- Select a data provider --</option>;
-                    {this.props.dataProviders.map((dataProvider) => {
-                      if (dataProvider.isActive) {
-                        return <option key={dataProvider.provider} value={dataProvider.provider}>{dataProvider.provider}</option>
+                    {this.props.providers.map((provider) => {
+                      if (provider.provider.isConnected) {
+                        return <option key={provider.provider.id} value={provider.provider.id}>{provider.provider.name}</option>
                       }
                     })}
                   </select>
                   <small className="form-text text-muted">
-                    {this.state.selectedProvider ? <a rel="noopener noreferrer" target="_blank" href={this.state.selectedProvider.docs}>Check out the <span style={{ textTransform: 'capitalize' }}>{this.state.selectedProvider.provider}</span> documentation</a> : ''}
+                    {/*this.state.selectedProvider ? <a rel="noopener noreferrer" target="_blank" href={this.state.selectedProvider.docs}>Check out the <span style={{ textTransform: 'capitalize' }}>{this.state.selectedProvider.provider}</span> documentation</a> : ''*/}
                   </small>
                 </div>
-                {this.state.selectedProvider ?
+                {this.state.selectedProvider && this.state.selectedProvider.provider.swagger_paths ?
                   <div className="form-group">
                     <label>Resource</label>
                     <select value={this.state.selectedResource} onChange={this.onResourceChange} className="form-control" id="dataSourceResource">
                       <option value="">-- Select a resource --</option>;
-                      {Object.keys(this.state.selectedProvider.resources).map(resourceKey => {
-                        return <option key={this.state.selectedProvider.resources[resourceKey].name} value={this.state.selectedProvider.resources[resourceKey].name}>{this.state.selectedProvider.resources[resourceKey].label}</option>
+                      {Object.keys(this.state.selectedProvider.provider.swagger_paths).filter(r => this.state.selectedProvider.provider.swagger_paths[r].get).map(resourceKey => {
+                        const resourceDetails = this.state.selectedProvider.provider.swagger_paths[resourceKey].get;
+                        return <option key={resourceKey} value={resourceKey}>{resourceDetails.summary}</option>
                       })}
                     </select>
                   </div>
