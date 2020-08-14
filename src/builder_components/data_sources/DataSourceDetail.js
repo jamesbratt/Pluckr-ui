@@ -56,7 +56,7 @@ const mapStateToProps = (state) => {
   return {
     user: state.user[0],
     dataProviders: state.dataProviders,
-    providers: state.providers,
+    providers: state.providers.map(p => p.provider),
     sources: state.sources.data,
     loader: state.loader,
   };
@@ -183,7 +183,7 @@ class DataSourceDetail extends Component {
     if (event.target.value) {
       this.props.fetchProvider(event.target.value);
       const selectedProvider = this.props.providers.find(
-        provider => provider.provider.id === parseInt(event.target.value)
+        provider => provider.id === parseInt(event.target.value)
       );
 
       this.setState({
@@ -206,10 +206,25 @@ class DataSourceDetail extends Component {
     if (this.state.selectedProvider && event.target.value) {
       let availableFields = [];
       const resourceName = event.target.value;
-      const resourceParams = this.state.selectedProvider.resources[resourceName].parameters;
+      const resourceParams = this.state.selectedProvider.swagger_paths[resourceName].get.parameters;
 
       if (resourceParams) {
-        availableFields = resourceParams;
+        availableFields = resourceParams.reduce((acc, curr) => {
+
+          // This is to handle path parameters that
+          // are defined as part of the definitions global parameters.
+          // Things such as paging and limits etc.
+          const key = Object.keys(curr)[0];
+          if (key === '$ref') {
+            const globalParamPath = curr[key].split("/");
+            const globalParamKey = globalParamPath[globalParamPath.length - 1];
+            const globalParam = this.state.selectedProvider.swagger_parameters[globalParamKey];
+            acc.push(globalParam);
+          } else {
+            acc.push(curr);
+          }
+          return acc;
+        }, availableFields);
       }
 
       this.setState({
@@ -277,7 +292,7 @@ class DataSourceDetail extends Component {
               <React.Fragment key={parameterField.name}>
                 <div class="form-group">
                   <label>{parameterField.name}</label>
-                  <input defaultValue={val} name={parameterField.name} onKeyUp={this.onParameterChange} type="number" className="form-control" placeholder={parameterField.name} />
+                  <input defaultValue={val} name={parameterField.name} onKeyUp={this.onParameterChange} type="number" className="form-control" placeholder={parameterField.description} />
                 </div>
               </React.Fragment>
             );
@@ -306,7 +321,7 @@ class DataSourceDetail extends Component {
               <React.Fragment key={parameterField.name}>
                 <div class="form-group">
                   <label>{parameterField.name}</label>
-                  <input defaultValue={val} name={parameterField.name} onKeyUp={this.onParameterChange} type="text" className="form-control" placeholder={parameterField.name} />
+                  <input defaultValue={val} name={parameterField.name} onKeyUp={this.onParameterChange} type="text" className="form-control" placeholder={parameterField.description} />
                 </div>
               </React.Fragment>
             );
@@ -332,11 +347,11 @@ class DataSourceDetail extends Component {
                 </div>
                 <div className="form-group">
                   <label>Data Provider</label>
-                  <select value={pathOr('', ['provider', 'id'], this.state.selectedProvider)} onChange={this.onProviderChange} className="form-control" id="dataProvider">
+                  <select value={pathOr('', ['id'], this.state.selectedProvider)} onChange={this.onProviderChange} className="form-control" id="dataProvider">
                     <option value="">-- Select a data provider --</option>;
                     {this.props.providers.map((provider) => {
-                      if (provider.provider.isConnected) {
-                        return <option key={provider.provider.id} value={provider.provider.id}>{provider.provider.name}</option>
+                      if (provider.isConnected) {
+                        return <option key={provider.id} value={provider.id}>{provider.name}</option>
                       }
                     })}
                   </select>
@@ -344,13 +359,13 @@ class DataSourceDetail extends Component {
                     {/*this.state.selectedProvider ? <a rel="noopener noreferrer" target="_blank" href={this.state.selectedProvider.docs}>Check out the <span style={{ textTransform: 'capitalize' }}>{this.state.selectedProvider.provider}</span> documentation</a> : ''*/}
                   </small>
                 </div>
-                {this.state.selectedProvider && this.state.selectedProvider.provider.swagger_paths ?
+                {this.state.selectedProvider && this.state.selectedProvider.swagger_paths ?
                   <div className="form-group">
                     <label>Resource</label>
                     <select value={this.state.selectedResource} onChange={this.onResourceChange} className="form-control" id="dataSourceResource">
                       <option value="">-- Select a resource --</option>;
-                      {Object.keys(this.state.selectedProvider.provider.swagger_paths).filter(r => this.state.selectedProvider.provider.swagger_paths[r].get).map(resourceKey => {
-                        const resourceDetails = this.state.selectedProvider.provider.swagger_paths[resourceKey].get;
+                      {Object.keys(this.state.selectedProvider.swagger_paths).filter(r => this.state.selectedProvider.swagger_paths[r].get).map(resourceKey => {
+                        const resourceDetails = this.state.selectedProvider.swagger_paths[resourceKey].get;
                         return <option key={resourceKey} value={resourceKey}>{resourceDetails.summary}</option>
                       })}
                     </select>
