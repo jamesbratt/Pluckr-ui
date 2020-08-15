@@ -6,6 +6,7 @@ import JSONTree from 'react-json-tree';
 import DateSelector from './DateSelector';
 import Loader from '../../Loader';
 import axios from "axios";
+import GenerateRequest from '../../utils/GenerateRequest';
 
 import { Link } from "react-router-dom";
 import { pathOr } from 'ramda';
@@ -132,13 +133,21 @@ class DataSourceDetail extends Component {
     const { username, api_key } = this.props.user;
 
     const selectedResource = this.state.selectedResource;
-    const selectedProvider = pathOr(null, ['provider'], this.state.selectedProvider);
+    const selectedProvider = this.state.selectedProvider || null;
     const params = this.state.parameterValues;
     const sourceName = this.state.sourceName;
+    const sourceId = this.props.match.params.data_source_id || this.state.newlySavedDataSoucerId;
 
     event.preventDefault();
     if(selectedResource && sourceName && selectedProvider) {
-      try {
+      GenerateRequest(
+        selectedProvider,
+        selectedResource,
+        params,
+        sourceId ? parseInt(sourceId) : null,
+        username, api_key,
+      );
+      /*try {
         this.props.setLoader(true);
         this.state.selectedProvider.request(
           selectedResource,
@@ -172,7 +181,7 @@ class DataSourceDetail extends Component {
       } catch(error) {
         this.props.setLoader(false);
         this.props.addNotification({ message: error.message, type: 'error' });
-      }
+      }*/
 
     } else {
       this.props.addNotification({ message: 'Fill out all required data source fields', type: 'error' });
