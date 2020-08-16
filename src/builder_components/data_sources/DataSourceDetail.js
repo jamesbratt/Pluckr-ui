@@ -15,6 +15,7 @@ import { connect } from 'react-redux';
 import { createDataSource, fetchDataSources, setLoader } from '../../actions';
 import { addNotification } from '../../actions/notification';
 import { fetchProvider } from '../../actions/provider';
+import { extractGlobalParameters } from '../../utils/Helpers';
 
 const fetchDataSource = async (apiKey, username, datasourceId, dataProviders) => {
     const options = {
@@ -29,18 +30,21 @@ const fetchDataSource = async (apiKey, username, datasourceId, dataProviders) =>
     try {
       const response = await axios(options)
       const dataSource = response.data;
-      const provider = dataProviders.find(dataProvider => dataProvider.provider === response.data.provider);
+      const provider = dataProviders.find(dataProvider => dataProvider.id === response.data.data_provider_id);
+      const parametersModel = extractGlobalParameters(provider, dataSource.resource);
 
       try {
-        const rawData = await provider.request(
+
+        const rawData = await GenerateRequest(
+          provider,
           dataSource.resource,
           JSON.parse(dataSource.params),
-          username,
-          apiKey,
-          dataSource.id
-        );
+          parametersModel,
+          dataSource.id ? parseInt(dataSource.id) : null,
+          username, apiKey,
+        )
 
-        dataSource.rawData = rawData.data;
+        dataSource.rawData = rawData;
 
         return dataSource;
 
@@ -97,19 +101,21 @@ class DataSourceDetail extends Component {
         api_key,
         username,
         this.props.match.params.data_source_id,
-        this.props.dataProviders,
+        this.props.providers,
       );
 
-      const selectedProvider = this.props.dataProviders.find(
-        dataProvider => dataProvider.provider === source.provider,
+      const selectedProvider = this.props.providers.find(
+        dataProvider => dataProvider.id === source.data_provider_id,
       );
+
+      const parameterFields = extractGlobalParameters(selectedProvider, source.resource);
 
       this.setState({
         sourceName: source.name,
         data: source.rawData,
         selectedProvider,
         selectedResource: source.resource,
-        parameterFields: selectedProvider.resources[source.resource].parameters,
+        parameterFields,
         parameterValues: typeof source.params === 'string' ? JSON.parse(source.params) : source.params,
       });
 
@@ -140,23 +146,19 @@ class DataSourceDetail extends Component {
 
     event.preventDefault();
     if(selectedResource && sourceName && selectedProvider) {
-      GenerateRequest(
-        selectedProvider,
-        selectedResource,
-        params,
-        sourceId ? parseInt(sourceId) : null,
-        username, api_key,
-      );
-      /*try {
+      try {
         this.props.setLoader(true);
-        this.state.selectedProvider.request(
+        GenerateRequest(
+          selectedProvider,
           selectedResource,
-          params, username, api_key,
-          parseInt(this.props.match.params.data_source_id) || parseInt(this.state.newlySavedDataSoucerId)
+          params,
+          this.state.parameterFields,
+          sourceId ? parseInt(sourceId) : null,
+          username, api_key,
         )
           .then(response => {
             this.setState({
-              data: response.data,
+              data: response,
             }, () => {
               this.props.createDataSource(
                 api_key,
@@ -181,7 +183,7 @@ class DataSourceDetail extends Component {
       } catch(error) {
         this.props.setLoader(false);
         this.props.addNotification({ message: error.message, type: 'error' });
-      }*/
+      }
 
     } else {
       this.props.addNotification({ message: 'Fill out all required data source fields', type: 'error' });
@@ -218,22 +220,7 @@ class DataSourceDetail extends Component {
       const resourceParams = this.state.selectedProvider.swagger_paths[resourceName].get.parameters;
 
       if (resourceParams) {
-        availableFields = resourceParams.reduce((acc, curr) => {
-
-          // This is to handle path parameters that
-          // are defined as part of the definitions global parameters.
-          // Things such as paging and limits etc.
-          const key = Object.keys(curr)[0];
-          if (key === '$ref') {
-            const globalParamPath = curr[key].split("/");
-            const globalParamKey = globalParamPath[globalParamPath.length - 1];
-            const globalParam = this.state.selectedProvider.swagger_parameters[globalParamKey];
-            acc.push(globalParam);
-          } else {
-            acc.push(curr);
-          }
-          return acc;
-        }, availableFields);
+        availableFields = extractGlobalParameters(this.state.selectedProvider, resourceName);
       }
 
       this.setState({

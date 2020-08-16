@@ -1,21 +1,25 @@
 import React from 'react';
+import GenerateRequest from '../../utils/GenerateRequest';
+
 import { createDataSet } from '../../actions/dataset';
 import { addNotification } from '../../actions/notification';
 import { connect } from 'react-redux';
-import { providers } from '../../ProviderConstants';
+import { extractGlobalParameters } from '../../utils/Helpers';
 
 const dataSetNameRef = React.createRef();
 const dataSetSourceRef = React.createRef();
 
-const getRawData = async (dataSources, username, apiKey) => {
+const getRawData = async (providers, dataSources, username, apiKey) => {
   const rawData = dataSources.map((source) => {
-    const provider = providers.find(provider => provider.provider === source.provider);
-    return provider.request(
+    const provider = providers.find(provider => provider.id === source.data_provider_id);
+    const parametersModel = extractGlobalParameters(provider, source.resource);
+    return GenerateRequest(
+      provider,
       source.resource,
       source.params,
-      username,
-      apiKey,
-      source.id
+      parametersModel,
+      source.id ? parseInt(source.id) : null,
+      username, apiKey,
     ).catch((error) => {});
   });
 
@@ -23,7 +27,7 @@ const getRawData = async (dataSources, username, apiKey) => {
     const rawData = responses.length > 1 ? responses.reduce((acc, curr) => {
       acc.push(curr.data);
       return acc;
-    }, []) : responses[0].data;
+    }, []) : responses[0];
 
     return rawData;
   });
@@ -33,6 +37,7 @@ const mapStateToProps = (state) => {
   return {
     sources: state.sources.data,
     user: state.user[0],
+    providers: state.providers.map(p => p.provider),
   };
 };
 
@@ -78,7 +83,7 @@ const AddDataSet = (props) => {
       const user = props.user.username;
       const apiKey = props.user.api_key;
 
-      const rawData = await getRawData(sources, user, apiKey);
+      const rawData = await getRawData(props.providers, sources, user, apiKey);
 
       props.add(
         dataSetNameRef.current.value,

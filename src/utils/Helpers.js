@@ -60,8 +60,8 @@ export const calculateVariableDate = (param) => {
   }
 }
 
-export const generateQueryString = (params, resource, paramConfigs) => {
-  const resourceParameters = paramConfigs;
+export const generateQueryString = (params, uriParametersModel) => {
+  const resourceParameters = uriParametersModel;
   return params.map(param => {
     let value = param.value;
     const transformation = resourceParameters.find(
@@ -94,7 +94,28 @@ export const injectParametersIntoEndpoint = (resourcEndpoint, params) => {
   return { endPoint, parameters };
 }
 
-export const proxyRequest = (url, key, integration_type, username, apiKey, source_id) => {
+export const extractGlobalParameters = (provider, resource) => {
+  const resourceParams = provider.swagger_paths[resource].get.parameters;
+
+  return resourceParams.reduce((acc, curr) => {
+
+    // This is to handle path parameters that
+    // are defined as part of the definitions global parameters.
+    // Things such as paging and limits etc.
+    const key = Object.keys(curr)[0];
+    if (key === '$ref') {
+      const globalParamPath = curr[key].split("/");
+      const globalParamKey = globalParamPath[globalParamPath.length - 1];
+      const globalParam = provider.swagger_parameters[globalParamKey];
+      acc.push(globalParam);
+    } else {
+      acc.push(curr);
+    }
+    return acc;
+  }, []);
+}
+
+export const proxyRequest = (url, key, integration_type, username, apiKey, source_id, swagger_definition) => {
 
   let payload = {};
 
@@ -103,6 +124,7 @@ export const proxyRequest = (url, key, integration_type, username, apiKey, sourc
       url,
       key,
       integration_type,
+      swagger_definition,
     }
   }
 
@@ -111,6 +133,7 @@ export const proxyRequest = (url, key, integration_type, username, apiKey, sourc
       url,
       source_id,
       integration_type,
+      swagger_definition,
     }
   }
 
@@ -118,6 +141,7 @@ export const proxyRequest = (url, key, integration_type, username, apiKey, sourc
     payload = {
       url,
       integration_type,
+      swagger_definition,
     }
   }
 

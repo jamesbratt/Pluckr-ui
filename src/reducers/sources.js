@@ -29,7 +29,7 @@ const sources = (state = { data: [] }, action) => {
         resource: action.resource,
         params: action.params,
         rawData: action.data,
-        properties: action.properties,
+        data_provider_id: action.data_provider_id,
       };
       return { data: prepend(newSource, state.data) };
     case 'UPDATE_SOURCE':
@@ -41,7 +41,7 @@ const sources = (state = { data: [] }, action) => {
         resource: action.resource,
         params: action.params,
         rawData: action.data,
-        properties: action.properties,
+        data_provider_id: action.data_provider_id,
       };
 
       const updatedSources = state.data.map((source) => {
