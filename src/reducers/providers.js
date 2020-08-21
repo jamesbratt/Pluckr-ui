@@ -1,51 +1,57 @@
 import { append } from 'ramda';
 
-const providers = (state = [], action) => {
+const providers = (state = { providers: [], isLoading: true }, action) => {
   switch (action.type) {
     case 'SETTING_PROVIDERS':
-      return action.payload.map((provider) => ({ provider, isEditing: false }));
+      return {
+        isLoading: false,
+        providers: action.payload.map((provider) => ({ ...provider, isEditing: false }))
+      }
 
-    case 'CREATE_PROVIDER':
-      return append({ provider: action.payload, isEditing: true, swaggerDefinition: action.payload.swagger_definition }, state);
+    case 'CREATE_PROVIDER': {
+      const newProvider = action.payload;
+      return {
+        isLoading: false,
+        providers: append({ ...newProvider, isEditing: true }, state.providers)
+      }
+    }
 
     case 'UPDATE_PROVIDER':
-      return state.map(p => {
-        if (p.provider.id === action.payload.id) {
-          return {
-            ...p,
-            provider: action.payload.data,
+      return {
+        isLoading: false,
+        providers: state.providers.map(p => {
+          if (p.id === action.payload.id) {
+            return action.payload.data
           }
-        }
-
-        return p;
-      });
+          return p;
+        })
+      }
 
     case 'EDIT_PROVIDER':
-      return state.map(p => {
-        if (p.provider.id === action.payload) {
-          return {
-            provider: p.provider,
-            isEditing: true,
+      return {
+        ...state,
+        providers: state.providers.map(p => {
+          if (p.id === action.payload) {
+            return {
+              ...p,
+              isEditing: true,
+            }
           }
-        }
+          return p;
+        })
+      }
 
-        return p;
-      });
+    case 'SET_PROVIDER_LOADER':
+      return {
+        ...state,
+        isLoading: action.payload,
+      };
 
-    case 'SET_SWAGGER_DEF':
-      return state.map(p => {
-        if (p.provider.id === action.payload.id) {
-          return {
-            ...p,
-            swaggerDefinition: action.payload.swaggerDef,
-          }
-        }
-
-        return p;
-      });
-      
     case 'DELETE_PROVIDER':
-      return state.filter(p => p.provider.id !== action.payload);
+      return {
+        ...state,
+        providers: state.providers.filter(p => p.id !== action.payload),
+      };
 
     default:
       return state;

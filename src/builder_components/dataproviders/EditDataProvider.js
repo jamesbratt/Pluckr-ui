@@ -10,23 +10,23 @@ const clientIdRef = React.createRef();
 const clientSecretRef = React.createRef();
 const apiKeyRef = React.createRef();
 
-const EditDataProvider = ({ provider, securityDefinition, fetchProvider, updateDataProvider }) => {
+const EditDataProvider = ({ provider, fetchProvider, updateDataProvider }) => {
   const [scopes, updateScopes] = useState([]);
-
+  const securityDefinition = provider.swagger_definition;
   const initialScopes = provider.scopes ? JSON.parse(provider.scopes.replace(/'/g, '"')) : [];
 
   useEffect(() => {
     updateScopes(initialScopes)
-    fetchProvider(provider.id)
+    // fetchProvider(provider.id)
   }, []);
 
   const updateProvider = () => {
     const payload = {
       ...provider,
       name: providerNameRef.current ? providerNameRef.current.value : null,
-      swagger_url: swaggerDefRef.current ? swaggerDefRef.current.value : null, 
-      client_id: clientIdRef.current ? clientIdRef.current.value : null, 
-      client_secret: clientSecretRef.current ? clientSecretRef.current.value : null, 
+      swagger_url: swaggerDefRef.current ? swaggerDefRef.current.value : null,
+      client_id: clientIdRef.current ? clientIdRef.current.value : null,
+      client_secret: clientSecretRef.current ? clientSecretRef.current.value : null,
       api_key: apiKeyRef.current ? apiKeyRef.current.value : null,
       scopes: scopes || scopes.length > 0 ? scopes : null
     }

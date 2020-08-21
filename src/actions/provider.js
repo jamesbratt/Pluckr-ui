@@ -3,6 +3,7 @@ import { addNotification } from './notification';
 
 export const fetchProviders = () => {
   return (dispatch, getState) => {
+    dispatch(setProviderLoader(true));
     const user = getState().user[0];
     const { username, api_key } = user;
 
@@ -14,7 +15,7 @@ export const fetchProviders = () => {
       },
       url: `${process.env.REACT_APP_PLUCKR_API_URI}/api/v1/provider/`,
     };
-    
+
     axios(options)
       .then((response) => dispatch(setProviders(response.data.objects)))
       .catch(error => {
@@ -25,6 +26,7 @@ export const fetchProviders = () => {
 
 export const fetchProvider = (id) => {
   return (dispatch, getState) => {
+    dispatch(setProviderLoader(true));
     const user = getState().user[0];
     const { username, api_key } = user;
 
@@ -36,7 +38,7 @@ export const fetchProvider = (id) => {
       },
       url: `${process.env.REACT_APP_PLUCKR_API_URI}/api/v1/provider/${id}`,
     };
-    
+
     axios(options)
       .then((response) => dispatch({
         type: 'SET_SWAGGER_DEF',
@@ -56,6 +58,7 @@ export const createDataProvider = (name, swagger_url) => {
   };
 
   return (dispatch, getState) => {
+    dispatch(setProviderLoader(true));
     const user = getState().user[0];
     const { username, api_key } = user;
 
@@ -79,6 +82,7 @@ export const createDataProvider = (name, swagger_url) => {
 export const updateDataProvider = (id, payload) => {
 
   return (dispatch, getState) => {
+    dispatch(setProviderLoader(true));
     const user = getState().user[0];
     const { username, api_key } = user;
 
@@ -133,5 +137,10 @@ export const editDataProvider = (payload) => ({
 
 export const deleteDataProvider = (payload) => ({
   type: 'DELETE_PROVIDER',
+  payload,
+});
+
+export const setProviderLoader = (payload) => ({
+  type: 'SET_PROVIDER_LOADER',
   payload,
 });

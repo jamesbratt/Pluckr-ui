@@ -61,7 +61,7 @@ const mapStateToProps = (state) => {
   return {
     user: state.user[0],
     dataProviders: state.dataProviders,
-    providers: state.providers.map(p => p.provider),
+    providers: state.providers.providers,
     sources: state.sources.data,
     loader: state.loader,
   };
@@ -192,7 +192,7 @@ class DataSourceDetail extends Component {
 
   onProviderChange = (event) => {
     if (event.target.value) {
-      this.props.fetchProvider(event.target.value);
+      // this.props.fetchProvider(event.target.value);
       const selectedProvider = this.props.providers.find(
         provider => provider.id === parseInt(event.target.value)
       );
