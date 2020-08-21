@@ -43,7 +43,7 @@ const fetchDataSets = async (providers, chartId, username, apiKey) => {
           username, apiKey,
         ).catch((error) => {});
       });
-    
+
 
       return Promise.all(rawData).then(responses => {
         const rawData = responses.length > 1 ? responses.reduce((acc, curr) => {
@@ -117,7 +117,7 @@ const mapStateToProps = (state) => {
     sources: state.sources.data,
     datasets: state.datasets,
     loader: state.loader,
-    providers: state.providers.map(p => p.provider),
+    providers: state.providers.providers,
   };
 };
 

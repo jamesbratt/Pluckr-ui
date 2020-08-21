@@ -74,7 +74,7 @@ export const createDataProvider = (name, swagger_url) => {
         payload: response.data,
       })))
       .catch(error => {
-        dispatch(addNotification({ message: error, type: 'error' }))
+        dispatch(addNotification({ message: error.response.data, type: 'error' }))
       });
   }
 }
@@ -98,7 +98,7 @@ export const updateDataProvider = (id, payload) => {
         payload: { data: response.data, id },
       })))
       .catch(error => {
-        dispatch(addNotification({ message: error, type: 'error' }))
+        dispatch(addNotification({ message: error.response.data, type: 'error' }))
       });
   }
 }

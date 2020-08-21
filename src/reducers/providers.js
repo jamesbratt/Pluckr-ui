@@ -53,6 +53,12 @@ const providers = (state = { providers: [], isLoading: true }, action) => {
         providers: state.providers.filter(p => p.id !== action.payload),
       };
 
+    case 'ADD_NOTIFICATION':
+      return {
+        ...state,
+        isLoading: false,
+      };
+
     default:
       return state;
   }
