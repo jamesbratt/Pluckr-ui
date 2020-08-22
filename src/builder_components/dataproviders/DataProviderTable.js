@@ -67,13 +67,13 @@ const DataProviderTable = ({ dataProviders, providers, fetchProviders, setProvid
             <tbody style={{ lineHeight: '25px' }}>
               {providers.map((p) => {
                 return (
-                  <tr key={p.id}>
+                  <tr className={p.isConnected ? "table-success" : ""}  key={p.id}>
                     <td className="capitalize">{p.name}</td>
                     <td width="40">
-                      <button onClick={() => editDataProvider(p.id)}>Edit</button>
+                      <button className="btn btn-link table-btn" onClick={() => editDataProvider(p.id)}><i className="fa fa-edit" /></button>
                     </td>
                     <td width="40">
-                      <button onClick={() => deleteProvider(p.id)}>Delete</button>
+                      <button className="btn btn-link table-btn" onClick={() => deleteProvider(p.id)}><i className="fa fa-trash" /></button>
                     </td>
                   </tr>
                 )
