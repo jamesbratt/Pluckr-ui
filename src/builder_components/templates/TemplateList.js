@@ -140,7 +140,7 @@ class TemplateList extends Component {
           <DataProviderTable />
         </div>
 
-        <Modal show={this.state.showModal} onHide={this.toggleModal}>
+        <Modal size="lg" show={this.state.showModal} onHide={this.toggleModal}>
           <Modal.Header closeButton>
             <Modal.Title>Install</Modal.Title>
           </Modal.Header>
