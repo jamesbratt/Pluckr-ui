@@ -37,7 +37,7 @@ const mapStateToProps = (state) => {
   return {
     sources: state.sources.data,
     user: state.user[0],
-    providers: state.providers.map(p => p.provider),
+    providers: state.providers.providers,
   };
 };
 
