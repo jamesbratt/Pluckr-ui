@@ -1,14 +1,19 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
+import { assoc } from 'ramda';
 
-const TemplateInstall = ({ id, template, providers }) => {
+const TemplateInstall = ({ id, install, template, providers }) => {
   const templateToInstall = template.find(t => t.id === id);
   const providerCount = templateToInstall.providers.length;
 
-  const [ selectedProviders, onProviderSelect ] = useState([]);
+  const [ selectedProviders, onProviderSelect ] = useState({});
 
   const onSelect = (providerId, sourceId) => {
-    //
+    onProviderSelect(assoc(sourceId, providerId, selectedProviders));
+  }
+
+  const onSubmit = () => {
+    install(id, selectedProviders, providerCount);
   }
 
   return (
@@ -45,6 +50,7 @@ const TemplateInstall = ({ id, template, providers }) => {
             </div>
           </dd>
         </dl>
+        <button className="btn btn-success" onClick={onSubmit}>Install Chart</button>
       </>
     )}
     </>

@@ -58,7 +58,7 @@ class TemplateList extends Component {
     );
   }
 
-  install = (chart_id) => {
+  install = (chart_id, sourceProviders) => {
     const user = this.props.user.username;
     const apiKey = this.props.user.api_key;
 
@@ -67,6 +67,7 @@ class TemplateList extends Component {
 
     const payload = {
       chart_id,
+      sourceProviders,
       tokens: parsedTokens,
     };
 
@@ -83,6 +84,7 @@ class TemplateList extends Component {
     })
     .then(response => {
       if(!response.error) {
+        this.setState({ showModal: false, template_id_to_edit: null })
         this.props.addChart(response.chart);
         this.props.addNotification({ message: `Template has successfully been installed`, type: 'success' });
       } else {
@@ -145,7 +147,7 @@ class TemplateList extends Component {
             <Modal.Title>Install</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            {this.state.template_id_to_edit ? <TemplateInstall id={this.state.template_id_to_edit} /> : null}
+            {this.state.template_id_to_edit ? <TemplateInstall install={this.install} id={this.state.template_id_to_edit} /> : null}
           </Modal.Body>
           <Modal.Footer>
           </Modal.Footer>
