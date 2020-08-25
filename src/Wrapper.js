@@ -40,26 +40,6 @@ class Wrapper extends Component {
       window.location.href = "/";
     }
 
-    componentDidMount() {
-      this.props.dispatch(
-        setLoader(
-        true
-        )
-      );
-
-      const cachedProviders = this.props.dataProviders.filter(dataProvider => {
-          if (getToken(dataProvider.provider)) {
-              return dataProvider;
-          }
-      });
-
-      this.props.dispatch(
-          setDataProviders(
-          cachedProviders
-          )
-      );
-    }
-
     closeProviderModal = () => {
       this.setState({ providerModalShow: false })
     }

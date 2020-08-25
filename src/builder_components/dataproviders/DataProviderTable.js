@@ -31,55 +31,42 @@ const DataProviderTable = ({ dataProviders, providers, fetchProviders, setProvid
 
     return (
       <div className="table-wrapper">
-        <Table bordered hover>
-          <thead>
-            <tr>
-              <th></th>
-              <th>Data Provider</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody style={{ lineHeight: '25px' }}>
-            {dataProviders.filter(dataProvider => !dataProvider.isDisabled).map((dataProvider) => {
-              return (
-                <tr className={dataProvider.isActive ? "table-success" : ""} key={dataProvider.provider}>
-                  <td style={{ textAlign: 'center' }} width="60"><img height={25} src={dataProvider.icon} alt={dataProvider.provider} /></td>
-                  <td className="capitalize">{dataProvider.provider}</td>
-                  <td width="40">
-                    {dataProvider.isActive || dataProvider.isDisabled ? null : <a href={dataProvider.redirectUrl}><i className="fa fa-plug" /></a>}
-                  </td>
-                </tr>
-              )
-            })}
-          </tbody>
-        </Table>
-        <hr />
+        <div className="table-header">
+          <h3>Data Providers</h3>
+        </div>
         {
           isLoading ? <Loader /> :
-          <Table bordered hover>
-            <thead>
-              <tr>
-                <th>Custom Data Providers</th>
-                <th></th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody style={{ lineHeight: '25px' }}>
-              {providers.map((p) => {
-                return (
-                  <tr className={p.isConnected ? "table-success" : ""}  key={p.id}>
-                    <td className="capitalize">{p.name}</td>
-                    <td width="40">
-                      <button className="btn btn-link table-btn" onClick={() => editDataProvider(p.id)}><i className="fa fa-edit" /></button>
-                    </td>
-                    <td width="40">
-                      <button className="btn btn-link table-btn" onClick={() => deleteProvider(p.id)}><i className="fa fa-trash" /></button>
-                    </td>
+          (
+            <>
+            {providers.length === 0 ? 
+              <div className="sad-face"><p style={{ textAlign: 'center' }} className="lead">You need to create a data provider</p></div> :   
+              <Table bordered hover>
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th></th>
+                    <th></th>
                   </tr>
-                )
-              })}
-            </tbody>
-          </Table>
+                </thead>
+                <tbody style={{ lineHeight: '25px' }}>
+                  {providers.map((p) => {
+                    return (
+                      <tr className={p.isConnected ? "table-success" : ""}  key={p.id}>
+                        <td className="capitalize">{p.name}</td>
+                        <td width="40">
+                          <button className="btn btn-link table-btn" onClick={() => editDataProvider(p.id)}><i className="fa fa-edit" /></button>
+                        </td>
+                        <td width="40">
+                          <button className="btn btn-link table-btn" onClick={() => deleteProvider(p.id)}><i className="fa fa-trash" /></button>
+                        </td>
+                      </tr>
+                    )
+                  })}
+                </tbody>
+              </Table>
+            }
+            </>
+          )
         }
         <hr />
         <button onClick={toggle} className="btn btn-primary">Create a Data Provider</button>
