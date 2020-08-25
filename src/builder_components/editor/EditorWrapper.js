@@ -101,7 +101,13 @@ const transformData = async (datasets, username, apiKey) => {
       };
 
     } catch(error) {
-        console.error(error);
+
+      // If there is an error when executing operations
+      // then just return the raw data
+      return {
+        ...dataset,
+        data: dataset.rawData
+      };
     };
   });
 

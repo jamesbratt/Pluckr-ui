@@ -25,7 +25,7 @@ const getRawData = async (providers, dataSources, username, apiKey) => {
 
   return Promise.all(rawData).then(responses => {
     const rawData = responses.length > 1 ? responses.reduce((acc, curr) => {
-      acc.push(curr.data);
+      acc.push(curr);
       return acc;
     }, []) : responses[0];
 
