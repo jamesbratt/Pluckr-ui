@@ -2,10 +2,12 @@ import * as React from "react";
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Nav from 'react-bootstrap/Nav';
+import Loader from './Loader';
 
 import { Link } from "react-router-dom";
 import { connect } from 'react-redux';
 import { fetchDataSources } from './actions';
+import { fetchProviders } from './actions/provider';
 
 const ChartConfigHoc = WrappedComponent => {
 
@@ -16,11 +18,14 @@ const ChartConfigHoc = WrappedComponent => {
       sources: state.sources.data,
       datasets: state.datasets,
       loader: state.loader,
+      providers: state.providers.providers,
+      providersIsLoading: state.providers.isLoading,
     };
   };
 
   const mapDispatchToProps = {
     fetchDataSources,
+    fetchProviders,
   };
 
   class ComponentWithNav extends React.Component {
@@ -28,6 +33,12 @@ const ChartConfigHoc = WrappedComponent => {
     componentDidMount() {
       const user = this.props.user.username;
       const apiKey = this.props.user.api_key;
+
+      // This is to load the data providers when
+      // we have routed directly to the wrapped component
+      if (this.props.providers.length === 0) {
+        this.props.fetchProviders();
+      }
 
       const sourcesLoaded = this.props.sources.filter(source => source.chart === parseInt(this.props.match.params.id));
 
@@ -50,7 +61,7 @@ const ChartConfigHoc = WrappedComponent => {
             </Nav>
           </Col>
           <Col style={{ marginBottom: '1em' }} md={10}>
-            <WrappedComponent {...this.props} />
+            { this.props.providersIsLoading ? <Loader /> : <WrappedComponent {...this.props} /> }
           </Col>
         </Row>
       );

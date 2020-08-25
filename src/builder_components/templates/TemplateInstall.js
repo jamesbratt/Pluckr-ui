@@ -50,9 +50,10 @@ const TemplateInstall = ({ id, install, template, providers }) => {
             </div>
           </dd>
         </dl>
-        <button className="btn btn-success" onClick={onSubmit}>Install Chart</button>
+        <hr />
       </>
     )}
+    <button className="btn btn-success" onClick={onSubmit}>Install Chart</button>
     </>
   )
 }
