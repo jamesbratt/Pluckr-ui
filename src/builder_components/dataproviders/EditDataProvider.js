@@ -9,6 +9,7 @@ const swaggerDefRef = React.createRef();
 const clientIdRef = React.createRef();
 const clientSecretRef = React.createRef();
 const apiKeyRef = React.createRef();
+const securityOptionRef = React.createRef();
 
 const EditDataProvider = ({ provider, fetchProvider, updateDataProvider }) => {
   const [scopes, updateScopes] = useState([]);
@@ -28,8 +29,13 @@ const EditDataProvider = ({ provider, fetchProvider, updateDataProvider }) => {
       client_id: clientIdRef.current ? clientIdRef.current.value : null,
       client_secret: clientSecretRef.current ? clientSecretRef.current.value : null,
       api_key: apiKeyRef.current ? apiKeyRef.current.value : null,
+      security_scheme: securityOptionRef.current ? securityOptionRef.current.value : null,
       scopes: scopes || scopes.length > 0 ? scopes : null
     }
+
+    if (provider.security_scheme) {
+      payload.security_scheme = provider.security_scheme;
+    };
 
     updateDataProvider(provider.id, payload);
   }
@@ -107,17 +113,39 @@ const EditDataProvider = ({ provider, fetchProvider, updateDataProvider }) => {
 
   return (
     <div>
-      <div className="form-group">
-        <label>Provider Name</label>
-        <input defaultValue={provider.name} ref={providerNameRef} className="form-control" type="text" placeholder="What is your provider called?" />
-      </div>
-      <div className="form-group">
-        <label>Swagger Definition URL</label>
-        <input defaultValue={provider.swagger_url} ref={swaggerDefRef} className="form-control" type="text" placeholder="e.g. https://example.com" />
-      </div>
-      {fields}
-      {redirectUri}
-      {buttons}
+      {provider.security_scheme ?
+        <>
+          <div className="form-group">
+            <label>Provider Name</label>
+            <input defaultValue={provider.name} ref={providerNameRef} className="form-control" type="text" placeholder="What is your provider called?" />
+          </div>
+          <div className="form-group">
+            <label>Swagger Definition URL</label>
+            <input defaultValue={provider.swagger_url} ref={swaggerDefRef} className="form-control" type="text" placeholder="e.g. https://example.com" />
+          </div>
+          {fields}
+          {redirectUri}
+          {buttons}
+        </> :
+        <>
+          <div className="form-group">
+            <label>Provider Name</label>
+            <input defaultValue={provider.name} ref={providerNameRef} className="form-control" type="text" placeholder="What is your provider called?" />
+          </div>
+          <div className="form-group">
+            <label>Swagger Definition URL</label>
+            <input defaultValue={provider.swagger_url} ref={swaggerDefRef} className="form-control" type="text" placeholder="e.g. https://example.com" />
+          </div>
+          <div className="form-group">
+            <label>Select an authentication method</label>
+            <select ref={securityOptionRef} className="form-control">
+              <option value={null}>-- Select Method --</option>
+              {provider.security_options.map((securityOption) => <option value={securityOption}>{securityOption}</option>)}
+            </select>
+          </div>
+          <button onClick={updateProvider} className="btn btn-success">Continue</button>
+        </>
+      }
     </div>
   );
 }
