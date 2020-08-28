@@ -10,6 +10,8 @@ const clientIdRef = React.createRef();
 const clientSecretRef = React.createRef();
 const apiKeyRef = React.createRef();
 const securityOptionRef = React.createRef();
+const paramExtensionsRef = React.createRef();
+const baseUrlOverrideRef = React.createRef();
 
 const EditDataProvider = ({ provider, fetchProvider, updateDataProvider }) => {
   const [scopes, updateScopes] = useState([]);
@@ -28,8 +30,10 @@ const EditDataProvider = ({ provider, fetchProvider, updateDataProvider }) => {
       swagger_url: swaggerDefRef.current ? swaggerDefRef.current.value : null,
       client_id: clientIdRef.current ? clientIdRef.current.value : null,
       client_secret: clientSecretRef.current ? clientSecretRef.current.value : null,
+      parameter_extensions: paramExtensionsRef.current ? paramExtensionsRef.current.value : null,
       api_key: apiKeyRef.current ? apiKeyRef.current.value : null,
       security_scheme: securityOptionRef.current ? securityOptionRef.current.value : null,
+      api_base_url_override: baseUrlOverrideRef.current ? baseUrlOverrideRef.current.value : null,
       scopes: scopes || scopes.length > 0 ? scopes : null
     }
 
@@ -82,6 +86,14 @@ const EditDataProvider = ({ provider, fetchProvider, updateDataProvider }) => {
                   </div>
                 )
               })}
+            </div>
+            <div className="form-group">
+              <label>API Base Url Override (Optional)</label>
+              <textarea defaultValue={provider.api_base_url_override} ref={baseUrlOverrideRef} className="form-control" />
+            </div>
+            <div className="form-group">
+              <label>Authentication Parameter Extensions (Optional)</label>
+              <textarea defaultValue={provider.parameter_extensions} ref={paramExtensionsRef} className="form-control" />
             </div>
           </>
         )

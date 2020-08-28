@@ -16,8 +16,9 @@ const GenerateRequest = (provider, resourceUri, uriParameters, uriParametersMode
       uriParametersModel,
     ) : '';
 
-  const { swagger_host, swagger_base_path, id, swagger_definition } = provider;
-  const url = `${swagger_host}${swagger_base_path ? swagger_base_path : ''}${endPoint}${queryString}`;
+  const { swagger_host, swagger_base_path, id, swagger_definition, api_base_url_override } = provider;
+  const baseUrl = api_base_url_override || `${swagger_host}${swagger_base_path ? swagger_base_path : ''}`
+  const url = `${baseUrl}${endPoint}${queryString}`;
 
   return proxyRequest(url, id, '', username, apiKey, sourceId, swagger_definition);
 }
