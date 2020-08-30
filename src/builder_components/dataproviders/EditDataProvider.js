@@ -12,6 +12,7 @@ const apiKeyRef = React.createRef();
 const securityOptionRef = React.createRef();
 const paramExtensionsRef = React.createRef();
 const baseUrlOverrideRef = React.createRef();
+const scopeExtensionRef = React.createRef();
 
 const EditDataProvider = ({ provider, fetchProvider, updateDataProvider }) => {
   const [scopes, updateScopes] = useState([]);
@@ -34,6 +35,7 @@ const EditDataProvider = ({ provider, fetchProvider, updateDataProvider }) => {
       api_key: apiKeyRef.current ? apiKeyRef.current.value : null,
       security_scheme: securityOptionRef.current ? securityOptionRef.current.value : null,
       api_base_url_override: baseUrlOverrideRef.current ? baseUrlOverrideRef.current.value : null,
+      scope_extensions:scopeExtensionRef.current ? scopeExtensionRef.current.value : null,
       scopes: scopes || scopes.length > 0 ? scopes : null
     }
 
@@ -86,6 +88,10 @@ const EditDataProvider = ({ provider, fetchProvider, updateDataProvider }) => {
                   </div>
                 )
               })}
+            </div>
+            <div className="form-group">
+              <label>Permission Scope Extensions (Optional)</label>
+              <textarea defaultValue={provider.scope_extensions} ref={scopeExtensionRef} className="form-control" />
             </div>
             <div className="form-group">
               <label>API Base Url Override (Optional)</label>
