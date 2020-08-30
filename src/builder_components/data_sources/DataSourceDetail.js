@@ -16,6 +16,9 @@ import { createDataSource, fetchDataSources, setLoader } from '../../actions';
 import { addNotification } from '../../actions/notification';
 import { fetchProvider } from '../../actions/provider';
 import { extractGlobalParameters } from '../../utils/Helpers';
+import { Typeahead } from 'react-bootstrap-typeahead';
+
+import 'react-bootstrap-typeahead/css/Typeahead.css';
 
 const fetchDataSource = async (apiKey, username, datasourceId, dataProviders) => {
     const options = {
@@ -213,10 +216,10 @@ class DataSourceDetail extends Component {
     }
   };
 
-  onResourceChange = (event) => {
-    if (this.state.selectedProvider && event.target.value) {
+  onResourceChange = (selection) => {
+    if (this.state.selectedProvider && selection.length > 0) {
       let availableFields = [];
-      const resourceName = event.target.value;
+      const resourceName = selection[0].id;
       const resourceParams = this.state.selectedProvider.swagger_paths[resourceName].get.parameters;
 
       if (resourceParams) {
@@ -271,6 +274,7 @@ class DataSourceDetail extends Component {
   render() {
 
     let parameters = [];
+    const selectedResourceLabel = this.state.selectedResource ? this.state.selectedProvider.swagger_paths[this.state.selectedResource].get.summary : '';
 
     if (this.state.parameterFields.length > 0) {
       parameters = this.state.parameterFields.map(parameterField => {
@@ -288,7 +292,8 @@ class DataSourceDetail extends Component {
               <React.Fragment key={parameterField.name}>
                 <div class="form-group">
                   <label>{parameterField.name}</label>
-                  <input defaultValue={val} name={parameterField.name} onKeyUp={this.onParameterChange} type="number" className="form-control" placeholder={parameterField.description} />
+                  <input defaultValue={val} name={parameterField.name} onKeyUp={this.onParameterChange} type="number" className="form-control" />
+                  <small class="form-text text-muted">{parameterField.description}</small>
                 </div>
               </React.Fragment>
             );
@@ -317,7 +322,8 @@ class DataSourceDetail extends Component {
               <React.Fragment key={parameterField.name}>
                 <div class="form-group">
                   <label>{parameterField.name}</label>
-                  <input defaultValue={val} name={parameterField.name} onKeyUp={this.onParameterChange} type="text" className="form-control" placeholder={parameterField.description} />
+                  <input defaultValue={val} name={parameterField.name} onKeyUp={this.onParameterChange} type="text" className="form-control" />
+                  <small class="form-text text-muted">{parameterField.description}</small>
                 </div>
               </React.Fragment>
             );
@@ -358,13 +364,15 @@ class DataSourceDetail extends Component {
                 {this.state.selectedProvider && this.state.selectedProvider.swagger_paths ?
                   <div className="form-group">
                     <label>Resource</label>
-                    <select value={this.state.selectedResource} onChange={this.onResourceChange} className="form-control" id="dataSourceResource">
-                      <option value="">-- Select a resource --</option>;
-                      {Object.keys(this.state.selectedProvider.swagger_paths).filter(r => this.state.selectedProvider.swagger_paths[r].get).map(resourceKey => {
+                    <Typeahead
+                      placeholder='Search and select a resource'
+                      defaultInputValue={selectedResourceLabel}
+                      onChange={this.onResourceChange}
+                      options={Object.keys(this.state.selectedProvider.swagger_paths).filter(r => this.state.selectedProvider.swagger_paths[r].get).map(resourceKey => {
                         const resourceDetails = this.state.selectedProvider.swagger_paths[resourceKey].get;
-                        return <option key={resourceKey} value={resourceKey}>{resourceDetails.summary}</option>
+                        return { id: resourceKey, label: resourceDetails.summary }
                       })}
-                    </select>
+                    />
                   </div>
                 : null
                 }
