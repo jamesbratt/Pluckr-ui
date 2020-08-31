@@ -125,7 +125,11 @@ const EditDataProvider = ({ provider, fetchProvider, updateDataProvider }) => {
         break;
 
       default:
-        fields = null;
+        fields = (
+          <Alert variant='danger'>
+            The authentication method: {securityDefinition.type} is not valid
+          </Alert>
+        );
     }
   }
 
