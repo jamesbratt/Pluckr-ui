@@ -1,7 +1,7 @@
 
 import { pathOr } from 'ramda';
 import axios from "axios";
-import { VARIABLES } from '../Constants';
+import { VARIABLES, DATA_TYPES } from '../Constants';
 
 export const GenerateGuid = () => {
   const s4 = () => {
@@ -61,14 +61,28 @@ export const calculateVariableDate = (param) => {
 }
 
 export const generateQueryString = (params, uriParametersModel) => {
-  const resourceParameters = uriParametersModel;
   return params.map(param => {
     let value = param.value;
-    const transformation = resourceParameters.find(
-      resourceParameter => resourceParameter.name === param.name
-    ).transform;
+    const parameterField = uriParametersModel.find(field => field.name === param.name);
+    const type = parameterField.type === undefined && parameterField.schema !== undefined ? parameterField.schema.type : parameterField.type;
+    
+    let transformation = null;
+    if (param.isDate && type === DATA_TYPES.int) {
+      transformation = ConvertToEpoch;
+    }
+
+    if (param.isDate && type === DATA_TYPES.string) {
+      transformation = ConvertToIso;
+    }
+
     if (transformation && VARIABLES.find(v => v.value === param.value)) {
       value = calculateVariableDate(param);
+
+      // The function above already gives us a timestamp
+      if (type === DATA_TYPES.int) {
+        transformation = null;
+        value = (value/1000);
+      }
     }
     return param.name + '=' + (transformation ? transformation(value) : value);
   }).join('&');

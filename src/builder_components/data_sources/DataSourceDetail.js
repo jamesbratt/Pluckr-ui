@@ -4,12 +4,13 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import JSONTree from 'react-json-tree';
 import DateSelector from './DateSelector';
+import ParameterField from './ParameterField';
 import Loader from '../../Loader';
 import axios from "axios";
 import GenerateRequest from '../../utils/GenerateRequest';
 
 import { Link } from "react-router-dom";
-import { pathOr } from 'ramda';
+import { pathOr, append } from 'ramda';
 import { DATA_TYPES } from '../../Constants';
 import { connect } from 'react-redux';
 import { createDataSource, fetchDataSources, setLoader } from '../../actions';
@@ -242,6 +243,7 @@ class DataSourceDetail extends Component {
   onParameterChange = (event) => {
     const parameterName = event.target.name;
     const parameterValue = event.target.value;
+    const isDate = event.target.isDate || false;
     const constructedParams = this.state.parameterValues;
     let newParams = [];
 
@@ -251,12 +253,12 @@ class DataSourceDetail extends Component {
           if (parameter.name && parameter.name === parameterName) {
             parameter.value = parameterValue;
           } else {
-            newParams.push({ name: parameter.name, value: parameter.value });
+            newParams.push({ name: parameter.name, value: parameter.value, isDate: parameter.isDate, });
           }
         });
-        newParams.push({ name: parameterName, value: parameterValue });
+        newParams.push({ name: parameterName, value: parameterValue, isDate });
       } else {
-        newParams.push({ name: parameterName, value: parameterValue });
+        newParams.push({ name: parameterName, value: parameterValue, isDate });
       }
     }
 
@@ -271,6 +273,12 @@ class DataSourceDetail extends Component {
     this.setState({ sourceName: event.target.value });
   };
 
+  onCovertToDateField = (name) => {
+    const parameterExists = this.state.parameterValues.find(value => value.name === name);
+    const parameterValues = parameterExists ? this.state.parameterValues.map(p => ({ ...p, isDate: true })) : append({ name, value: null, isDate: true }, this.state.parameterValues);
+    this.setState({ parameterValues });
+  }
+
   render() {
 
     let parameters = [];
@@ -280,21 +288,14 @@ class DataSourceDetail extends Component {
       parameters = this.state.parameterFields.map(parameterField => {
         const paramValue = this.state.parameterValues.find(parameterValue => parameterValue.name === parameterField.name);
         const val = pathOr(null, ['value'], paramValue);
-        switch(parameterField.type) {
+
+        // In v3 openapi definitions, the parameter type is nested inside a schema object
+        const parameterType = parameterField.type === undefined && parameterField.schema !== undefined ? parameterField.schema.type : parameterField.type;
+        switch(parameterType) {
           case DATA_TYPES.date:
             return (
               <React.Fragment key={parameterField.name}>
                 <DateSelector useVariables={parameterField.useVariables} name={parameterField.name} value={val} onChange={this.onParameterChange} />
-              </React.Fragment>
-            );
-          case DATA_TYPES.int:
-            return (
-              <React.Fragment key={parameterField.name}>
-                <div class="form-group">
-                  <label>{parameterField.name}</label>
-                  <input defaultValue={val} name={parameterField.name} onKeyUp={this.onParameterChange} type="number" className="form-control" />
-                  <small class="form-text text-muted">{parameterField.description}</small>
-                </div>
               </React.Fragment>
             );
             case DATA_TYPES.picker:
@@ -319,13 +320,12 @@ class DataSourceDetail extends Component {
               );
           default:
             return (
-              <React.Fragment key={parameterField.name}>
-                <div class="form-group">
-                  <label>{parameterField.name}</label>
-                  <input defaultValue={val} name={parameterField.name} onKeyUp={this.onParameterChange} type="text" className="form-control" />
-                  <small class="form-text text-muted">{parameterField.description}</small>
-                </div>
-              </React.Fragment>
+              <ParameterField
+                type={parameterType}
+                parameterField={parameterField}
+                paramValue={paramValue}
+                onChange={this.onParameterChange}
+              />
             );
         }
       })
