@@ -273,12 +273,6 @@ class DataSourceDetail extends Component {
     this.setState({ sourceName: event.target.value });
   };
 
-  onCovertToDateField = (name) => {
-    const parameterExists = this.state.parameterValues.find(value => value.name === name);
-    const parameterValues = parameterExists ? this.state.parameterValues.map(p => ({ ...p, isDate: true })) : append({ name, value: null, isDate: true }, this.state.parameterValues);
-    this.setState({ parameterValues });
-  }
-
   render() {
 
     let parameters = [];
@@ -292,12 +286,6 @@ class DataSourceDetail extends Component {
         // In v3 openapi definitions, the parameter type is nested inside a schema object
         const parameterType = parameterField.type === undefined && parameterField.schema !== undefined ? parameterField.schema.type : parameterField.type;
         switch(parameterType) {
-          case DATA_TYPES.date:
-            return (
-              <React.Fragment key={parameterField.name}>
-                <DateSelector useVariables={parameterField.useVariables} name={parameterField.name} value={val} onChange={this.onParameterChange} />
-              </React.Fragment>
-            );
             case DATA_TYPES.picker:
               return (
                 <React.Fragment key={parameterField.name}>
