@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import Alert from 'react-bootstrap/Alert';
+import Tabs from 'react-bootstrap/Tabs';
+import Tab from 'react-bootstrap/Tab';
+
 import { fetchProvider, updateDataProvider } from '../../actions/provider';
 import { connect } from 'react-redux';
 import { append } from 'ramda';
@@ -60,6 +63,7 @@ const EditDataProvider = ({ provider, fetchProvider, updateDataProvider }) => {
   }
 
   let fields = null;
+  let advancedFields = null;
   let redirectUri = null;
   let buttons = [<button style={{ marginRight: '1em' }} onClick={updateProvider} className="btn btn-success">Save Data Provider</button>];
 
@@ -89,6 +93,12 @@ const EditDataProvider = ({ provider, fetchProvider, updateDataProvider }) => {
                 )
               })}
             </div>
+
+          </>
+        )
+
+        advancedFields = (
+          <>
             <div className="form-group">
               <label>Permission Scope Extensions (Optional)</label>
               <textarea defaultValue={provider.scope_extensions} ref={scopeExtensionRef} className="form-control" />
@@ -137,16 +147,27 @@ const EditDataProvider = ({ provider, fetchProvider, updateDataProvider }) => {
     <div>
       {provider.security_scheme ?
         <>
-          <div className="form-group">
-            <label>Provider Name</label>
-            <input defaultValue={provider.name} ref={providerNameRef} className="form-control" type="text" placeholder="What is your provider called?" />
-          </div>
-          <div className="form-group">
-            <label>Swagger Definition URL</label>
-            <input defaultValue={provider.swagger_url} ref={swaggerDefRef} className="form-control" type="text" placeholder="e.g. https://example.com" />
-          </div>
-          {fields}
-          {redirectUri}
+          <Tabs defaultActiveKey="basic" id="uncontrolled-tab-example">
+            <Tab eventKey="basic" title="Basic Settings">
+              <div className="form-group">
+                <label>Provider Name</label>
+                <input defaultValue={provider.name} ref={providerNameRef} className="form-control" type="text" placeholder="What is your provider called?" />
+              </div>
+              <div className="form-group">
+                <label>Swagger Definition URL</label>
+                <input defaultValue={provider.swagger_url} ref={swaggerDefRef} className="form-control" type="text" placeholder="e.g. https://example.com" />
+              </div>
+              {fields}
+            </Tab>
+            {
+              advancedFields ?
+                <Tab eventKey="advanced" title="Advanced Settings">
+                  {advancedFields}
+                </Tab> :
+              null
+            }
+          </Tabs>
+          <hr />
           {buttons}
         </> :
         <>

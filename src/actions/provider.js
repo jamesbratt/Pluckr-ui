@@ -69,10 +69,13 @@ export const createDataProvider = (name, swagger_url) => {
           'Content-Type': 'application/json',
           'Authorization': `ApiKey ${username}:${api_key}`
       },
-    }).then((response) => (dispatch({
-        type: 'CREATE_PROVIDER',
-        payload: response.data,
-      })))
+    }).then((response) => {
+        dispatch({
+          type: 'CREATE_PROVIDER',
+          payload: response.data,
+        });
+        dispatch(addNotification({ message: `${response.data.name} has successfully been created`, type: 'success' }));
+      })
       .catch(error => {
         dispatch(addNotification({ message: error.response.data, type: 'error' }))
       });
@@ -93,13 +96,16 @@ export const updateDataProvider = (id, payload) => {
           'Content-Type': 'application/json',
           'Authorization': `ApiKey ${username}:${api_key}`
       },
-    }).then((response) => (dispatch({
+    }).then((response) => {
+      dispatch({
         type: 'UPDATE_PROVIDER',
         payload: { data: response.data, id },
-      })))
-      .catch(error => {
-        dispatch(addNotification({ message: error.response.data, type: 'error' }))
       });
+      dispatch(addNotification({ message: `${response.data.name} has successfully been updated`, type: 'success' }));
+    })
+    .catch(error => {
+      dispatch(addNotification({ message: error.response.data, type: 'error' }))
+    });
   }
 }
 
