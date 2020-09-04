@@ -85,7 +85,7 @@ class DataSetList extends Component {
                       }, '');
 
                       const providers = dataset.sources.reduce((acc, curr) => {
-                        return acc += `${curr.provider}, `
+                        return acc += `${curr.data_provider_name}, `
                       }, '');
 
                       return (
