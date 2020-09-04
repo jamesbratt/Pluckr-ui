@@ -84,7 +84,7 @@ export const updateMembers = (apiKey, username, payload) => {
 
   return dispatch => {
 
-    axios.put(`${process.env.REACT_APP_PLUCKR_API_URI}/api/v1/members/`,
+    axios.patch(`${process.env.REACT_APP_PLUCKR_API_URI}/api/v1/members/`,
     JSON.stringify({ objects: formatPayload }),
     {
       headers: {

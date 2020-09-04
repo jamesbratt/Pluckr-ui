@@ -121,7 +121,7 @@ class TemplateList extends Component {
                           <i className={ICON_MAPPER[template.series_type]} />
                         </td>
                         <td>{template.name}</td>
-                        <td className="capitalize">{template.chart_type}</td>
+                        <td className="capitalize">{template.series_type}</td>
                         <td>{template.publisher}</td>
                         <td width="40">
                           <button onClick={() =>/*this.install(template.id)*/ this.toggleModal(template.id)} className="btn btn-link table-btn float-right"><i className="fa fa-download" /></button>

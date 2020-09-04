@@ -108,7 +108,6 @@ class Charts extends Component {
                     <th></th>
                     <th>Name</th>
                     <th>Chart Type</th>
-                    <th>Series Type</th>
                     <th></th>
                   </tr>
                 </thead>
@@ -120,7 +119,6 @@ class Charts extends Component {
                           <i className={ICON_MAPPER[chart.series_type]} />
                         </td>
                         <td><Link to={`/charts/${chart.id}/data-sources`}>{chart.name}</Link></td>
-                        <td className="capitalize">{chart.chart_type}</td>
                         <td className="capitalize">{chart.series_type}</td>
                         <td width="40">
                           <button onClick={() => this.removeChart(chart.id)} className="btn btn-link table-btn float-right"><i className="fa fa-trash" /></button>
