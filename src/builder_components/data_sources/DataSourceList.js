@@ -79,6 +79,7 @@ class DataSourceList extends Component {
                     <th>Name</th>
                     <th>Provider</th>
                     <th>Resource</th>
+                    <th>Updated At</th>
                     <th></th>
                   </tr>
                 </thead>
@@ -89,6 +90,7 @@ class DataSourceList extends Component {
                         <td><Link to={`edit-data-source/${source.id}`}>{source.name}</Link></td>
                         <td>{source.data_provider_name}</td>
                         <td>{source.resource}</td>
+                        <td>{source.updated_at}</td>
                         <td width="40">
                           <button onClick={() => this.delete(source.id)} className="btn btn-link table-btn float-right"><i className="fa fa-trash" /></button>
                         </td>

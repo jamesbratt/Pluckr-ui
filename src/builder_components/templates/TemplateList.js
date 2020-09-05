@@ -109,6 +109,7 @@ class TemplateList extends Component {
                     <th>Name</th>
                     <th>Chart Type</th>
                     <th>Published By</th>
+                    <th>Created At</th>
                     <th></th>
                     <th></th>
                   </tr>
@@ -123,6 +124,7 @@ class TemplateList extends Component {
                         <td>{template.name}</td>
                         <td className="capitalize">{template.series_type}</td>
                         <td>{template.publisher}</td>
+                        <td>{template.created_at}</td>
                         <td width="40">
                           <button onClick={() =>/*this.install(template.id)*/ this.toggleModal(template.id)} className="btn btn-link table-btn float-right"><i className="fa fa-download" /></button>
                         </td>
