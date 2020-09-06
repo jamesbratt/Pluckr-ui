@@ -173,7 +173,6 @@ class DataSourceDetail extends Component {
                 selectedResource,
                 params,
                 response,
-                response.properties,
                 this.props.match.params.data_source_id || this.state.newlySavedDataSoucerId
               ).then(response => {
                 this.props.setLoader(false);

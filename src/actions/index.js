@@ -58,7 +58,7 @@ export const addSource = (id, sourceName, chartId, provider, resource, params, d
   }
 };
 
-export const updateSource = (id, sourceName, chartId, provider, resource, params, data, properties) => {
+export const updateSource = (id, sourceName, chartId, provider, resource, params, data, data_provider_id) => {
   return {
     type: 'UPDATE_SOURCE',
     id,
@@ -68,7 +68,7 @@ export const updateSource = (id, sourceName, chartId, provider, resource, params
     resource,
     params,
     data,
-    properties,
+    data_provider_id,
   }
 };
 
@@ -143,7 +143,6 @@ export const createDataSource = (
   resource,
   params,
   rawData,
-  properties,
   id,
 ) => {
 
