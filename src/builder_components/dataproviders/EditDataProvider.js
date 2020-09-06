@@ -3,7 +3,7 @@ import Alert from 'react-bootstrap/Alert';
 import Tabs from 'react-bootstrap/Tabs';
 import Tab from 'react-bootstrap/Tab';
 
-import { fetchProvider, updateDataProvider } from '../../actions/provider';
+import { updateDataProvider } from '../../actions/provider';
 import { connect } from 'react-redux';
 import { append } from 'ramda';
 
@@ -16,15 +16,15 @@ const securityOptionRef = React.createRef();
 const paramExtensionsRef = React.createRef();
 const baseUrlOverrideRef = React.createRef();
 const scopeExtensionRef = React.createRef();
+const scopeDelimitterRef = React.createRef();
 
-const EditDataProvider = ({ provider, fetchProvider, updateDataProvider }) => {
+const EditDataProvider = ({ provider, updateDataProvider }) => {
   const [scopes, updateScopes] = useState([]);
   const securityDefinition = provider.swagger_definition;
   const initialScopes = provider.scopes ? JSON.parse(provider.scopes.replace(/'/g, '"')) : [];
 
   useEffect(() => {
     updateScopes(initialScopes)
-    // fetchProvider(provider.id)
   }, []);
 
   const updateProvider = () => {
@@ -38,7 +38,8 @@ const EditDataProvider = ({ provider, fetchProvider, updateDataProvider }) => {
       api_key: apiKeyRef.current ? apiKeyRef.current.value : null,
       security_scheme: securityOptionRef.current ? securityOptionRef.current.value : null,
       api_base_url_override: baseUrlOverrideRef.current ? baseUrlOverrideRef.current.value : null,
-      scope_extensions:scopeExtensionRef.current ? scopeExtensionRef.current.value : null,
+      scope_extensions: scopeExtensionRef.current ? scopeExtensionRef.current.value : null,
+      scope_delimitter: scopeDelimitterRef.current ? scopeDelimitterRef.current.value : null,
       scopes: scopes || scopes.length > 0 ? scopes : null
     }
 
@@ -99,6 +100,10 @@ const EditDataProvider = ({ provider, fetchProvider, updateDataProvider }) => {
 
         advancedFields = (
           <>
+            <div className="form-group">
+              <label>Scope Delimitter (Optional)</label>
+              <input type="text" defaultValue={provider.scope_delimitter} ref={scopeDelimitterRef} className="form-control" />
+            </div>
             <div className="form-group">
               <label>Permission Scope Extensions (Optional)</label>
               <textarea defaultValue={provider.scope_extensions} ref={scopeExtensionRef} className="form-control" />
@@ -193,6 +198,6 @@ const EditDataProvider = ({ provider, fetchProvider, updateDataProvider }) => {
   );
 }
 
-const mapDispatchToProps = { fetchProvider, updateDataProvider };
+const mapDispatchToProps = { updateDataProvider };
 
 export default connect(null, mapDispatchToProps)(EditDataProvider);
