@@ -122,8 +122,8 @@ class Charts extends Component {
                         </td>
                         <td><Link to={`/charts/${chart.id}/data-sources`}>{chart.name}</Link></td>
                         <td className="capitalize">{chart.series_type}</td>
-                        <td>{chart.created_at}</td>
-                        <td>{chart.updated_at}</td>
+                        <td>{new Date(chart.created_at).toLocaleString()}</td>
+                        <td>{new Date(chart.updated_at).toLocaleString()}</td>
                         <td width="40">
                           <button onClick={() => this.removeChart(chart.id)} className="btn btn-link table-btn float-right"><i className="fa fa-trash" /></button>
                         </td>

@@ -124,7 +124,7 @@ class TemplateList extends Component {
                         <td>{template.name}</td>
                         <td className="capitalize">{template.series_type}</td>
                         <td>{template.publisher}</td>
-                        <td>{template.created_at}</td>
+                        <td>{new Date(template.created_at).toLocaleString()}</td>
                         <td width="40">
                           <button onClick={() =>/*this.install(template.id)*/ this.toggleModal(template.id)} className="btn btn-link table-btn float-right"><i className="fa fa-download" /></button>
                         </td>

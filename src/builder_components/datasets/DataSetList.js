@@ -94,7 +94,7 @@ class DataSetList extends Component {
                           <td><Link to={`${this.props.url}/edit-dataset/${dataset.id}`}>{dataset.name}</Link></td>
                           <td>{dataSources}</td>
                           <td>{providers}</td>
-                          <td>{dataset.updated_at}</td>
+                          <td>{new Date(dataset.updated_at).toLocaleString()}</td>
                           <td width="40">
                             <button onClick={() => this.delete(dataset.id)} className="btn btn-link table-btn"><i className="fa fa-trash" /></button>
                           </td>
