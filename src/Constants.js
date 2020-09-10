@@ -1,4 +1,11 @@
-
+export const HELP_TOPICS = {
+  data_providers: 'DATA_PROVIDERS',
+  data_sources: 'DATA_SOURCES',
+  datasets: 'DATASETS',
+  operations: 'OPERATIONS',
+  dashboards: 'DASHBOARDS',
+  templates: 'TEMPLATES',
+};
 
 export const OPERATOR_VALUES = {
   EQUAL_TO: 'EQUAL_TO',

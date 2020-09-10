@@ -13,10 +13,11 @@ import ViewDashboard from './builder_components/dashboards/ViewDashboard';
 import DeleteAccount from './builder_components/account/DeleteAccount';
 import DataSourceList from './builder_components/data_sources/DataSourceList';
 import DataSourceDetail from './builder_components/data_sources/DataSourceDetail';
+import Help from './builder_components/Help';
+import Welcome from './builder_components/Welcome';
 import { Link, Route, Redirect } from "react-router-dom";
 import { connect } from 'react-redux';
-import { setDataProviders, setLoader } from './actions';
-import { getToken } from './utils/Helpers';
+import { toggleHelp } from './actions/help';
 
 const DataSourceListWrapped = ChartConfigHoc(DataSourceList);
 const DataSourceDetailWrapped = ChartConfigHoc(DataSourceDetail);
@@ -24,6 +25,10 @@ const ChartEditorWrapped = ChartConfigHoc(EditorWrapper);
 
 const mapStateToProps = state => {
   return state
+};
+
+const mapDispatchToProps = {
+  toggleHelp,
 };
 
 class Wrapper extends Component {
@@ -46,6 +51,8 @@ class Wrapper extends Component {
 
     render() {
       const tokenObj = localStorage.getItem('pluckr_token');
+      const seenWelcome = localStorage.getItem('seenWelcome') || false;
+
       if (!tokenObj) {
         return <Redirect to='/' />;
       }
@@ -63,6 +70,7 @@ class Wrapper extends Component {
             </Nav>
             <Nav>
               <Link className="nav-link" to="/account">Account for {this.props.user[0].username}</Link>
+              <Nav.Link onClick={() => this.props.toggleHelp(null)}>Documentation</Nav.Link>
               <Nav.Link onClick={this.logout}>Log Out</Nav.Link>
             </Nav>
           </Navbar.Collapse>
@@ -107,6 +115,10 @@ class Wrapper extends Component {
               <Modal.Footer>
               </Modal.Footer>
             </Modal>
+
+            <Modal centered size="lg" show={!seenWelcome || this.props.help.isOpen} onHide={this.props.toggleHelp}>
+              {!seenWelcome ? <Welcome /> : <Help />}
+            </Modal>
             </div>
           </div>
         </React.Fragment>
@@ -115,5 +127,6 @@ class Wrapper extends Component {
 }
 
 export default connect(
-  mapStateToProps
+  mapStateToProps,
+  mapDispatchToProps,
 )(Wrapper);
