@@ -125,7 +125,6 @@ const EditDataProvider = ({ provider, updateDataProvider }) => {
           </Alert>
         );
 
-        buttons.push(<a href={`${process.env.REACT_APP_PLUCKR_API_URI}/providers/connect/${provider.id}/`}>Connect to {provider.name}</a>);
         break;
 
       case 'apiKey':

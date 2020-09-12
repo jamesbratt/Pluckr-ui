@@ -116,7 +116,7 @@ class Wrapper extends Component {
               </Modal.Footer>
             </Modal>
 
-            <Modal centered size="lg" show={!seenWelcome || this.props.help.isOpen} onHide={this.props.toggleHelp}>
+            <Modal size="lg" show={!seenWelcome || this.props.help.isOpen} onHide={this.props.toggleHelp}>
               {!seenWelcome ? <Welcome /> : <Help />}
             </Modal>
             </div>

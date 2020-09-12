@@ -27,6 +27,10 @@ const DataProviderTable = ({ dataProviders, providers, fetchProviders, setProvid
       }
     }
 
+    const connect = (id) => {
+      window.location.replace(`${process.env.REACT_APP_PLUCKR_API_URI}/providers/connect/${id}/`);
+    }
+
     const providerToEdit = providers.find(p => p.isEditing);
 
     return (
@@ -46,18 +50,23 @@ const DataProviderTable = ({ dataProviders, providers, fetchProviders, setProvid
                     <th>Name</th>
                     <th></th>
                     <th></th>
+                    <th></th>
                   </tr>
                 </thead>
                 <tbody style={{ lineHeight: '25px' }}>
                   {providers.map((p) => {
+                    const canConnect = p.swagger_definition.type === 'oauth2';
                     return (
                       <tr className={p.isConnected ? "table-success" : ""}  key={p.id}>
-                        <td className="capitalize">{p.name}</td>
+                        <td className="capitalize">{p.name}{p.is_public ? " - Managed" : null}</td>
                         <td width="40">
-                          <button className="btn btn-link table-btn" onClick={() => editDataProvider(p.id)}><i className="fa fa-edit" /></button>
+                          <button disabled={!canConnect} className="btn btn-link table-btn" onClick={() => connect(p.id)}><i className="fa fa-plug" /></button>
                         </td>
                         <td width="40">
-                          <button className="btn btn-link table-btn" onClick={() => deleteProvider(p.id)}><i className="fa fa-trash" /></button>
+                          <button disabled={!p.isOwner} className="btn btn-link table-btn" onClick={() => editDataProvider(p.id)}><i className="fa fa-edit" /></button>
+                        </td>
+                        <td width="40">
+                          <button disabled={!p.isOwner} className="btn btn-link table-btn" onClick={() => deleteProvider(p.id)}><i className="fa fa-trash" /></button>
                         </td>
                       </tr>
                     )
