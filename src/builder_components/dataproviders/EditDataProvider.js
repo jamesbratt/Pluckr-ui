@@ -29,7 +29,6 @@ const EditDataProvider = ({ provider, updateDataProvider }) => {
 
   const updateProvider = () => {
     const payload = {
-      ...provider,
       name: providerNameRef.current ? providerNameRef.current.value : null,
       swagger_url: swaggerDefRef.current ? swaggerDefRef.current.value : null,
       client_id: clientIdRef.current ? clientIdRef.current.value : null,
@@ -40,7 +39,8 @@ const EditDataProvider = ({ provider, updateDataProvider }) => {
       api_base_url_override: baseUrlOverrideRef.current ? baseUrlOverrideRef.current.value : null,
       scope_extensions: scopeExtensionRef.current ? scopeExtensionRef.current.value : null,
       scope_delimitter: scopeDelimitterRef.current ? scopeDelimitterRef.current.value : null,
-      scopes: scopes || scopes.length > 0 ? scopes : null
+      scopes: scopes || scopes.length > 0 ? scopes : null,
+      isEditing: provider.isEditing,
     }
 
     if (provider.security_scheme) {
