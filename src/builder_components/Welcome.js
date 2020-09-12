@@ -1,0 +1,24 @@
+import React from 'react';
+import Modal from 'react-bootstrap/Modal';
+import { switchHelpTopic } from '../actions/help';
+import { connect } from 'react-redux';
+
+const Welcome = ({ switchHelpTopic }) => {
+  const dontShow = () => {
+    localStorage.setItem('seenWelcome', true);
+    switchHelpTopic(null)
+  }
+  return (
+    <Modal.Body>
+      <h1 className="text-center">Welcome</h1>
+      <p className="lead text-center">And thankyou for choosing to sign up to take Pluckr for a spin and become an early adopter of this new insights platform.</p>
+      <p className="text-center">Before jumping straight into building charts we would recommend that you take the time to check out the documentation.
+      If you find any problems or would just like to ask a question then please feel free to get in contact via email at <a href="mailto:info@pluckr.io">info@pluckr.io</a></p>
+      <div className="d-flex justify-content-center">
+        <button className="btn btn-primary btn-lg" onClick={dontShow}>Get Started!</button>
+      </div>
+    </Modal.Body>
+  );
+}
+
+export default connect(null, { switchHelpTopic })(Welcome);

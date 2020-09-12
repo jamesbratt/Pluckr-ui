@@ -2,16 +2,17 @@ import * as React from "react";
 import Loader from '../../Loader';
 import Chart from './Chart';
 import axios from "axios";
+import GenerateRequest from '../../utils/GenerateRequest';
 
 import { setDataSets } from '../../actions/dataset';
 import { setLoader } from '../../actions';
-import { providers } from '../../ProviderConstants';
+import { extractGlobalParameters } from '../../utils/Helpers';
 import { executeOperations } from '../../data_parsing/parse';
 import { connect } from 'react-redux';
 import { fetchCharts } from '../../actions/chart';
 import { clone } from 'ramda';
 
-const fetchDataSets = async (chartId, username, apiKey) => {
+const fetchDataSets = async (providers, chartId, username, apiKey) => {
 
   const headers = {
     'Content-Type': 'application/json',
@@ -31,21 +32,24 @@ const fetchDataSets = async (chartId, username, apiKey) => {
       const dataSources = dataset.sources;
 
       const rawData = dataSources.map((source) => {
-        const provider = providers.find(provider => provider.provider === source.provider);
-        return provider.request(
+        const provider = providers.find(provider => provider.id === source.data_provider_id);
+        const parametersModel = extractGlobalParameters(provider, source.resource);
+        return GenerateRequest(
+          provider,
           source.resource,
           JSON.parse(source.params),
-          username,
-          apiKey,
-          source.id
+          parametersModel,
+          source.id ? parseInt(source.id) : null,
+          username, apiKey,
         ).catch((error) => {});
       });
+
 
       return Promise.all(rawData).then(responses => {
         const rawData = responses.length > 1 ? responses.reduce((acc, curr) => {
           acc.push(curr.data);
           return acc;
-        }, []) : responses[0].data;
+        }, []) : responses[0];
 
         return { ...dataset, rawData };
       });
@@ -97,7 +101,13 @@ const transformData = async (datasets, username, apiKey) => {
       };
 
     } catch(error) {
-        console.error(error);
+
+      // If there is an error when executing operations
+      // then just return the raw data
+      return {
+        ...dataset,
+        data: dataset.rawData
+      };
     };
   });
 
@@ -113,6 +123,7 @@ const mapStateToProps = (state) => {
     sources: state.sources.data,
     datasets: state.datasets,
     loader: state.loader,
+    providers: state.providers.providers,
   };
 };
 
@@ -128,7 +139,7 @@ class EditorWrapper extends React.Component {
     const user = this.props.user.username;
     const apiKey = this.props.user.api_key;
 
-    const datasets = await fetchDataSets(chartId, user, apiKey);
+    const datasets = await fetchDataSets(this.props.providers, chartId, user, apiKey);
     const processedDatasets = await transformData(datasets, user, apiKey);
     this.props.setDataSets(processedDatasets);
 

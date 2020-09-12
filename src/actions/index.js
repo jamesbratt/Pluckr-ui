@@ -44,7 +44,7 @@ export const fetchUser = (username, password) => {
 }
 
 // DATA SOURCES
-export const addSource = (id, sourceName, chartId, provider, resource, params, data, properties) => {
+export const addSource = (id, sourceName, chartId, provider, resource, params, data, data_provider_id) => {
   return {
     type: 'ADD_SOURCE',
     id,
@@ -54,11 +54,11 @@ export const addSource = (id, sourceName, chartId, provider, resource, params, d
     resource,
     params,
     data,
-    properties,
+    data_provider_id,
   }
 };
 
-export const updateSource = (id, sourceName, chartId, provider, resource, params, data, properties) => {
+export const updateSource = (id, sourceName, chartId, provider, resource, params, data, data_provider_id) => {
   return {
     type: 'UPDATE_SOURCE',
     id,
@@ -68,7 +68,7 @@ export const updateSource = (id, sourceName, chartId, provider, resource, params
     resource,
     params,
     data,
-    properties,
+    data_provider_id,
   }
 };
 
@@ -143,7 +143,6 @@ export const createDataSource = (
   resource,
   params,
   rawData,
-  properties,
   id,
 ) => {
 
@@ -152,10 +151,11 @@ export const createDataSource = (
   const payload = {
     name,
     chart: { pk: chartId },
-    provider,
+    provider: '',
     resource,
     params: JSON.stringify(params),
     integration_auth: integration_id ? { pk: integration_id } : null,
+    data_provider: { pk: provider.id }
   };
 
   return (dispatch, getState) => {
@@ -178,8 +178,8 @@ export const createDataSource = (
           response.data.provider,
           response.data.resource,
           JSON.parse(response.data.params),
-          rawData.data,
-          properties,
+          rawData,
+          response.data.data_provider_id,
         ) : updateSource(
           response.data.id,
           response.data.name,
@@ -187,8 +187,8 @@ export const createDataSource = (
           response.data.provider,
           response.data.resource,
           JSON.parse(response.data.params),
-          rawData.data,
-          properties,
+          rawData,
+          response.data.data_provider_id,
         )
       );
 

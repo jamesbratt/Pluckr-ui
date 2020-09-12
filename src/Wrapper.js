@@ -13,17 +13,22 @@ import ViewDashboard from './builder_components/dashboards/ViewDashboard';
 import DeleteAccount from './builder_components/account/DeleteAccount';
 import DataSourceList from './builder_components/data_sources/DataSourceList';
 import DataSourceDetail from './builder_components/data_sources/DataSourceDetail';
+import Help from './builder_components/Help';
+import Welcome from './builder_components/Welcome';
 import { Link, Route, Redirect } from "react-router-dom";
 import { connect } from 'react-redux';
-import { setDataProviders, setLoader } from './actions';
-import { getToken } from './utils/Helpers';
+import { toggleHelp } from './actions/help';
 
 const DataSourceListWrapped = ChartConfigHoc(DataSourceList);
-// const DataSourceDetailWrapped = ChartConfigHoc(DataSourceDetail);
+const DataSourceDetailWrapped = ChartConfigHoc(DataSourceDetail);
 const ChartEditorWrapped = ChartConfigHoc(EditorWrapper);
 
 const mapStateToProps = state => {
   return state
+};
+
+const mapDispatchToProps = {
+  toggleHelp,
 };
 
 class Wrapper extends Component {
@@ -40,32 +45,14 @@ class Wrapper extends Component {
       window.location.href = "/";
     }
 
-    componentDidMount() {
-      this.props.dispatch(
-        setLoader(
-        true
-        )
-      );
-
-      const cachedProviders = this.props.dataProviders.filter(dataProvider => {
-          if (getToken(dataProvider.provider)) {
-              return dataProvider;
-          }
-      });
-
-      this.props.dispatch(
-          setDataProviders(
-          cachedProviders
-          )
-      );
-    }
-
     closeProviderModal = () => {
       this.setState({ providerModalShow: false })
     }
 
     render() {
       const tokenObj = localStorage.getItem('pluckr_token');
+      const seenWelcome = localStorage.getItem('seenWelcome') || false;
+
       if (!tokenObj) {
         return <Redirect to='/' />;
       }
@@ -83,6 +70,7 @@ class Wrapper extends Component {
             </Nav>
             <Nav>
               <Link className="nav-link" to="/account">Account for {this.props.user[0].username}</Link>
+              <Nav.Link onClick={() => this.props.toggleHelp(null)}>Documentation</Nav.Link>
               <Nav.Link onClick={this.logout}>Log Out</Nav.Link>
             </Nav>
           </Navbar.Collapse>
@@ -115,8 +103,8 @@ class Wrapper extends Component {
             />
             <Route path={`/charts/:id/chart`} component={ChartEditorWrapped} />
             <Route path={`/charts/:id/data-sources`} component={DataSourceListWrapped} />
-            <Route path={`/charts/:id/create-data-source`} component={DataSourceDetail} />
-            <Route path={`/charts/:id/edit-data-source/:data_source_id`} component={DataSourceDetail} />
+            <Route path={`/charts/:id/create-data-source`} component={DataSourceDetailWrapped} />
+            <Route path={`/charts/:id/edit-data-source/:data_source_id`} component={DataSourceDetailWrapped} />
             <Modal show={this.state.providerModalShow} onHide={this.closeProviderModal}>
               <Modal.Header closeButton>
                 <Modal.Title>Connect to a data provider</Modal.Title>
@@ -127,6 +115,10 @@ class Wrapper extends Component {
               <Modal.Footer>
               </Modal.Footer>
             </Modal>
+
+            <Modal size="lg" show={!seenWelcome || this.props.help.isOpen} onHide={this.props.toggleHelp}>
+              {!seenWelcome ? <Welcome /> : <Help />}
+            </Modal>
             </div>
           </div>
         </React.Fragment>
@@ -135,5 +127,6 @@ class Wrapper extends Component {
 }
 
 export default connect(
-  mapStateToProps
+  mapStateToProps,
+  mapDispatchToProps,
 )(Wrapper);

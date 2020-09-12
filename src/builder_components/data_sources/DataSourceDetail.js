@@ -4,15 +4,22 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import JSONTree from 'react-json-tree';
 import DateSelector from './DateSelector';
+import ParameterField from './ParameterField';
 import Loader from '../../Loader';
 import axios from "axios";
+import GenerateRequest from '../../utils/GenerateRequest';
 
 import { Link } from "react-router-dom";
-import { pathOr } from 'ramda';
+import { pathOr, append } from 'ramda';
 import { DATA_TYPES } from '../../Constants';
 import { connect } from 'react-redux';
 import { createDataSource, fetchDataSources, setLoader } from '../../actions';
 import { addNotification } from '../../actions/notification';
+import { fetchProvider } from '../../actions/provider';
+import { extractGlobalParameters } from '../../utils/Helpers';
+import { Typeahead } from 'react-bootstrap-typeahead';
+
+import 'react-bootstrap-typeahead/css/Typeahead.css';
 
 const fetchDataSource = async (apiKey, username, datasourceId, dataProviders) => {
     const options = {
@@ -27,18 +34,21 @@ const fetchDataSource = async (apiKey, username, datasourceId, dataProviders) =>
     try {
       const response = await axios(options)
       const dataSource = response.data;
-      const provider = dataProviders.find(dataProvider => dataProvider.provider === response.data.provider);
+      const provider = dataProviders.find(dataProvider => dataProvider.id === response.data.data_provider_id);
+      const parametersModel = extractGlobalParameters(provider, dataSource.resource);
 
       try {
-        const rawData = await provider.request(
+
+        const rawData = await GenerateRequest(
+          provider,
           dataSource.resource,
           JSON.parse(dataSource.params),
-          username,
-          apiKey,
-          dataSource.id
-        );
+          parametersModel,
+          dataSource.id ? parseInt(dataSource.id) : null,
+          username, apiKey,
+        )
 
-        dataSource.rawData = rawData.data;
+        dataSource.rawData = rawData;
 
         return dataSource;
 
@@ -55,6 +65,7 @@ const mapStateToProps = (state) => {
   return {
     user: state.user[0],
     dataProviders: state.dataProviders,
+    providers: state.providers.providers,
     sources: state.sources.data,
     loader: state.loader,
   };
@@ -66,6 +77,7 @@ const mapDispatchToProps = {
   fetchDataSources,
   addNotification,
   fetchDataSource,
+  fetchProvider,
 }
 
 class DataSourceDetail extends Component {
@@ -93,19 +105,21 @@ class DataSourceDetail extends Component {
         api_key,
         username,
         this.props.match.params.data_source_id,
-        this.props.dataProviders,
+        this.props.providers,
       );
 
-      const selectedProvider = this.props.dataProviders.find(
-        dataProvider => dataProvider.provider === source.provider,
+      const selectedProvider = this.props.providers.find(
+        dataProvider => dataProvider.id === source.data_provider_id,
       );
+
+      const parameterFields = extractGlobalParameters(selectedProvider, source.resource);
 
       this.setState({
         sourceName: source.name,
         data: source.rawData,
         selectedProvider,
         selectedResource: source.resource,
-        parameterFields: selectedProvider.resources[source.resource].parameters,
+        parameterFields,
         parameterValues: typeof source.params === 'string' ? JSON.parse(source.params) : source.params,
       });
 
@@ -129,22 +143,26 @@ class DataSourceDetail extends Component {
     const { username, api_key } = this.props.user;
 
     const selectedResource = this.state.selectedResource;
-    const selectedProvider = pathOr(null, ['provider'], this.state.selectedProvider);
+    const selectedProvider = this.state.selectedProvider || null;
     const params = this.state.parameterValues;
     const sourceName = this.state.sourceName;
+    const sourceId = this.props.match.params.data_source_id || this.state.newlySavedDataSoucerId;
 
     event.preventDefault();
     if(selectedResource && sourceName && selectedProvider) {
       try {
         this.props.setLoader(true);
-        this.state.selectedProvider.request(
+        GenerateRequest(
+          selectedProvider,
           selectedResource,
-          params, username, api_key,
-          parseInt(this.props.match.params.data_source_id) || parseInt(this.state.newlySavedDataSoucerId)
+          params,
+          this.state.parameterFields,
+          sourceId ? parseInt(sourceId) : null,
+          username, api_key,
         )
           .then(response => {
             this.setState({
-              data: response.data,
+              data: response,
             }, () => {
               this.props.createDataSource(
                 api_key,
@@ -155,7 +173,6 @@ class DataSourceDetail extends Component {
                 selectedResource,
                 params,
                 response,
-                response.properties,
                 this.props.match.params.data_source_id || this.state.newlySavedDataSoucerId
               ).then(response => {
                 this.props.setLoader(false);
@@ -178,8 +195,9 @@ class DataSourceDetail extends Component {
 
   onProviderChange = (event) => {
     if (event.target.value) {
-      const selectedProvider = this.props.dataProviders.find(
-        dataProvider => dataProvider.provider === event.target.value
+      // this.props.fetchProvider(event.target.value);
+      const selectedProvider = this.props.providers.find(
+        provider => provider.id === parseInt(event.target.value)
       );
 
       this.setState({
@@ -198,14 +216,14 @@ class DataSourceDetail extends Component {
     }
   };
 
-  onResourceChange = (event) => {
-    if (this.state.selectedProvider && event.target.value) {
+  onResourceChange = (selection) => {
+    if (this.state.selectedProvider && selection.length > 0) {
       let availableFields = [];
-      const resourceName = event.target.value;
-      const resourceParams = this.state.selectedProvider.resources[resourceName].parameters;
+      const resourceName = selection[0].id;
+      const resourceParams = this.state.selectedProvider.swagger_paths[resourceName].get.parameters;
 
       if (resourceParams) {
-        availableFields = resourceParams;
+        availableFields = extractGlobalParameters(this.state.selectedProvider, resourceName);
       }
 
       this.setState({
@@ -224,6 +242,7 @@ class DataSourceDetail extends Component {
   onParameterChange = (event) => {
     const parameterName = event.target.name;
     const parameterValue = event.target.value;
+    const isDate = event.target.isDate || false;
     const constructedParams = this.state.parameterValues;
     let newParams = [];
 
@@ -233,12 +252,12 @@ class DataSourceDetail extends Component {
           if (parameter.name && parameter.name === parameterName) {
             parameter.value = parameterValue;
           } else {
-            newParams.push({ name: parameter.name, value: parameter.value });
+            newParams.push({ name: parameter.name, value: parameter.value, isDate: parameter.isDate, });
           }
         });
-        newParams.push({ name: parameterName, value: parameterValue });
+        newParams.push({ name: parameterName, value: parameterValue, isDate });
       } else {
-        newParams.push({ name: parameterName, value: parameterValue });
+        newParams.push({ name: parameterName, value: parameterValue, isDate });
       }
     }
 
@@ -256,27 +275,16 @@ class DataSourceDetail extends Component {
   render() {
 
     let parameters = [];
+    const selectedResourceLabel = this.state.selectedResource ? this.state.selectedProvider.swagger_paths[this.state.selectedResource].get.summary : '';
 
     if (this.state.parameterFields.length > 0) {
       parameters = this.state.parameterFields.map(parameterField => {
         const paramValue = this.state.parameterValues.find(parameterValue => parameterValue.name === parameterField.name);
         const val = pathOr(null, ['value'], paramValue);
-        switch(parameterField.type) {
-          case DATA_TYPES.date:
-            return (
-              <React.Fragment key={parameterField.name}>
-                <DateSelector useVariables={parameterField.useVariables} name={parameterField.name} value={val} onChange={this.onParameterChange} />
-              </React.Fragment>
-            );
-          case DATA_TYPES.int:
-            return (
-              <React.Fragment key={parameterField.name}>
-                <div class="form-group">
-                  <label>{parameterField.name}</label>
-                  <input defaultValue={val} name={parameterField.name} onKeyUp={this.onParameterChange} type="number" className="form-control" placeholder={parameterField.name} />
-                </div>
-              </React.Fragment>
-            );
+
+        // In v3 openapi definitions, the parameter type is nested inside a schema object
+        const parameterType = parameterField.type === undefined && parameterField.schema !== undefined ? parameterField.schema.type : parameterField.type;
+        switch(parameterType) {
             case DATA_TYPES.picker:
               return (
                 <React.Fragment key={parameterField.name}>
@@ -299,12 +307,12 @@ class DataSourceDetail extends Component {
               );
           default:
             return (
-              <React.Fragment key={parameterField.name}>
-                <div class="form-group">
-                  <label>{parameterField.name}</label>
-                  <input defaultValue={val} name={parameterField.name} onKeyUp={this.onParameterChange} type="text" className="form-control" placeholder={parameterField.name} />
-                </div>
-              </React.Fragment>
+              <ParameterField
+                type={parameterType}
+                parameterField={parameterField}
+                paramValue={paramValue}
+                onChange={this.onParameterChange}
+              />
             );
         }
       })
@@ -328,27 +336,30 @@ class DataSourceDetail extends Component {
                 </div>
                 <div className="form-group">
                   <label>Data Provider</label>
-                  <select value={pathOr('', ['provider'], this.state.selectedProvider)} onChange={this.onProviderChange} className="form-control" id="dataProvider">
+                  <select value={pathOr('', ['id'], this.state.selectedProvider)} onChange={this.onProviderChange} className="form-control" id="dataProvider">
                     <option value="">-- Select a data provider --</option>;
-                    {this.props.dataProviders.map((dataProvider) => {
-                      if (dataProvider.isActive) {
-                        return <option key={dataProvider.provider} value={dataProvider.provider}>{dataProvider.provider}</option>
+                    {this.props.providers.map((provider) => {
+                      if (provider.isConnected) {
+                        return <option key={provider.id} value={provider.id}>{provider.name}</option>
                       }
                     })}
                   </select>
                   <small className="form-text text-muted">
-                    {this.state.selectedProvider ? <a rel="noopener noreferrer" target="_blank" href={this.state.selectedProvider.docs}>Check out the <span style={{ textTransform: 'capitalize' }}>{this.state.selectedProvider.provider}</span> documentation</a> : ''}
+                    {/*this.state.selectedProvider ? <a rel="noopener noreferrer" target="_blank" href={this.state.selectedProvider.docs}>Check out the <span style={{ textTransform: 'capitalize' }}>{this.state.selectedProvider.provider}</span> documentation</a> : ''*/}
                   </small>
                 </div>
-                {this.state.selectedProvider ?
+                {this.state.selectedProvider && this.state.selectedProvider.swagger_paths ?
                   <div className="form-group">
                     <label>Resource</label>
-                    <select value={this.state.selectedResource} onChange={this.onResourceChange} className="form-control" id="dataSourceResource">
-                      <option value="">-- Select a resource --</option>;
-                      {Object.keys(this.state.selectedProvider.resources).map(resourceKey => {
-                        return <option key={this.state.selectedProvider.resources[resourceKey].name} value={this.state.selectedProvider.resources[resourceKey].name}>{this.state.selectedProvider.resources[resourceKey].label}</option>
+                    <Typeahead
+                      placeholder='Search and select a resource'
+                      defaultInputValue={selectedResourceLabel}
+                      onChange={this.onResourceChange}
+                      options={Object.keys(this.state.selectedProvider.swagger_paths).filter(r => this.state.selectedProvider.swagger_paths[r].get).map(resourceKey => {
+                        const resourceDetails = this.state.selectedProvider.swagger_paths[resourceKey].get;
+                        return { id: resourceKey, label: resourceDetails.summary }
                       })}
-                    </select>
+                    />
                   </div>
                 : null
                 }

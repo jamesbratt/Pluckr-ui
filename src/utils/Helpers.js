@@ -1,7 +1,7 @@
 
 import { pathOr } from 'ramda';
 import axios from "axios";
-import { VARIABLES } from '../Constants';
+import { VARIABLES, DATA_TYPES } from '../Constants';
 
 export const GenerateGuid = () => {
   const s4 = () => {
@@ -60,15 +60,29 @@ export const calculateVariableDate = (param) => {
   }
 }
 
-export const generateQueryString = (params, resource, paramConfigs) => {
-  const resourceParameters = paramConfigs;
+export const generateQueryString = (params, uriParametersModel) => {
   return params.map(param => {
     let value = param.value;
-    const transformation = resourceParameters.find(
-      resourceParameter => resourceParameter.name === param.name
-    ).transform;
+    const parameterField = uriParametersModel.find(field => field.name === param.name);
+    const type = parameterField.type === undefined && parameterField.schema !== undefined ? parameterField.schema.type : parameterField.type;
+    
+    let transformation = null;
+    if (param.isDate && type === DATA_TYPES.int) {
+      transformation = ConvertToEpoch;
+    }
+
+    if (param.isDate && type === DATA_TYPES.string) {
+      transformation = ConvertToIso;
+    }
+
     if (transformation && VARIABLES.find(v => v.value === param.value)) {
       value = calculateVariableDate(param);
+
+      // The function above already gives us a timestamp
+      if (type === DATA_TYPES.int) {
+        transformation = null;
+        value = (value/1000);
+      }
     }
     return param.name + '=' + (transformation ? transformation(value) : value);
   }).join('&');
@@ -94,7 +108,28 @@ export const injectParametersIntoEndpoint = (resourcEndpoint, params) => {
   return { endPoint, parameters };
 }
 
-export const proxyRequest = (url, key, integration_type, username, apiKey, source_id) => {
+export const extractGlobalParameters = (provider, resource) => {
+  const resourceParams = provider.swagger_paths[resource].get.parameters;
+
+  return resourceParams.reduce((acc, curr) => {
+
+    // This is to handle path parameters that
+    // are defined as part of the definitions global parameters.
+    // Things such as paging and limits etc.
+    const key = Object.keys(curr)[0];
+    if (key === '$ref') {
+      const globalParamPath = curr[key].split("/");
+      const globalParamKey = globalParamPath[globalParamPath.length - 1];
+      const globalParam = provider.swagger_parameters[globalParamKey];
+      acc.push(globalParam);
+    } else {
+      acc.push(curr);
+    }
+    return acc;
+  }, []);
+}
+
+export const proxyRequest = (url, key, integration_type, username, apiKey, source_id, swagger_definition) => {
 
   let payload = {};
 
@@ -103,6 +138,7 @@ export const proxyRequest = (url, key, integration_type, username, apiKey, sourc
       url,
       key,
       integration_type,
+      swagger_definition,
     }
   }
 
@@ -111,6 +147,7 @@ export const proxyRequest = (url, key, integration_type, username, apiKey, sourc
       url,
       source_id,
       integration_type,
+      swagger_definition,
     }
   }
 
@@ -118,6 +155,7 @@ export const proxyRequest = (url, key, integration_type, username, apiKey, sourc
     payload = {
       url,
       integration_type,
+      swagger_definition,
     }
   }
 

@@ -9,6 +9,7 @@ const mapStateToProps = (state) => {
   return {
     user: state.user[0],
     dashboards: state.dashboards,
+    providers: state.providers.providers,
     loader: state.loader,
   };
 };
@@ -46,7 +47,7 @@ class ViewDashboard extends Component {
     const { id } = this.props.match.params;
     const dashboard = this.props.dashboards.find(dashboard => dashboard.id === parseInt(id));
     const charts = dashboard ? dashboard.charts.sort((a, b) => a.order - b.order)
-      .map(chart => <Visualisation config={chart} />) : [];
+      .map(chart => <Visualisation config={chart} providers={this.props.providers} />) : [];
 
     const rows = this.generateRows(charts, 2);
 

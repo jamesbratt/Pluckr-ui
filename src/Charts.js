@@ -88,53 +88,50 @@ class Charts extends Component {
 
       let content = (
         <React.Fragment>
-          <div className="row">
-            <div className="col-md-8">
-              <div className="table-wrapper">
-                <h2>Your Charts</h2>
-                <div className="table-header">
-                  <button style={{ marginRight: '1em' }} type="button" onClick={() => this.setState({createChartModalShow: true})} className="btn btn-primary">
-                    Create Chart from Scratch
-                  </button>
-                  <Link to={`/charts/templates`}>
-                      Create Chart from Template
-                  </Link>
-                </div>
-
-                {charts.length === 0 ?
-                  <div className="sad-face"><p style={{ textAlign: 'center' }} className="lead">You have no charts yet, get building!</p></div> :
-                  <Table bordered hover>
-                  <thead>
-                    <tr>
-                      <th></th>
-                      <th>Name</th>
-                      <th>Chart Type</th>
-                      <th>Series Type</th>
-                      <th></th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {charts.map((chart) => {
-                      return (
-                        <tr key={chart.id}>
-                          <td width="40">
-                            <i className={ICON_MAPPER[chart.series_type]} />
-                          </td>
-                          <td><Link to={`/charts/${chart.id}/data-sources`}>{chart.name}</Link></td>
-                          <td className="capitalize">{chart.chart_type}</td>
-                          <td className="capitalize">{chart.series_type}</td>
-                          <td width="40">
-                            <button onClick={() => this.removeChart(chart.id)} className="btn btn-link table-btn float-right"><i className="fa fa-trash" /></button>
-                          </td>
-                        </tr>
-                      )
-                    })}
-                  </tbody>
-                </Table>}
+          <div className="col-md-8">
+            <div className="table-wrapper">
+              <h2>Your Charts</h2>
+              <div className="table-header">
+                <button style={{ marginRight: '1em' }} type="button" onClick={() => this.setState({createChartModalShow: true})} className="btn btn-primary">
+                  Create Chart from Scratch
+                </button>
+                <Link to={`/charts/templates`}>
+                    Create Chart from Template
+                </Link>
               </div>
-            </div>
-            <div className="col-md-4">
-              <DataProviderTable />
+
+              {charts.length === 0 ?
+                <div className="sad-face"><p style={{ textAlign: 'center' }} className="lead">You have no charts yet, get building!</p></div> :
+                <Table bordered hover>
+                <thead>
+                  <tr>
+                    <th></th>
+                    <th>Name</th>
+                    <th>Chart Type</th>
+                    <th>Created At</th>
+                    <th>Updated At</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {charts.map((chart) => {
+                    return (
+                      <tr key={chart.id}>
+                        <td width="40">
+                          <i className={ICON_MAPPER[chart.series_type]} />
+                        </td>
+                        <td><Link to={`/charts/${chart.id}/data-sources`}>{chart.name}</Link></td>
+                        <td className="capitalize">{chart.series_type}</td>
+                        <td>{new Date(chart.created_at).toLocaleString()}</td>
+                        <td>{new Date(chart.updated_at).toLocaleString()}</td>
+                        <td width="40">
+                          <button onClick={() => this.removeChart(chart.id)} className="btn btn-link table-btn float-right"><i className="fa fa-trash" /></button>
+                        </td>
+                      </tr>
+                    )
+                  })}
+                </tbody>
+              </Table>}
             </div>
           </div>
         </React.Fragment>
@@ -154,7 +151,12 @@ class Charts extends Component {
 
       return (
         <React.Fragment>
-          {content}
+          <div className="row">
+            {content}
+            <div className="col-md-4">
+              <DataProviderTable />
+            </div>
+          </div>
           <Modal show={this.state.createChartModalShow} onHide={() => this.setState({createChartModalShow: false})}>
             <Modal.Header closeButton>
               <Modal.Title>Create a new chart</Modal.Title>

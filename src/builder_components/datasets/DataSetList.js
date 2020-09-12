@@ -75,6 +75,7 @@ class DataSetList extends Component {
                       <th>Name</th>
                       <th>Data Sources</th>
                       <th>Data Providers</th>
+                      <th>Updated At</th>
                       <th></th>
                     </tr>
                   </thead>
@@ -85,7 +86,7 @@ class DataSetList extends Component {
                       }, '');
 
                       const providers = dataset.sources.reduce((acc, curr) => {
-                        return acc += `${curr.provider}, `
+                        return acc += `${curr.data_provider_name}, `
                       }, '');
 
                       return (
@@ -93,6 +94,7 @@ class DataSetList extends Component {
                           <td><Link to={`${this.props.url}/edit-dataset/${dataset.id}`}>{dataset.name}</Link></td>
                           <td>{dataSources}</td>
                           <td>{providers}</td>
+                          <td>{new Date(dataset.updated_at).toLocaleString()}</td>
                           <td width="40">
                             <button onClick={() => this.delete(dataset.id)} className="btn btn-link table-btn"><i className="fa fa-trash" /></button>
                           </td>

@@ -1,15 +1,16 @@
 import React, { Component } from 'react';
 import axios from "axios";
 import Loader from '../../Loader';
+import GenerateRequest from '../../utils/GenerateRequest';
 
 import { executeOperations } from '../../data_parsing/parse';
 import { connect } from 'react-redux';
-import { providers } from '../../ProviderConstants';
+import { extractGlobalParameters } from '../../utils/Helpers';
 import { defineChartConfig } from '../editor/Graph';
 
 const Highcharts = require('highcharts');
 
-const fetchDataSets = async (chartId, username, apiKey) => {
+const fetchDataSets = async (chartId, providers, username, apiKey) => {
 
   const headers = {
     'Content-Type': 'application/json',
@@ -28,13 +29,16 @@ const fetchDataSets = async (chartId, username, apiKey) => {
       const dataSources = dataset.sources;
 
       const rawData = dataSources.map((source) => {
-        const provider = providers.find(provider => provider.provider === source.provider);
-        return provider.request(
+        const provider = providers.find(provider => provider.id === source.data_provider_id);
+
+        const parametersModel = extractGlobalParameters(provider, source.resource);
+        return GenerateRequest(
+          provider,
           source.resource,
           JSON.parse(source.params),
-          username,
-          apiKey,
-          source.id
+          parametersModel,
+          source.id ? parseInt(source.id) : null,
+          username, apiKey,
         ).catch((error) => {
           throw Error(error);
         });
@@ -42,9 +46,9 @@ const fetchDataSets = async (chartId, username, apiKey) => {
 
       return Promise.all(rawData).then(responses => {
         const data = responses.length > 1 ? responses.reduce((acc, curr) => {
-          acc.push(curr.data);
+          acc.push(curr);
           return acc;
-        }, []) : responses[0].data;
+        }, []) : responses[0];
 
         return { ...dataset, data };
       });
@@ -117,7 +121,7 @@ class Visualisation extends Component {
     const { chart } = this.props.config;
 
     try {
-      const datasets = await fetchDataSets(id, user, apiKey);
+      const datasets = await fetchDataSets(id, this.props.providers, user, apiKey);
       const datasetsProcessed = await transformData(datasets, user, apiKey);
 
       const chartConfig = defineChartConfig(chart);
