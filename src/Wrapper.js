@@ -68,7 +68,7 @@ class Wrapper extends Component {
             </Nav>
             <Nav>
               <Link className="nav-link" to="/account">Account for {this.props.user[0].username}</Link>
-              <Nav.Link onClick={() => this.props.toggleHelp(null)}>Documentation</Nav.Link>
+              <Nav.Link rel="noopener noreferrer" target="_blank" href="https://pluckr.io/documentation/">Documentation</Nav.Link>
               <Nav.Link onClick={this.logout}>Log Out</Nav.Link>
             </Nav>
           </Navbar.Collapse>
