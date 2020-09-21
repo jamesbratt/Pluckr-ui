@@ -338,10 +338,6 @@ a {
   width: 100%;
 }
 
-.btn-group-fixed button, a {
-  margin-right: 0.5em;
-}
-
 .login-wrapper {
   height: 100%;
   justify-content: center;

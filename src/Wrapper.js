@@ -13,11 +13,9 @@ import ViewDashboard from './builder_components/dashboards/ViewDashboard';
 import DeleteAccount from './builder_components/account/DeleteAccount';
 import DataSourceList from './builder_components/data_sources/DataSourceList';
 import DataSourceDetail from './builder_components/data_sources/DataSourceDetail';
-import Help from './builder_components/Help';
 import Welcome from './builder_components/Welcome';
 import { Link, Route, Redirect } from "react-router-dom";
 import { connect } from 'react-redux';
-import { toggleHelp } from './actions/help';
 
 const DataSourceListWrapped = ChartConfigHoc(DataSourceList);
 const DataSourceDetailWrapped = ChartConfigHoc(DataSourceDetail);
@@ -27,15 +25,12 @@ const mapStateToProps = state => {
   return state
 };
 
-const mapDispatchToProps = {
-  toggleHelp,
-};
-
 class Wrapper extends Component {
     constructor(props) {
         super(props);
         this.state = {
           providerModalShow: false,
+          welcomeModalShow: localStorage.getItem('seenWelcome') ? false : true
         }
     }
 
@@ -49,9 +44,12 @@ class Wrapper extends Component {
       this.setState({ providerModalShow: false })
     }
 
+    closeWelcomeModal = () => {
+      this.setState({ welcomeModalShow: false })
+    }
+
     render() {
       const tokenObj = localStorage.getItem('pluckr_token');
-      const seenWelcome = localStorage.getItem('seenWelcome') || false;
 
       if (!tokenObj) {
         return <Redirect to='/' />;
@@ -116,8 +114,8 @@ class Wrapper extends Component {
               </Modal.Footer>
             </Modal>
 
-            <Modal size="lg" show={!seenWelcome || this.props.help.isOpen} onHide={this.props.toggleHelp}>
-              {!seenWelcome ? <Welcome /> : <Help />}
+            <Modal size="lg" show={this.state.welcomeModalShow}>
+              <Welcome onClose={this.closeWelcomeModal} />
             </Modal>
             </div>
           </div>
@@ -128,5 +126,4 @@ class Wrapper extends Component {
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps,
 )(Wrapper);
