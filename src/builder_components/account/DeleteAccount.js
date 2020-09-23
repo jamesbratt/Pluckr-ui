@@ -33,7 +33,7 @@ class DeleteAccount extends React.Component {
     })
       .then(response => {
         if (response.status === 204) {
-          Cookies.remove('pluckr_token');
+          Cookies.set('pluckr_token', '', { expires: new Date(new Date().getTime() - 60 * 60 * 24 * 1000) });
           window.location.href = "/";
         }
       })

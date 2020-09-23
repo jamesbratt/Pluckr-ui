@@ -39,7 +39,7 @@ export const fetchUser = (username, password) => {
     })
     .then(json => {
       const isProduction = process.env.NODE_ENV === 'production';
-      const cookieOptions = { secure: isProduction };
+      const cookieOptions = { secure: isProduction, expires: new Date(new Date().getTime() + 60 * 60 * 24 * 1000) };
       if (isProduction) {
         cookieOptions.domain = 'app.pluckr.io';
       }

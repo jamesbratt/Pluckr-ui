@@ -37,7 +37,7 @@ class Wrapper extends Component {
     }
 
     logout = () => {
-      Cookies.remove('pluckr_token')
+      Cookies.set('pluckr_token', '', { expires: new Date(new Date().getTime() - 60 * 60 * 24 * 1000) });
       window.location.href = "/";
     }
 
