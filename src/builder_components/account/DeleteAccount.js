@@ -1,5 +1,7 @@
 import React from 'react';
 import Modal from 'react-bootstrap/Modal';
+import Cookies from 'js-cookie';
+
 import { connect } from 'react-redux';
 
 const mapStateToProps = (state) => {
@@ -31,8 +33,7 @@ class DeleteAccount extends React.Component {
     })
       .then(response => {
         if (response.status === 204) {
-          localStorage.removeItem('pluckr_token');
-          localStorage.removeItem('token');
+          Cookies.remove('pluckr_token');
           window.location.href = "/";
         }
       })

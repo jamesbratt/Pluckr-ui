@@ -14,6 +14,8 @@ import DeleteAccount from './builder_components/account/DeleteAccount';
 import DataSourceList from './builder_components/data_sources/DataSourceList';
 import DataSourceDetail from './builder_components/data_sources/DataSourceDetail';
 import Welcome from './builder_components/Welcome';
+import Cookies from 'js-cookie';
+
 import { Link, Route, Redirect } from "react-router-dom";
 import { connect } from 'react-redux';
 
@@ -35,8 +37,7 @@ class Wrapper extends Component {
     }
 
     logout = () => {
-      localStorage.removeItem('pluckr_token');
-      localStorage.removeItem('token');
+      Cookies.remove('pluckr_token')
       window.location.href = "/";
     }
 
@@ -49,7 +50,7 @@ class Wrapper extends Component {
     }
 
     render() {
-      const tokenObj = localStorage.getItem('pluckr_token');
+      const tokenObj = Cookies.get('pluckr_token');
 
       if (!tokenObj) {
         return <Redirect to='/' />;

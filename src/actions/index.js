@@ -1,7 +1,9 @@
+import Cookies from 'js-cookie';
+import axios from "axios";
+
 import { assocPath } from 'ramda';
 import { getTokenId } from '../utils/Helpers';
 import { addNotification } from './notification';
-import axios from "axios";
 
 // USERS
 export const setLoader = (isLoading) => {
@@ -36,7 +38,12 @@ export const fetchUser = (username, password) => {
       }
     })
     .then(json => {
-      localStorage.setItem('pluckr_token', JSON.stringify(json));
+      const isProduction = process.env.NODE_ENV === 'production';
+      const cookieOptions = { secure: isProduction };
+      if (isProduction) {
+        cookieOptions.domain = 'app.pluckr.io';
+      }
+      Cookies.set('pluckr_token', JSON.stringify(json), cookieOptions);
       dispatch(receiveUser(json));
     })
     .catch(error => dispatch(addNotification({ message: error.message, type: 'error' })));
