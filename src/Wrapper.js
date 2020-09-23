@@ -37,7 +37,12 @@ class Wrapper extends Component {
     }
 
     logout = () => {
-      Cookies.set('pluckr_token', '', { expires: new Date(new Date().getTime() - 60 * 60 * 24 * 1000) });
+      const isProduction = process.env.NODE_ENV === 'production';
+      const cookieOptions = { expires: new Date(new Date().getTime() + 60 * 60 * 24 * 1000) };
+      if (isProduction) {
+        cookieOptions.domain = 'app.pluckr.io';
+      }
+      Cookies.set('pluckr_token', '', cookieOptions);
       window.location.href = "/";
     }
 
