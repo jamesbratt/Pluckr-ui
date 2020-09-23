@@ -62,13 +62,10 @@ class TemplateList extends Component {
     const user = this.props.user.username;
     const apiKey = this.props.user.api_key;
 
-    const tokens = localStorage.getItem('token');
-    const parsedTokens = tokens ? JSON.parse(tokens) : {};
-
     const payload = {
       chart_id,
       sourceProviders,
-      tokens: parsedTokens,
+      tokens: {},
     };
 
     fetch(`${process.env.REACT_APP_PLUCKR_API_URI}/api/v1/library/install/`, {

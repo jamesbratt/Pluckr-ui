@@ -1,6 +1,7 @@
 
-import { pathOr } from 'ramda';
 import axios from "axios";
+
+import { pathOr } from 'ramda';
 import { VARIABLES, DATA_TYPES } from '../Constants';
 
 export const GenerateGuid = () => {

@@ -1,5 +1,6 @@
-const storedUser = localStorage.getItem('pluckr_token');
+import Cookies from 'js-cookie';
 
+const storedUser = Cookies.get('pluckr_token');
 const initialState = storedUser ? [JSON.parse(storedUser)] : [];
 
 const user = (state = initialState, action) => {
