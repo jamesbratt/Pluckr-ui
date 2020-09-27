@@ -58,8 +58,7 @@ class Register extends React.Component {
     return (
       <div className="login-wrapper">
         <form onSubmit={this.register} className="form-register">
-          <h1 style={{textAlign: "center"}} className="h3 mb-3 font-weight-normal">Register as a Beta Tester</h1>
-          <p>To make Pluckr the best it can be, user feedback is crucial! Once you have been using Pluckr for a while your feedback will be requested.</p>
+          <h1 style={{textAlign: "center"}} className="h3 mb-3 font-weight-normal">Sign Up</h1>
           <div className="form-group">
             <label>Username</label>
             <input name="userame" required ref={usernameRef} className="form-control" type="text" placeholder="Please enter a username" />
@@ -85,7 +84,7 @@ class Register extends React.Component {
               Don't worry, we will not be using your email address to spam you with junk. It is just for gathering user feedback and to contact you regarding your continued usage of Pluckr.
             </small>
           </div>
-          <button style={{ marginTop: '1em' }} className="btn btn-lg btn-primary" type="submit">Register</button>
+          <button style={{ marginTop: '1em' }} className="btn btn-lg btn-primary" type="submit">Sign Up</button>
           <p className="text-muted">Already registered? Sign-in <a href="/">here</a></p>
           <p className="text-muted">© Pluckr {new Date().getFullYear()}</p>
         </form>
