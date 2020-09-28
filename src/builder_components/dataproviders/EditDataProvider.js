@@ -79,7 +79,7 @@ const EditDataProvider = ({ provider, updateDataProvider }) => {
             </div>
             <div className="form-group">
               <label>Client Secret</label>
-              <input type="password" defaultValue={provider.client_secret} ref={clientSecretRef} className="form-control" />
+              <input type="password" autocomplete="off" defaultValue={provider.client_secret} ref={clientSecretRef} className="form-control" />
             </div>
             <div className="form-group">
               <label>Permission Scopes</label>
@@ -132,7 +132,7 @@ const EditDataProvider = ({ provider, updateDataProvider }) => {
           <>
             <div className="form-group">
               <label>API Key</label>
-              <input type="password" defaultValue={provider.api_key} ref={apiKeyRef} className="form-control" />
+              <input type="password" autocomplete="off" defaultValue={provider.api_key} ref={apiKeyRef} className="form-control" />
             </div>
           </>
         )
