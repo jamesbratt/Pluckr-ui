@@ -121,7 +121,7 @@ const EditDataProvider = ({ provider, updateDataProvider }) => {
 
         redirectUri = (
           <Alert variant='dark'>
-            {`In your oauth2 application, set "${process.env.REACT_APP_PLUCKR_API_URI}/oauth2/${provider.id}/" as the redirect URI`}
+            {`In your oauth2 application, set ${process.env.REACT_APP_PLUCKR_API_URI}/providers/authenticate/${provider.id}/ as the redirect/callback URI`}
           </Alert>
         );
 
@@ -153,12 +153,13 @@ const EditDataProvider = ({ provider, updateDataProvider }) => {
         <>
           <Tabs defaultActiveKey="basic" id="uncontrolled-tab-example">
             <Tab eventKey="basic" title="Basic Settings">
+              {redirectUri}
               <div className="form-group">
                 <label>Provider Name</label>
                 <input defaultValue={provider.name} ref={providerNameRef} className="form-control" type="text" placeholder="What is your provider called?" />
               </div>
               <div className="form-group">
-                <label>Swagger Definition URL</label>
+                <label>Open API Definition URL</label>
                 <input defaultValue={provider.swagger_url} ref={swaggerDefRef} className="form-control" type="text" placeholder="e.g. https://example.com" />
               </div>
               {fields}
@@ -180,7 +181,7 @@ const EditDataProvider = ({ provider, updateDataProvider }) => {
             <input defaultValue={provider.name} ref={providerNameRef} className="form-control" type="text" placeholder="What is your provider called?" />
           </div>
           <div className="form-group">
-            <label>Swagger Definition URL</label>
+            <label>Open API Definition URL</label>
             <input defaultValue={provider.swagger_url} ref={swaggerDefRef} className="form-control" type="text" placeholder="e.g. https://example.com" />
           </div>
           <div className="form-group">
