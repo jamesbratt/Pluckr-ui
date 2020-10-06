@@ -8,6 +8,7 @@ import DropdownButton from 'react-bootstrap/DropdownButton';
 import Dropdown from 'react-bootstrap/Dropdown';
 import AddDataSet from '../datasets/AddDataSet';
 import Loader from '../../Loader';
+import Badge from 'react-bootstrap/Badge';
 
 import { addNotification } from '../../actions/notification';
 import { createDataSet } from '../../actions/dataset';
@@ -241,6 +242,9 @@ class Chart extends Component {
           <Modal show={this.state.createChartModalShow} onHide={() => this.setState({createChartModalShow: false})}>
             <Modal.Header closeButton>
               <Modal.Title>Create a New Dataset</Modal.Title>
+              <a rel="noopener noreferrer" target="_blank" href="https://pluckr.io/documentation/datasets/">
+                <Badge pill variant="secondary">?</Badge>
+              </a>
             </Modal.Header>
             <Modal.Body>
                 <AddDataSet add={this.addDataset} chartId={this.props.match.params.id} close={() => this.setState({createChartModalShow: false})} />

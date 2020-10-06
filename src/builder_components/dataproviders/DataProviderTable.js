@@ -4,6 +4,7 @@ import Modal from 'react-bootstrap/Modal';
 import CreateDataProvider from './CreateDataProvider';
 import EditDataProvider from './EditDataProvider';
 import Loader from '../../Loader';
+import Badge from 'react-bootstrap/Badge';
 import { createDataProvider, setProviders, fetchProviders, editDataProvider, deleteProvider } from '../../actions/provider';
 import { connect } from 'react-redux';
 
@@ -36,7 +37,10 @@ const DataProviderTable = ({ dataProviders, providers, fetchProviders, setProvid
     return (
       <div className="table-wrapper">
         <div className="table-header">
-          <h3>Data Providers</h3>
+          <h3>Data Providers</h3>      
+        <a rel="noopener noreferrer" target="_blank" href="https://pluckr.io/documentation/data-providers/"><Badge pill variant="secondary">
+          ?
+        </Badge></a>
         </div>
         {
           isLoading ? <Loader /> :
