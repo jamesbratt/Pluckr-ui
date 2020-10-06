@@ -9,7 +9,7 @@ const Welcome = ({ onClose }) => {
   return (
     <Modal.Body>
       <h1 className="text-center">Welcome</h1>
-      <p className="lead text-center">And thankyou for choosing to sign up to take Pluckr for a spin and become an early adopter of this new insights platform.</p>
+      <p className="lead text-center">And thank you for choosing to sign up to take Pluckr for a spin and become an early adopter of this new insights platform.</p>
       <p className="text-center">Before jumping straight into building charts we would recommend that you take the time to check out the <a rel="noopener noreferrer" target="_blank" href="https://pluckr.io/documentation/">documentation</a>.
       If you find any problems or would just like to ask a question then please feel free to get in contact via email at <a href="mailto:support@pluckr.io">support@pluckr.io</a></p>
       <div className="d-flex justify-content-center">

@@ -161,6 +161,7 @@ const EditDataProvider = ({ provider, updateDataProvider }) => {
               <div className="form-group">
                 <label>Open API Definition URL</label>
                 <input defaultValue={provider.swagger_url} ref={swaggerDefRef} className="form-control" type="text" placeholder="e.g. https://example.com" />
+                <small class="form-text text-muted"><a rel="noopener noreferrer" target="_blank" href="https://pluckr.io/api-definitions/">Check out our list of API definitions</a></small>
               </div>
               {fields}
             </Tab>
@@ -183,6 +184,7 @@ const EditDataProvider = ({ provider, updateDataProvider }) => {
           <div className="form-group">
             <label>Open API Definition URL</label>
             <input defaultValue={provider.swagger_url} ref={swaggerDefRef} className="form-control" type="text" placeholder="e.g. https://example.com" />
+            <small class="form-text text-muted"><a rel="noopener noreferrer" target="_blank" href="https://pluckr.io/api-definitions/">Check out our list of API definitions</a></small>
           </div>
           <div className="form-group">
             <label>Select an authentication method</label>
