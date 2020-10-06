@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Table from 'react-bootstrap/Table';
 import Loader from '../../Loader';
+import Badge from 'react-bootstrap/Badge';
 import { connect } from 'react-redux';
 import { deleteDataSource, fetchDataSources } from '../../actions';
 import { Link } from "react-router-dom";
@@ -69,10 +70,14 @@ class DataSourceList extends Component {
         {this.props.loader ? <Loader /> :
             this.props.sources.data.length > 0 ?
             <React.Fragment>
-              <h2>Available Data Sources</h2>
               <div className="table-header">
-                <Link className="btn btn-primary" to="create-data-source">Create a Data Source</Link>
+                <h2>Available Data Sources</h2>
+                <a rel="noopener noreferrer" target="_blank" href="https://pluckr.io/documentation/data-sources/">
+                  <Badge pill variant="secondary">?</Badge>
+                </a>
               </div>
+              <hr />
+              <Link className="btn btn-primary" to="create-data-source">Create a Data Source</Link>
               <Table bordered hover>
                 <thead>
                   <tr>
@@ -101,8 +106,14 @@ class DataSourceList extends Component {
               </Table>
             </React.Fragment> :
             <div>
-              <h2>Available Data Sources</h2>
+              <div className="table-header">
+                <h2>Available Data Sources</h2>
+                <a rel="noopener noreferrer" target="_blank" href="https://pluckr.io/documentation/data-sources/">
+                  <Badge pill variant="secondary">?</Badge>
+                </a>
+              </div>
               <p className="lead">Get started by creating a data source. Data sources use your connected data providers to retrieve specific data</p>
+              <hr />
               <Link className="btn btn-primary" to="create-data-source">Create a Data Source</Link>
             </div>
         }

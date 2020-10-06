@@ -5,6 +5,8 @@ import DatasetPreview from '../DatasetPreview';
 import InfoButton from '../InfoButton';
 import ValueSelector from './ValueSelector';
 import DataKeySelector from './DataKeySelector';
+import Badge from 'react-bootstrap/Badge';
+
 import { GenerateGuid } from '../../utils/Helpers';
 import { createOperation, deleteOperation, updateOperationAst, fetchOperations } from '../../actions';
 import { runDataSet } from '../../actions/dataset';
@@ -356,7 +358,12 @@ class Operations extends Component {
 
     return (
       <div className="operations">
-        <button style={{marginRight: '1em'}} onClick={this.handleShow} type="button" className="btn btn-primary btn-sm">Add Operation</button>
+        <div className="operations-header">
+          <button style={{marginRight: '1em'}} onClick={this.handleShow} type="button" className="btn btn-primary btn-sm">Add Operation</button>
+          <a rel="noopener noreferrer" target="_blank" href="https://pluckr.io/documentation/operations/">
+            <Badge pill variant="secondary">?</Badge>
+          </a>
+        </div>
         <Modal dialogClassName="modal-80w" show={this.state.show} onHide={this.handleClose}>
           {
             this.state.preview ?

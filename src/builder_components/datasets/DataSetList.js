@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import Table from 'react-bootstrap/Table';
 import Modal from 'react-bootstrap/Modal';
 import AddDataSet from './AddDataSet';
+import Badge from 'react-bootstrap/Badge';
+
 import { connect } from 'react-redux';
 import { createDataSet, deleteDataset } from '../../actions/dataset';
 import { Link, Redirect } from "react-router-dom";
@@ -115,6 +117,9 @@ class DataSetList extends Component {
         <Modal show={this.state.createChartModalShow} onHide={() => this.setState({createChartModalShow: false})}>
           <Modal.Header closeButton>
             <Modal.Title>Create a New Dataset</Modal.Title>
+            <a rel="noopener noreferrer" target="_blank" href="https://pluckr.io/documentation/datasets/">
+              <Badge pill variant="secondary">?</Badge>
+            </a>
           </Modal.Header>
           <Modal.Body>
               <AddDataSet add={this.addDataset} chartId={this.props.chartId} close={() => this.setState({createChartModalShow: false})} />
