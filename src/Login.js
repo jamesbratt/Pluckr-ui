@@ -40,7 +40,7 @@ class Login extends Component {
           <div className="login-wrapper">
             <form onSubmit={this.login} className="form-signin">
               {this.props.location.state ? <Alert variant='success'>{this.props.location.state.alert}</Alert> : null}
-              <h1 style={{textAlign: "center"}} className="h3 font-weight-normal">Sign-in to Pluckr</h1>
+              <h1 style={{textAlign: "center"}} className="h3 font-weight-normal">Sign-in to Pluckr<sup>Beta</sup></h1>
               <label className="sr-only">Username</label>
               <input ref={this.usernameRef} type="text" name="username" className="form-control" placeholder="Enter your username" required="" autofocus="" />
               <label className="sr-only">Password</label>
