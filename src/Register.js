@@ -52,13 +52,14 @@ class Register extends React.Component {
     if (this.state.hasRegisted) {
       return <Redirect to={{
         pathname: '/',
-        state: { alert: 'Awesome! You are now registered as a beta tester. You can now sign-in to Pluckr and get started!' }
+        state: { alert: 'Awesome! You are now a registered member of Pluckr. You can now sign-in to your account.' }
       }} />
     }
     return (
       <div className="login-wrapper">
         <form onSubmit={this.register} className="form-register">
-          <h1 style={{textAlign: "center"}} className="h3 mb-3 font-weight-normal">Sign Up</h1>
+          <h1 style={{textAlign: "center"}} className="h3 mb-3 font-weight-normal">Register</h1>
+          <p>Become a registered member of Pluckr<sup>Beta</sup> for free!</p>
           <div className="form-group">
             <label>Username</label>
             <input name="userame" required ref={usernameRef} className="form-control" type="text" placeholder="Please enter a username" />
@@ -81,7 +82,7 @@ class Register extends React.Component {
               By ticking this box you are agreeing to be contacted by Pluckr
             </label>
             <small class="form-text text-muted">
-              Don't worry, we will not be using your email address to spam you with junk. It is just for gathering user feedback and to contact you regarding your continued usage of Pluckr.
+              Don't worry, we will not be using your email address to spam you with junk. It is just for gathering user feedback whilst Pluckr is in it's beta phase.
             </small>
           </div>
           <button style={{ marginTop: '1em' }} className="btn btn-lg btn-primary" type="submit">Sign Up</button>

@@ -64,7 +64,7 @@ class Wrapper extends Component {
       return (
         <React.Fragment>
           <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
-          <Navbar.Brand href="/">Pluckr</Navbar.Brand>
+          <Navbar.Brand href="/">Pluckr<sup>Beta</sup></Navbar.Brand>
           <Navbar.Toggle aria-controls="responsive-navbar-nav" />
           <Navbar.Collapse id="responsive-navbar-nav">
             <Nav className="mr-auto">
