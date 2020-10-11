@@ -37,7 +37,7 @@ const DataProviderTable = ({ dataProviders, providers, fetchProviders, setProvid
     return (
       <div className="table-wrapper">
         <div className="table-header">
-          <h3>Data Providers</h3>      
+          <h3>Data Providers</h3>
         <a rel="noopener noreferrer" target="_blank" href="https://pluckr.io/documentation/data-providers/"><Badge pill variant="secondary">
           ?
         </Badge></a>
@@ -46,8 +46,8 @@ const DataProviderTable = ({ dataProviders, providers, fetchProviders, setProvid
           isLoading ? <Loader /> :
           (
             <>
-            {providers.length === 0 ? 
-              <div className="sad-face"><p style={{ textAlign: 'center' }} className="lead">You need to create a data provider</p></div> :   
+            {providers.length === 0 ?
+              <div className="sad-face"><p style={{ textAlign: 'center' }} className="lead">You need to create a data provider</p></div> :
               <Table bordered hover>
                 <thead>
                   <tr>
@@ -67,10 +67,10 @@ const DataProviderTable = ({ dataProviders, providers, fetchProviders, setProvid
                           <button disabled={!canConnect} className="btn btn-link table-btn" onClick={() => connect(p.id)}><i className="fa fa-plug" /></button>
                         </td>
                         <td width="40">
-                          <button disabled={!p.isOwner} className="btn btn-link table-btn" onClick={() => editDataProvider(p.id)}><i className="fa fa-edit" /></button>
+                          <button disabled={p.is_public} className="btn btn-link table-btn" onClick={() => editDataProvider(p.id)}><i className="fa fa-edit" /></button>
                         </td>
                         <td width="40">
-                          <button disabled={!p.isOwner} className="btn btn-link table-btn" onClick={() => deleteProvider(p.id)}><i className="fa fa-trash" /></button>
+                          <button disabled={p.is_public} className="btn btn-link table-btn" onClick={() => deleteProvider(p.id)}><i className="fa fa-trash" /></button>
                         </td>
                       </tr>
                     )
