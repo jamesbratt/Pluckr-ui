@@ -276,7 +276,7 @@ class DataSourceDetail extends Component {
 
     let parameters = [];
     const selectedResourceLabel = this.state.selectedResource ? this.state.selectedProvider.swagger_paths[this.state.selectedResource].get.summary : '';
-
+    const selectedResourceDescription = pathOr("", [this.state.selectedResource, 'get', 'description'], this.state.selectedProvider.swagger_paths);
     if (this.state.parameterFields.length > 0) {
       parameters = this.state.parameterFields.map(parameterField => {
         const paramValue = this.state.parameterValues.find(parameterValue => parameterValue.name === parameterField.name);
@@ -344,14 +344,12 @@ class DataSourceDetail extends Component {
                       }
                     })}
                   </select>
-                  <small className="form-text text-muted">
-                    {/*this.state.selectedProvider ? <a rel="noopener noreferrer" target="_blank" href={this.state.selectedProvider.docs}>Check out the <span style={{ textTransform: 'capitalize' }}>{this.state.selectedProvider.provider}</span> documentation</a> : ''*/}
-                  </small>
                 </div>
                 {this.state.selectedProvider && this.state.selectedProvider.swagger_paths ?
                   <div className="form-group">
                     <label>Resource</label>
                     <Typeahead
+                      id="Resources"
                       placeholder='Search and select a resource'
                       defaultInputValue={selectedResourceLabel}
                       onChange={this.onResourceChange}
@@ -360,6 +358,9 @@ class DataSourceDetail extends Component {
                         return { id: resourceKey, label: resourceDetails.summary }
                       })}
                     />
+                    <small className="form-text text-muted">
+                      {selectedResourceDescription}
+                    </small>
                   </div>
                 : null
                 }
