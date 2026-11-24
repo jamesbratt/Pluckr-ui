@@ -2,6 +2,19 @@
 
 A React/Redux app that models third party data on the client so that it can be transformed and visualised using JavaScript charting libraries.
 
+### Introduction
+
+[![Watch the introduction to Pluckr](https://img.youtube.com/vi/kEnj0gdK2iM/hqdefault.jpg)](https://youtu.be/kEnj0gdK2iM)
+
+### Tutorials
+
+[![Watch Pluckr tutorial 1](https://img.youtube.com/vi/uBpoy1Jbvf4/mqdefault.jpg)](https://youtu.be/uBpoy1Jbvf4)
+[![Watch Pluckr tutorial 2](https://img.youtube.com/vi/neRZ-2CD5_w/mqdefault.jpg)](https://youtu.be/neRZ-2CD5_w)
+[![Watch Pluckr tutorial 3](https://img.youtube.com/vi/0eBTP264oBE/mqdefault.jpg)](https://youtu.be/0eBTP264oBE)
+[![Watch Pluckr tutorial 4](https://img.youtube.com/vi/urUJobXVI2Y/mqdefault.jpg)](https://youtu.be/urUJobXVI2Y)
+
+### Local setup
+
 To run locally, start by creating an `.env.local` file in the project root,
 containing the following:
 
